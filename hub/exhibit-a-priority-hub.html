@@ -25,6 +25,7 @@
   --ok:#6fd3a0; --ok-bg:#163a2b; --warn:#f2bf62; --warn-bg:#3b2e14; --bad:#ff8a92; --bad-bg:#43191e; --info:#9fc0ef; --info-bg:#1d3150;
   --accent:#ff4b58; color-scheme:dark}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
 h1,h2,h3{font-family:var(--f-head);text-wrap:balance;margin:0}
 a{color:var(--info)}
@@ -148,6 +149,8 @@ td .sub{font-size:12px;color:var(--muted)}
 .list{display:grid;gap:0}
 .li{display:grid;grid-template-columns:96px 1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
 .li:last-child{border-bottom:0}
+.grid3 .li{grid-template-columns:58px 1fr}
+.grid3 .li>*:last-child{grid-column:2;justify-self:start}
 .li .when{font-family:var(--f-head);font-weight:600;color:var(--muted)}
 .src{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
 .src:last-child{border-bottom:0}
@@ -369,7 +372,7 @@ function stationStats(){
 function regProgress(){
   const n=S.regsteps.length, done=S.regsteps.filter(s=>s.status==="Done").length;
   const sorted=S.regsteps.slice().sort((a,b)=>(+a.order||0)-(+b.order||0));
-  const cur=sorted.find(s=>s.status!=="Done");
+  const cur=sorted.find(s=>s.status==="In progress")||sorted.find(s=>s.status==="Not started")||sorted.find(s=>s.status!=="Done");
   return {n,done,cur,blocked:S.regsteps.some(s=>s.status==="Blocked")};
 }
 function nextTask(obj){
@@ -420,7 +423,7 @@ function renderLanes(){
     <h2>Additional DSPs, same station</h2>
     <div class="top"><span class="big num">${addl}/${addlCap}</span><span class="meta">slots filled at opened stations · ${pipeAddl} open</span></div>
     <div class="bar"><i style="width:${addlCap?Math.round(addl/addlCap*100):0}%"></i></div>
-    <div class="meta">Up to $2,000 each (50+ units), max 4 per station</div>
+    <div class="meta">${addlCap?"Up to $2,000 each (50+ units), max 4 per station":"Unlocks when a station's first DSP signs"}</div>
     <div class="next"><b>Next action</b>${nx(n2,"None set")}</div>
   </button>`;
 }
@@ -439,7 +442,7 @@ function renderToday(){
   }).join("");
   const due=S.tasks.filter(t=>t.status!=="Done"&&days(t.due)!==null&&days(t.due)<=7).sort((a,b)=>pd(a.due)-pd(b.due));
   $("#today-due").innerHTML = due.length?`<div class="list">${due.map(taskLine).join("")}</div>`:`<div class="empty">Nothing overdue or due in the next 7 days.</div>`;
-  const stale=S.dsps.filter(d=>!WON.includes(d.stage)&&d.stage!=="Lost"&&(days(d.lastTouch)===null||days(d.lastTouch)<=-14))
+  const stale=S.dsps.filter(d=>!WON.includes(d.stage)&&d.stage!=="Lost"&&(d.lastTouch||d.stage!=="Identified")&&(days(d.lastTouch)===null||days(d.lastTouch)<=-14))
     .sort((a,b)=>(pd(a.lastTouch)||0)-(pd(b.lastTouch)||0));
   $("#today-stale").innerHTML = stale.length?`<div class="list">${stale.map(d=>{const dd=days(d.lastTouch);return `<div class="li" data-edit="dsps:${esc(d.id)}" style="cursor:pointer">
     <div class="when ${dd!==null&&dd<=-30?"stale":""}">${d.lastTouch?(-dd)+"d ago":"Never"}</div>
