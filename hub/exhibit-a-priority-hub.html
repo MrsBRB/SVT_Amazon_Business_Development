@@ -183,13 +183,38 @@ td .sub{font-size:12px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
+<style>
+.site{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:14px;display:grid;gap:8px;min-width:0;cursor:pointer;align-content:start}
+.site:hover{border-color:var(--muted)}
+.site.live{border-color:var(--ok);box-shadow:inset 0 3px 0 var(--ok)}
+.site.blocked{box-shadow:inset 0 3px 0 var(--bad)}
+.site .row{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.site .code{font-family:var(--f-head);font-weight:700;font-size:21px}
+.kv{display:grid;grid-template-columns:86px 1fr;gap:4px 10px;font-size:13px}
+.kv dt{color:var(--muted);font-weight:600}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.ladder{display:flex;gap:3px}
+.ladder i{flex:1;height:6px;border-radius:2px;background:var(--panel-2);border:1px solid var(--line)}
+.ladder i.f{background:var(--info);border-color:var(--info)}
+.sites{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.track-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.track-h h3{font-size:19px}
+.sched td.tags{white-space:nowrap}
+.tag{display:inline-block;font-family:var(--f-head);font-size:11px;letter-spacing:.06em;font-weight:700;border-radius:var(--r-sm);padding:0 6px;margin:0 3px 3px 0;border:1px solid var(--line);color:var(--muted)}
+.tag.VA{color:var(--accent);border-color:var(--accent)}
+.tag.SC-MM,.tag.SC-LM{color:var(--info);border-color:var(--info)}
+.onoff{font-weight:700;font-size:12px}
+.onoff.on{color:var(--ok)} .onoff.off{color:var(--muted)}
+.banner{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r-md);padding:10px 12px;font-size:14px}
+</style>
+
 <header class="mast">
   <div class="wrap">
-    <div class="eyebrow"><span class="rule"></span>SVT Fleet Solutions · Exhibit A · Consultant: Brooke Benkert</div>
+    <div class="eyebrow"><span class="rule"></span>SVT Fleet Solutions · Amazon · Consultant: Brooke Benkert</div>
     <div style="display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:end">
       <div style="display:grid;gap:6px;min-width:0">
         <h1>Exhibit A Priority Hub</h1>
-        <div class="sub">Amazon vendor registration first, then the first DSP at each station, then every additional DSP behind it.</div>
+        <div class="sub">Two initiatives only: Amazon Vendor Approval, and Amazon Station Conversions (Middle Mile and Last Mile). DSP outreach, lead lists and routing workflows are deliberately left out.</div>
       </div>
       <div class="clock num" id="clock"></div>
     </div>
@@ -200,11 +225,12 @@ td .sub{font-size:12px;color:var(--muted)}
 <nav class="tabs" aria-label="Hub sections">
   <div class="wrap" id="tabs">
     <a href="#today">Today</a>
-    <a href="#registration">Vendor Registration</a>
-    <a href="#stations">Stations &amp; DSPs</a>
+    <a href="#approval">Vendor Approval</a>
+    <a href="#stations">Station Conversions</a>
     <a href="#board">Action Board</a>
     <a href="#log">Decisions &amp; Evidence</a>
     <a href="#sources">Sources</a>
+    <a href="#schedules">Scheduled Tasks</a>
     <a href="#method">Method</a>
   </div>
 </nav>
@@ -212,65 +238,72 @@ td .sub{font-size:12px;color:var(--muted)}
 <main><div class="wrap">
 
 <section data-view="today">
-  <div class="head"><div><h2>Today</h2><p>The next move on each priority, anything overdue, and deals that have gone quiet.</p></div>
+  <div class="head"><div><h2>Today</h2><p>The next move on each initiative, what's due this week, and who you're waiting on.</p></div>
     <div class="tools"><button class="btn primary" data-add="tasks">Add action</button></div></div>
   <div class="grid3" id="today-next"></div>
   <div class="grid2">
     <div class="panel"><h3>Overdue &amp; due this week</h3><div id="today-due"></div></div>
-    <div class="panel"><h3>Stale DSP deals <span class="muted small">(no touch in 14+ days)</span></h3><div id="today-stale"></div></div>
+    <div class="panel"><h3>Waiting on others</h3><div id="today-wait"></div></div>
   </div>
 </section>
 
-<section data-view="registration">
-  <div class="head"><div><h2>Amazon Vendor Network Registration <span class="chip o3">OBJ #3 · PRIORITY 1</span></h2>
-    <p>$5,000 one time. It pays on the date SVT gets written confirmation from Amazon that SVT is an approved, active, registered vendor. Log every step you drive, because Amazon controls the timing.</p></div>
+<section data-view="approval">
+  <div class="head"><div><h2>Amazon Vendor Approval <span class="chip o3">PRIORITY 1 · EXHIBIT A #3</span></h2>
+    <p>$5,000 one time. It's earned on the date SVT receives written confirmation from Amazon that SVT has been approved as an active, registered vendor. It must land in the Initial Term (ends Jan 31, 2027). Log every step you drive, because Amazon controls the timing.</p></div>
     <div class="tools"><button class="btn primary" data-add="regsteps">Add step</button></div></div>
   <div class="grid2">
     <div class="panel"><h3>Path to written confirmation</h3><div class="steps" id="reg-steps"></div></div>
     <div style="display:grid;gap:18px;align-content:start">
-      <div class="panel"><h3>Open actions · OBJ #3</h3><div id="reg-tasks"></div></div>
-      <div class="panel"><h3>Recent evidence &amp; decisions · OBJ #3</h3><div id="reg-log"></div></div>
+      <div class="panel"><h3>Open actions · Vendor Approval</h3><div id="reg-tasks"></div></div>
+      <div class="panel"><h3>Recent evidence &amp; decisions</h3><div id="reg-log"></div></div>
     </div>
   </div>
 </section>
 
 <section data-view="stations">
-  <div class="head"><div><h2>Stations &amp; DSP Conversions <span class="chip">OBJ #1 · #2</span></h2>
-    <p>Open each station first ($1,000–$5,000 for the first DSP), then add up to four more DSPs per station ($0–$2,000 each). Get the unit count before signing. A deal within 15% of the next tier gets flagged.</p></div>
-    <div class="tools"><button class="btn" data-add="stations">Add station</button><button class="btn primary" data-add="dsps">Add DSP</button></div></div>
-  <div class="stations" id="station-cards"></div>
-  <div class="tools">
-    <div class="seg" id="dsp-filter" role="group" aria-label="Filter DSPs">
-      <button aria-pressed="true" data-f="open">Open deals</button><button aria-pressed="false" data-f="all">All</button><button aria-pressed="false" data-f="won">Signed+</button>
-    </div>
-  </div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>DSP</th><th>Units</th><th>Slot</th><th>Stage</th><th>Tier value</th><th>Next action</th><th>Due</th><th>Last touch</th></tr></thead>
-    <tbody id="dsp-rows"></tbody></table></div>
+  <div class="head"><div><h2>Amazon Station Conversions</h2>
+    <p>A site counts as converted when Amazon routes work to SVT there under SVT's own name. Middle Mile runs through Evan's AFP sites, with Reach and Relay Garage. Last Mile is gated at Amazon's level: the TOM-site vendor network is set until a Q1 review, on-site work needs a direct contract, and Amazon-paid work needs a Relay Garage integration.</p></div>
+    <div class="tools"><button class="btn primary" data-add="sites">Add site</button></div></div>
+  <div class="track-h"><h3>Middle Mile</h3><span class="muted small" id="mm-sum"></span></div>
+  <div class="sites" id="mm-sites"></div>
+  <div class="panel"><h3>Open actions · Middle Mile</h3><div id="mm-tasks"></div></div>
+  <div class="track-h"><h3>Last Mile (Amazon-level access)</h3><span class="muted small" id="lm-sum"></span></div>
+  <div class="sites" id="lm-sites"></div>
+  <div class="panel"><h3>Open actions · Last Mile</h3><div id="lm-tasks"></div></div>
 </section>
 
 <section data-view="board">
-  <div class="head"><div><h2>Action Board</h2><p>Every action for the three priorities, one card per action and one owner per card.</p></div>
+  <div class="head"><div><h2>Action Board</h2><p>Every action for the two initiatives, one card per action and one owner per card.</p></div>
     <div class="tools">
-      <div class="seg" id="obj-filter" role="group" aria-label="Filter by objective">
-        <button aria-pressed="true" data-f="all">All</button><button aria-pressed="false" data-f="OBJ-3">#3 Registration</button><button aria-pressed="false" data-f="OBJ-1">#1 First DSP</button><button aria-pressed="false" data-f="OBJ-2">#2 Additional</button>
+      <div class="seg" id="obj-filter" role="group" aria-label="Filter by initiative">
+        <button aria-pressed="true" data-f="all">All</button><button aria-pressed="false" data-f="VA">Vendor Approval</button><button aria-pressed="false" data-f="MM">Middle Mile</button><button aria-pressed="false" data-f="LM">Last Mile</button>
       </div>
       <button class="btn primary" data-add="tasks">Add action</button></div></div>
   <div class="board" id="board"></div>
 </section>
 
 <section data-view="log">
-  <div class="head"><div><h2>Decisions &amp; Evidence</h2><p>A dated record of decisions, meetings and proof. If SVT disputes a verification later, this record is your support.</p></div>
+  <div class="head"><div><h2>Decisions &amp; Evidence</h2><p>A dated record of decisions, meetings and proof. If the trigger date or attribution is ever questioned, this record is your support.</p></div>
     <div class="tools"><button class="btn primary" data-add="log">Add entry</button></div></div>
   <div class="panel"><div class="list" id="log-list"></div></div>
 </section>
 
 <section data-view="sources">
-  <div class="head"><div><h2>Sources</h2><p>Only the artifacts and meetings that bear on objectives #3, #1 and #2. Each one is marked Core (use it), Supporting (reference) or Retire (replaced by this hub).</p></div>
+  <div class="head"><div><h2>Sources</h2><p>Only artifacts and meetings with facts about Vendor Approval or Station Conversions. DSP lead lists, outreach and routing/workflow artifacts are excluded. Core = use it, Supporting = reference, Retire = superseded by this hub.</p></div>
     <div class="tools"><div class="seg" id="src-filter" role="group" aria-label="Filter sources">
       <button aria-pressed="true" data-f="use">Core + Supporting</button><button aria-pressed="false" data-f="Retire">Retire</button><button aria-pressed="false" data-f="all">All</button></div>
       <button class="btn" data-add="sources">Add source</button></div></div>
   <div class="grid3" id="src-cols"></div>
+</section>
+
+<section data-view="schedules">
+  <div class="head"><div><h2>Scheduled Tasks</h2><p>Every scheduled task on this account, tagged by initiative. VA = Vendor Approval, SC-MM / SC-LM = Station Conversions (Middle / Last Mile). Untagged tasks are distractions from this hub. Changes are not applied automatically; the recommendation column is a proposal.</p></div>
+    <div class="tools"><div class="seg" id="sch-filter" role="group" aria-label="Filter scheduled tasks">
+      <button aria-pressed="true" data-f="tied">Tied to initiatives</button><button aria-pressed="false" data-f="other">Not tied</button><button aria-pressed="false" data-f="all">All</button></div></div></div>
+  <div class="banner" id="sch-banner"></div>
+  <div class="tbl-wrap sched"><table>
+    <thead><tr><th>Scheduled task</th><th>When</th><th>State</th><th>Tags</th><th>Recommendation</th><th>What it does</th></tr></thead>
+    <tbody id="sch-rows"></tbody></table></div>
 </section>
 
 <section data-view="method">
@@ -279,20 +312,20 @@ td .sub{font-size:12px;color:var(--muted)}
   <div class="grid2 method">
     <div class="panel"><h3>Operating rhythm</h3>
       <ul>
-        <li><b>Daily (10 min):</b> open <i>Today</i>. Do the top card in each lane: one for registration, one for station openings, one for depth.</li>
-        <li><b>After every touch (under 2 min):</b> update the DSP's stage, next action and last touch. Add an evidence entry for anything you could be asked to prove later.</li>
-        <li><b>Friday (15 min):</b> clear the stale list. Any deal untouched for 30 days gets revived with a dated action or marked Lost.</li>
-        <li><b>Monthly, 1st:</b> send Michael a one-screen update covering registration status, stations opened, deals by stage and what's blocked. Log it as evidence.</li>
-        <li><b>Within 24 hours of any objective met:</b> send the confirmation email to Michael with the date, unit count, tier and amount, attach the proof, and log it.</li>
+        <li><b>Daily (10 min):</b> open <i>Today</i>. Do the top card in each lane: Vendor Approval first, then Middle Mile, then Last Mile.</li>
+        <li><b>After every Amazon touch (under 2 min):</b> update the step or site, then add an evidence entry for anything you might need to prove later (who said what, in writing or in a meeting).</li>
+        <li><b>Friday (15 min):</b> clear the Waiting list. Chase or re-date anything older than 7 days.</li>
+        <li><b>Monthly, 1st:</b> send Michael a one-screen update covering approval status, site stages, blockers and decisions needed. Log it as evidence.</li>
+        <li><b>Within 24 hours of Amazon's written confirmation:</b> forward it to Michael with the date and the Exhibit A #3 amount, and log it.</li>
       </ul></div>
     <div class="panel"><h3>Rules the hub applies</h3>
       <ul>
-        <li><b>Sequence:</b> Registration (#3) comes first because it is the foundational unlock. For DSPs, go wide before deep. Three first conversions are worth $15,000 and open three stations. One first plus four additional at one station is worth $13,000.</li>
-        <li><b>First DSP tiers:</b> 75+ units $5,000 · 50–74 $4,000 · 25–49 $3,000 · 1–24 $1,000.</li>
-        <li><b>Additional DSP tiers (max 4 per station):</b> 50+ $2,000 · 25–49 $1,500 · 10–25 $1,000 · 1–9 $0. At exactly 25 units the tiers overlap, so get the reading in writing.</li>
-        <li><b>"Units" is undefined</b> in the agreement. Confirm with SVT that it means vehicles before the first PMA signs.</li>
-        <li><b>Earning gate:</b> objectives must be completed <i>during the term</i>. The Initial Term ends Jan 31, 2027. A deal at 95% on that date pays $0.</li>
-        <li><b>Stage ladder:</b> Identified → Qualified → Engaged → Proposed → Verbal → Signed → Verified → Paid (plus Lost).</li>
+        <li><b>Scope:</b> Amazon Vendor Approval and Amazon Station Conversions only. No DSP outreach, lead lists or routing workflows.</li>
+        <li><b>Trigger wording (Exhibit A #3):</b> "written confirmation from Amazon that SVT has been approved as an active, registered vendor." Element, Supplier Connect, DTNA clearance and "selectable in Relay Garage" don't count on their own.</li>
+        <li><b>Own name:</b> the confirmation must name SVT FLEET LLC, not SVT working under DTNA's or Velocity's approval.</li>
+        <li><b>Never claim it early:</b> don't call SVT "Amazon approved" in any message until the confirmation exists.</li>
+        <li><b>Station conversions and Exhibit A:</b> Middle Mile pilot work sits under Exhibit A's unpriced "other named opportunities" line. Agree the incentive with Michael in writing before more pilot work.</li>
+        <li><b>Earning gate:</b> objectives must be completed during the term. The Initial Term ends Jan 31, 2027.</li>
       </ul></div>
   </div>
 </section>
@@ -305,35 +338,34 @@ td .sub{font-size:12px;color:var(--muted)}
 <script>
 (() => {
 const TERM_END = new Date("2027-01-31T23:59:59");
-const STAGES = ["Identified","Qualified","Engaged","Proposed","Verbal","Signed","Verified","Paid","Lost"];
-const WON = ["Signed","Verified","Paid"];
-const OBJS = {"OBJ-3":"#3 Registration","OBJ-1":"#1 First DSP","OBJ-2":"#2 Additional DSP","ALL":"All three"};
+const OBJS = {VA:"Vendor Approval",MM:"Middle Mile",LM:"Last Mile",ALL:"All"};
+const SITE_STAGES = ["Identified","Scoping","Site visit","Pilot agreed","Onboarding","Live","Converted","Blocked","Paused"];
+const LADDER = ["Identified","Scoping","Site visit","Pilot agreed","Onboarding","Live","Converted"];
 const SCHEMA = {
   tasks:{label:"Action",fields:[
-    ["title","Action","text",true],["obj","Objective","select",false,Object.keys(OBJS)],
+    ["title","Action","text",true],["obj","Initiative","select",false,Object.keys(OBJS)],
     ["status","Status","select",false,["Next","Doing","Waiting","Done"]],["phase","Phase","select",false,["Initiate","Plan","Execute","Monitor","Close"]],
-    ["owner","Owner","text"],["due","Due","date"],["dsp","Related DSP or station","text"],["notes","Notes","textarea"],["source","Source link","url"]]},
-  regsteps:{label:"Registration step",fields:[
+    ["owner","Owner","text"],["due","Due","date"],["site","Related site","text"],["notes","Notes","textarea"],["source","Source link","url"]]},
+  regsteps:{label:"Approval step",fields:[
     ["order","Order","number",true],["title","Step","text",true],["status","Status","select",false,["Not started","In progress","Blocked","Done"]],
     ["owner","Owner","text"],["date","Date (done or target)","date"],["evidence","Evidence / proof","textarea"],["notes","Notes","textarea"]]},
-  stations:{label:"Station",fields:[
-    ["code","Station code","text",true],["name","City / area","text"],["named","Target type","select",false,["Named in Exhibit A","Other target"]],
-    ["priority","Priority (1 = highest)","number"],["shop","SVT shop / coverage","text"],["notes","Notes","textarea"]]},
-  dsps:{label:"DSP",fields:[
-    ["name","DSP name","text",true],["station","Station code","text",true],["contact","Owner / contact","text"],
-    ["units","Units (vans)","number"],["slot","Slot","select",false,["First at station","Additional"]],
-    ["stage","Stage","select",false,STAGES],["next","Next action","text"],["due","Next action due","date"],["lastTouch","Last touch","date"],["notes","Notes","textarea"],["source","Source link","url"]]},
+  sites:{label:"Site",fields:[
+    ["code","Site code","text",true],["name","Location","text"],["track","Track","select",false,["Middle Mile","Last Mile"]],
+    ["stage","Stage","select",false,SITE_STAGES],["priority","Priority (1 = highest)","number"],["contact","Amazon contacts","text"],
+    ["fleet","Fleet / volume","text"],["coverage","SVT coverage","text"],["gate","What must happen to convert","textarea"],
+    ["next","Next step","text"],["due","Next step due","date"],["lastTouch","Last touch","date"],["notes","Notes","textarea"],["source","Source link","url"]]},
   log:{label:"Log entry",fields:[
-    ["date","Date","date",true],["obj","Objective","select",false,Object.keys(OBJS)],["kind","Type","select",false,["Decision","Evidence","Meeting","Risk","Update"]],
+    ["date","Date","date",true],["obj","Initiative","select",false,Object.keys(OBJS)],["kind","Type","select",false,["Decision","Evidence","Meeting","Risk","Update"]],
     ["text","Entry","textarea",true],["link","Link","url"]]},
   sources:{label:"Source",fields:[
-    ["title","Title","text",true],["url","Link","url"],["obj","Objective","select",false,Object.keys(OBJS)],
-    ["role","Role","select",false,["Core","Supporting","Retire"]],["kind","Kind","select",false,["Artifact","Meeting","Doc"]],["updated","Last updated","date"],["what","What it gives you","textarea"]]}
+    ["title","Title","text",true],["url","Link","url"],["obj","Initiative","select",false,Object.keys(OBJS)],
+    ["role","Role","select",false,["Core","Supporting","Retire"]],["kind","Kind","select",false,["Artifact","Meeting","Doc"]],["updated","Last updated","date"],["what","What it gives you","textarea"]]},
+  schedules:{label:"Scheduled task",fields:[
+    ["name","Name","text",true],["schedule","When","text"],["enabled","On?","select",false,["on","off"]],["lastRun","Last run","text"],
+    ["tags","Tags (comma separated)","text"],["recommendation","Recommendation","text"],["does","What it does","textarea"],["touches","Reads / writes","textarea"],["notes","Notes","textarea"]]}
 };
-const S = {tasks:[],regsteps:[],stations:[],dsps:[],log:[],sources:[]};
-const loaded = {};
-let db=null, canWrite=false;
-let dspFilter="open", objFilter="all", srcFilter="use";
+const S = {tasks:[],regsteps:[],sites:[],log:[],sources:[],schedules:[]};
+let db=null, canWrite=false, objFilter="all", srcFilter="use", schFilter="tied";
 
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -341,115 +373,94 @@ const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
 const pd = s => { if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; };
 const days = s => { const d=pd(s); return d?Math.round((d-today())/864e5):null; };
 const fmtD = s => { const d=pd(s); return d?d.toLocaleDateString(undefined,{month:"short",day:"numeric"}):""; };
-const money = n => "$"+(n||0).toLocaleString();
 const safeUrl = u => /^https?:\/\//i.test(u||"") ? u : "";
-
-function tier(units, slot){
-  const u=+units||0;
-  if(slot==="Additional"){
-    const v = u>=50?2000:u>=25?1500:u>=10?1000:0;
-    const next = u>=50?null:u>=25?50:u>=10?25:10;
-    return {v, next, overlap:u===25};
-  }
-  const v = u>=75?5000:u>=50?4000:u>=25?3000:u>=1?1000:0;
-  const next = u>=75?null:u>=50?75:u>=25?50:u>=1?25:1;
-  return {v, next, overlap:false};
-}
-function nearNext(t,u){ return t.next && u>0 && (t.next-u)/t.next<=0.15 && (t.next-u)>0; }
-
+const tagsOf = r => Array.isArray(r.tags)?r.tags:String(r.tags||"").split(",").map(t=>t.trim()).filter(Boolean);
+const tied = r => tagsOf(r).some(t=>t==="VA"||t.startsWith("SC"));
+const chipCls = o => o==="VA"?"o3":"";
 function toast(msg){ const r=$("#toast-root"); r.innerHTML=`<div class="toast" role="status">${esc(msg)}</div>`; clearTimeout(toast.t); toast.t=setTimeout(()=>r.innerHTML="",2200); }
 
-/* ---------- Derived ---------- */
-function stationStats(){
-  return S.stations.slice().sort((a,b)=>(+a.priority||99)-(+b.priority||99)).map(st=>{
-    const ds=S.dsps.filter(d=>(d.station||"").toUpperCase()===(st.code||"").toUpperCase());
-    const first=ds.find(d=>d.slot!=="Additional" && WON.includes(d.stage));
-    const addlWon=ds.filter(d=>d.slot==="Additional" && WON.includes(d.stage)).length;
-    const open=ds.filter(d=>!WON.includes(d.stage)&&d.stage!=="Lost");
-    return {st,ds,first,addlWon,open};
-  });
-}
 function regProgress(){
-  const n=S.regsteps.length, done=S.regsteps.filter(s=>s.status==="Done").length;
   const sorted=S.regsteps.slice().sort((a,b)=>(+a.order||0)-(+b.order||0));
+  const n=sorted.length, done=sorted.filter(s=>s.status==="Done").length;
   const cur=sorted.find(s=>s.status==="In progress")||sorted.find(s=>s.status==="Not started")||sorted.find(s=>s.status!=="Done");
-  return {n,done,cur,blocked:S.regsteps.some(s=>s.status==="Blocked")};
+  return {n,done,cur,blocked:sorted.some(s=>s.status==="Blocked")};
 }
-function nextTask(obj){
-  return S.tasks.filter(t=>t.obj===obj && t.status!=="Done")
-    .sort((a,b)=>(a.status==="Doing"?-1:0)-(b.status==="Doing"?-1:0) || (pd(a.due)||9e15)-(pd(b.due)||9e15))[0];
-}
+const openTasks = o => S.tasks.filter(t=>t.obj===o && t.status!=="Done")
+  .sort((a,b)=>(a.status==="Doing"?-1:0)-(b.status==="Doing"?-1:0) || (pd(a.due)||9e15)-(pd(b.due)||9e15));
+const sitesOf = tr => S.sites.filter(s=>s.track===tr).sort((a,b)=>(+a.priority||99)-(+b.priority||99));
+const lvl = st => LADDER.indexOf(st);
 
-/* ---------- Render ---------- */
 function renderClock(){
   const left=Math.ceil((TERM_END-today())/864e5);
-  const notice=Math.ceil((new Date("2027-01-01")-today())/864e5);
-  const ss=stationStats();
-  const opened=ss.filter(x=>x.first).length;
-  const earned = ss.reduce((a,x)=>a+x.ds.filter(d=>WON.includes(d.stage)).reduce((s,d)=>s+tier(d.units,d.slot).v,0),0)
-    + (regProgress().n && regProgress().done===regProgress().n ? 5000 : 0);
+  const rp=regProgress();
+  const mm=sitesOf("Middle Mile"), live=mm.filter(s=>lvl(s.stage)>=lvl("Live")).length;
+  const waiting=S.tasks.filter(t=>t.status==="Waiting").length;
   $("#clock").innerHTML = `
     <div><b>${left}</b><span>days left in Initial Term</span></div>
-    <div><b>${opened}/${S.stations.length||0}</b><span>stations opened</span></div>
-    <div><b>${money(earned)}</b><span>signed or better, OBJ #1–3</span></div>`;
+    <div><b>${rp.done}/${rp.n}</b><span>approval steps done</span></div>
+    <div><b>${live}/${mm.length}</b><span>middle-mile sites live</span></div>
+    <div><b>${waiting}</b><span>waiting on others</span></div>`;
 }
+function nx(t){ return t?`${esc(t.title)}${t.due?` <span class="meta">· ${fmtD(t.due)}</span>`:""}`:"None set"; }
 function renderLanes(){
-  const rp=regProgress(), ss=stationStats();
-  const opened=ss.filter(x=>x.first).length, named=S.stations.length;
-  const addl=ss.reduce((a,x)=>a+x.addlWon,0), addlCap=ss.filter(x=>x.first).length*4;
-  const pipeFirst=ss.filter(x=>!x.first).reduce((a,x)=>a+x.open.filter(d=>d.slot!=="Additional").length,0);
-  const pipeAddl=S.dsps.filter(d=>d.slot==="Additional"&&!WON.includes(d.stage)&&d.stage!=="Lost").length;
-  const n3=nextTask("OBJ-3"), n1=nextTask("OBJ-1"), n2=nextTask("OBJ-2");
-  const nx=(t,fallback)=> t?`${esc(t.title)}${t.due?` <span class="meta">· ${fmtD(t.due)}</span>`:""}`:fallback;
+  const rp=regProgress(), mm=sitesOf("Middle Mile"), lm=sitesOf("Last Mile");
+  const mmTop=mm.slice().sort((a,b)=>lvl(b.stage)-lvl(a.stage))[0];
+  const lmBlocked=lm.filter(s=>s.stage==="Blocked").length;
+  const mmPct=mm.length?Math.round(mm.reduce((a,s)=>a+Math.max(0,lvl(s.stage)),0)/(mm.length*(LADDER.length-1))*100):0;
   $("#lanes").innerHTML = `
-  <button class="lane p1" data-go="registration">
-    <div class="top"><span class="tag">Objective #3</span><span class="pri">Priority 1</span></div>
-    <h2>Amazon vendor registration</h2>
-    <div class="top"><span class="big num">$5,000</span><span class="meta">${rp.done}/${rp.n} steps done${rp.blocked?" · <b>blocked</b>":""}</span></div>
+  <button class="lane p1" data-go="approval">
+    <div class="top"><span class="tag" style="border:0;color:var(--mast-muted)">Initiative 1 · Exhibit A #3</span><span class="pri">Priority 1</span></div>
+    <h2>Amazon Vendor Approval</h2>
+    <div class="top"><span class="big num">$5,000</span><span class="meta">${rp.done}/${rp.n} steps done${rp.blocked?" · <b>a step is blocked</b>":""}</span></div>
     <div class="bar"><i style="width:${rp.n?Math.round(rp.done/rp.n*100):0}%"></i></div>
-    <div class="meta">Current step: ${rp.cur?esc(rp.cur.title):(rp.n?"All steps done":"Not mapped yet")}</div>
-    <div class="next"><b>Next action</b>${nx(n3,"None set")}</div>
+    <div class="meta">Current step: ${rp.cur?esc(rp.cur.title):"Not mapped yet"}</div>
+    <div class="next"><b>Next action</b>${nx(openTasks("VA")[0])}</div>
   </button>
   <button class="lane" data-go="stations">
-    <div class="top"><span class="tag">Objective #1</span><span class="pri n">Priority 2</span></div>
-    <h2>First DSP per station</h2>
-    <div class="top"><span class="big num">${opened}/${named}</span><span class="meta">stations opened · ${pipeFirst} first-slot deals open</span></div>
-    <div class="bar"><i style="width:${named?Math.round(opened/named*100):0}%"></i></div>
-    <div class="meta">Up to $5,000 each (75+ units)</div>
-    <div class="next"><b>Next action</b>${nx(n1,"None set")}</div>
+    <div class="top"><span class="tag" style="border:0;color:var(--mast-muted)">Initiative 2a</span><span class="pri n">Priority 2</span></div>
+    <h2>Station Conversions · Middle Mile</h2>
+    <div class="top"><span class="big num">${mm.length}</span><span class="meta">sites tracked${mmTop?` · lead: ${esc(mmTop.code)} (${esc(mmTop.stage)})`:""}</span></div>
+    <div class="bar"><i style="width:${mmPct}%"></i></div>
+    <div class="meta">${mmTop&&mmTop.next?esc(mmTop.next):"Add the first site"}</div>
+    <div class="next"><b>Next action</b>${nx(openTasks("MM")[0])}</div>
   </button>
   <button class="lane" data-go="stations">
-    <div class="top"><span class="tag">Objective #2</span><span class="pri n">Priority 3</span></div>
-    <h2>Additional DSPs, same station</h2>
-    <div class="top"><span class="big num">${addl}/${addlCap}</span><span class="meta">slots filled at opened stations · ${pipeAddl} open</span></div>
-    <div class="bar"><i style="width:${addlCap?Math.round(addl/addlCap*100):0}%"></i></div>
-    <div class="meta">${addlCap?"Up to $2,000 each (50+ units), max 4 per station":"Unlocks when a station's first DSP signs"}</div>
-    <div class="next"><b>Next action</b>${nx(n2,"None set")}</div>
+    <div class="top"><span class="tag" style="border:0;color:var(--mast-muted)">Initiative 2b</span><span class="pri n">Priority 3</span></div>
+    <h2>Station Conversions · Last Mile</h2>
+    <div class="top"><span class="big num">${lmBlocked}/${lm.length}</span><span class="meta">markets blocked at Amazon level</span></div>
+    <div class="bar"><i style="width:${lm.length?Math.round((lm.length-lmBlocked)/lm.length*100):0}%"></i></div>
+    <div class="meta">Gate: TOM-site network review in Q1; direct contract for on-site work</div>
+    <div class="next"><b>Next action</b>${nx(openTasks("LM")[0])}</div>
   </button>`;
 }
 function taskLine(t){
   const dd=days(t.due); const cls=dd!==null&&dd<0&&t.status!=="Done"?"overdue":"";
   return `<div class="li" data-edit="tasks:${esc(t.id)}" style="cursor:pointer">
     <div class="when ${cls}">${t.due?fmtD(t.due):"No date"}</div>
-    <div><div style="font-weight:600">${esc(t.title)}</div><div class="small muted">${esc(t.owner||"")}${t.dsp?" · "+esc(t.dsp):""}</div></div>
-    <div><span class="chip ${t.obj==="OBJ-3"?"o3":""}">${esc(OBJS[t.obj]||t.obj||"")}</span></div></div>`;
+    <div><div style="font-weight:600">${esc(t.title)}</div><div class="small muted">${esc(t.owner||"")}${t.status==="Waiting"?" · waiting":""}${t.site?" · "+esc(t.site):""}</div></div>
+    <div><span class="chip ${chipCls(t.obj)}">${esc(OBJS[t.obj]||t.obj||"")}</span></div></div>`;
 }
+const listOr = (arr,empty,fn=taskLine) => arr.length?`<div class="list">${arr.map(fn).join("")}</div>`:`<div class="empty">${empty}</div>`;
 function renderToday(){
-  const lanes=[["OBJ-3","#3 Registration"],["OBJ-1","#1 First DSP per station"],["OBJ-2","#2 Additional DSPs"]];
-  $("#today-next").innerHTML = lanes.map(([o,l])=>{
-    const ts=S.tasks.filter(t=>t.obj===o&&t.status!=="Done").sort((a,b)=>(a.status==="Doing"?-1:0)-(b.status==="Doing"?-1:0)||(pd(a.due)||9e15)-(pd(b.due)||9e15)).slice(0,3);
-    return `<div class="panel"><h3>${l}</h3>${ts.length?`<div class="list">${ts.map(taskLine).join("")}</div>`:`<div class="empty">No open actions. Add one so this lane always has a next move.</div>`}</div>`;
-  }).join("");
+  $("#today-next").innerHTML = [["VA","Vendor Approval"],["MM","Middle Mile"],["LM","Last Mile"]].map(([o,l])=>
+    `<div class="panel"><h3>${l}</h3>${listOr(openTasks(o).slice(0,3),"No open actions. Add one so this lane always has a next move.")}</div>`).join("");
   const due=S.tasks.filter(t=>t.status!=="Done"&&days(t.due)!==null&&days(t.due)<=7).sort((a,b)=>pd(a.due)-pd(b.due));
-  $("#today-due").innerHTML = due.length?`<div class="list">${due.map(taskLine).join("")}</div>`:`<div class="empty">Nothing overdue or due in the next 7 days.</div>`;
-  const stale=S.dsps.filter(d=>!WON.includes(d.stage)&&d.stage!=="Lost"&&(d.lastTouch||d.stage!=="Identified")&&(days(d.lastTouch)===null||days(d.lastTouch)<=-14))
-    .sort((a,b)=>(pd(a.lastTouch)||0)-(pd(b.lastTouch)||0));
-  $("#today-stale").innerHTML = stale.length?`<div class="list">${stale.map(d=>{const dd=days(d.lastTouch);return `<div class="li" data-edit="dsps:${esc(d.id)}" style="cursor:pointer">
-    <div class="when ${dd!==null&&dd<=-30?"stale":""}">${d.lastTouch?(-dd)+"d ago":"Never"}</div>
-    <div><div style="font-weight:600">${esc(d.name)}</div><div class="small muted">${esc(d.station)} · ${esc(d.stage||"")}</div></div>
-    <div>${dd===null||dd<=-30?'<span class="pill bad">Revive or kill</span>':'<span class="pill warn">Touch</span>'}</div></div>`;}).join("")}</div>`:`<div class="empty">No stale deals.</div>`;
+  $("#today-due").innerHTML = listOr(due,"Nothing overdue or due in the next 7 days.");
+  const wait=S.tasks.filter(t=>t.status==="Waiting").sort((a,b)=>(pd(a.due)||9e15)-(pd(b.due)||9e15));
+  $("#today-wait").innerHTML = listOr(wait,"Nobody to chase right now.");
 }
-function renderReg(){
+function selectHTML(col,rec,field,opts){
+  return `<select class="inline-sel" aria-label="${esc(field)}" data-inline="${col}:${esc(rec.id)}:${field}">${opts.map(o=>`<option${o===rec[field]?" selected":""}>${esc(o)}</option>`).join("")}</select>`;
+}
+function logLine(l){
+  const pc={Decision:"info",Evidence:"ok",Risk:"bad",Meeting:"",Update:""};
+  const u=safeUrl(l.link);
+  return `<div class="li" data-edit="log:${esc(l.id)}" style="cursor:pointer">
+    <div class="when">${l.date?fmtD(l.date):""}</div>
+    <div style="min-width:0;overflow-wrap:anywhere">${esc(l.text)}${u?` <a href="${esc(u)}" target="_blank" rel="noopener">Open</a>`:""}</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:end"><span class="pill ${pc[l.kind]||""}">${esc(l.kind||"")}</span><span class="chip ${chipCls(l.obj)}">${esc(OBJS[l.obj]||"")}</span></div></div>`;
+}
+function renderApproval(){
   const steps=S.regsteps.slice().sort((a,b)=>(+a.order||0)-(+b.order||0));
   const pc={"Done":"ok","In progress":"info","Blocked":"bad"};
   $("#reg-steps").innerHTML = steps.length?steps.map((s,i)=>`<div class="step" data-s="${esc(s.status)}">
@@ -459,58 +470,34 @@ function renderReg(){
       ${s.evidence?`<div class="ev">${esc(s.evidence)}</div>`:""}${s.notes?`<div class="d">${esc(s.notes)}</div>`:""}</div>
     <div class="r">${canWrite?selectHTML("regsteps",s,"status",SCHEMA.regsteps.fields[2][4]):`<span class="pill ${pc[s.status]||""}">${esc(s.status||"Not started")}</span>`}
       ${canWrite?`<button class="btn sm" data-edit="regsteps:${esc(s.id)}">Edit</button>`:""}</div></div>`).join("")
-    : `<div class="empty">No registration steps yet. Add the first step, or ask Claude to seed them from your registration artifacts.</div>`;
-  const ts=S.tasks.filter(t=>t.obj==="OBJ-3"&&t.status!=="Done").sort((a,b)=>(pd(a.due)||9e15)-(pd(b.due)||9e15));
-  $("#reg-tasks").innerHTML = ts.length?`<div class="list">${ts.map(taskLine).join("")}</div>`:`<div class="empty">No open registration actions.</div>`;
-  const lg=S.log.filter(l=>l.obj==="OBJ-3").sort((a,b)=>(pd(b.date)||0)-(pd(a.date)||0)).slice(0,6);
-  $("#reg-log").innerHTML = lg.length?`<div class="list">${lg.map(logLine).join("")}</div>`:`<div class="empty">No entries yet.</div>`;
+    : `<div class="empty">No approval steps yet. Add the first step.</div>`;
+  $("#reg-tasks").innerHTML = listOr(openTasks("VA"),"No open approval actions.");
+  $("#reg-log").innerHTML = listOr(S.log.filter(l=>l.obj==="VA").sort((a,b)=>(pd(b.date)||0)-(pd(a.date)||0)).slice(0,6),"No entries yet.",logLine);
 }
-function selectHTML(col,rec,field,opts){
-  return `<select class="inline-sel" aria-label="${esc(field)}" data-inline="${col}:${esc(rec.id)}:${field}">${opts.map(o=>`<option${o===rec[field]?" selected":""}>${esc(o)}</option>`).join("")}</select>`;
+function siteCard(s){
+  const L=lvl(s.stage); let lad=""; for(let i=0;i<LADDER.length;i++) lad+=`<i class="${L>=i?"f":""}" title="${LADDER[i]}"></i>`;
+  const pill=s.stage==="Blocked"?"bad":L>=lvl("Live")?"ok":L>=lvl("Pilot agreed")?"info":"";
+  const dd=days(s.due);
+  return `<div class="site ${L>=lvl("Live")?"live":""} ${s.stage==="Blocked"?"blocked":""}" data-edit="sites:${esc(s.id)}" tabindex="0">
+    <div class="row"><span class="code">${esc(s.code)}</span>${canWrite?selectHTML("sites",s,"stage",SITE_STAGES):`<span class="pill ${pill}">${esc(s.stage||"")}</span>`}</div>
+    <div class="small"><b>${esc(s.name||"")}</b></div>
+    ${s.stage!=="Blocked"&&s.stage!=="Paused"?`<div class="ladder" aria-label="Stage ${esc(s.stage)}">${lad}</div>`:""}
+    <dl class="kv">
+      ${s.fleet?`<dt>Volume</dt><dd>${esc(s.fleet)}</dd>`:""}
+      ${s.contact?`<dt>Amazon</dt><dd>${esc(s.contact)}</dd>`:""}
+      ${s.coverage?`<dt>Coverage</dt><dd>${esc(s.coverage)}</dd>`:""}
+      ${s.gate?`<dt>To convert</dt><dd>${esc(s.gate)}</dd>`:""}
+      ${s.next?`<dt>Next</dt><dd>${esc(s.next)}${s.due?` <span class="${dd!==null&&dd<0?"overdue":"muted"}">· ${fmtD(s.due)}</span>`:""}</dd>`:""}
+    </dl></div>`;
 }
 function renderStations(){
-  const ss=stationStats();
-  $("#station-cards").innerHTML = ss.length?ss.map(({st,ds,first,addlWon,open})=>{
-    const addlOpen=ds.filter(d=>d.slot==="Additional"&&!WON.includes(d.stage)&&d.stage!=="Lost").length;
-    const pot=(first?0:5000)+(4-addlWon)*2000;
-    let slots=`<i class="${first?"f":open.some(d=>d.slot!=="Additional")?"p":""}" title="First DSP"></i>`;
-    for(let i=0;i<4;i++) slots+=`<i class="${i<addlWon?"f":i<addlWon+addlOpen?"p":""}" title="Additional slot ${i+1}"></i>`;
-    return `<div class="st ${first?"open":""}" data-edit="stations:${esc(st.id)}" style="cursor:pointer">
-      <div class="row"><span class="code">${esc(st.code)}</span><span class="pill ${first?"ok":open.length?"info":""}">${first?"Opened":open.length?"In pursuit":"Not started"}</span></div>
-      <div class="small"><b>${esc(st.name||"")}</b> ${st.named==="Named in Exhibit A"?'<span class="chip o3">Named</span>':""}</div>
-      <div class="slots" aria-label="1 first slot and 4 additional slots">${slots}</div>
-      <div class="small muted">${ds.length} DSP${ds.length===1?"":"s"} tracked · ${first?"first: "+esc(first.name):"first slot open"} · ${addlWon}/4 additional</div>
-      <div class="small">Remaining upside <b class="num">${money(pot)}</b></div>
-      ${st.shop?`<div class="small muted">Coverage: ${esc(st.shop)}</div>`:""}
-    </div>`;}).join("") : `<div class="empty">No stations yet. Add San Diego, Las Vegas and Fremont first, since they are named in Exhibit A.</div>`;
-
-  const byStation={};
-  S.dsps.forEach(d=>{const k=(d.station||"—").toUpperCase();(byStation[k]=byStation[k]||[]).push(d);});
-  const order=ss.map(x=>(x.st.code||"").toUpperCase()); Object.keys(byStation).forEach(k=>{if(!order.includes(k))order.push(k);});
-  const keep=d=> dspFilter==="all"?true: dspFilter==="won"?WON.includes(d.stage): !WON.includes(d.stage)&&d.stage!=="Lost";
-  let rows="";
-  order.forEach(k=>{
-    const list=(byStation[k]||[]).filter(keep).sort((a,b)=>STAGES.indexOf(b.stage)-STAGES.indexOf(a.stage)||(+b.units||0)-(+a.units||0));
-    if(!list.length) return;
-    const st=S.stations.find(s=>(s.code||"").toUpperCase()===k);
-    rows+=`<tr class="grp"><td colspan="8">${esc(k)}${st&&st.name?` · <span class="muted">${esc(st.name)}</span>`:""}</td></tr>`;
-    rows+=list.map(d=>{
-      const t=tier(d.units,d.slot); const u=+d.units||0; const lt=days(d.lastTouch); const dd=days(d.due);
-      const flags=[];
-      if(!u) flags.push("Get unit count");
-      if(nearNext(t,u)) flags.push(`${t.next-u} units to next tier`);
-      if(t.overlap) flags.push("25-unit overlap: confirm tier");
-      return `<tr>
-        <td><a href="#stations" data-edit="dsps:${esc(d.id)}" style="font-weight:700;text-decoration:none">${esc(d.name)}</a><div class="sub">${esc(d.contact||"")}</div></td>
-        <td class="num">${u||"—"}</td>
-        <td><span class="small">${d.slot==="Additional"?"Additional":"First"}</span></td>
-        <td>${canWrite?selectHTML("dsps",d,"stage",STAGES):`<span class="pill">${esc(d.stage||"")}</span>`}</td>
-        <td class="money num">${money(t.v)}${flags.length?`<div class="flag">${flags.map(esc).join(" · ")}</div>`:""}</td>
-        <td style="min-width:200px">${esc(d.next||"")}</td>
-        <td class="${dd!==null&&dd<0?"overdue":""}">${d.due?fmtD(d.due):"—"}</td>
-        <td class="${lt!==null&&lt<=-30?"stale":lt!==null&&lt<=-14?"flag":""}">${d.lastTouch?fmtD(d.lastTouch):"—"}</td></tr>`;}).join("");
-  });
-  $("#dsp-rows").innerHTML = rows || `<tr><td colspan="8"><div class="empty">No DSPs match this filter.</div></td></tr>`;
+  const mm=sitesOf("Middle Mile"), lm=sitesOf("Last Mile");
+  $("#mm-sites").innerHTML = mm.length?mm.map(siteCard).join(""):`<div class="empty">No middle-mile sites yet.</div>`;
+  $("#lm-sites").innerHTML = lm.length?lm.map(siteCard).join(""):`<div class="empty">No last-mile markets yet.</div>`;
+  $("#mm-sum").textContent = `${mm.filter(s=>lvl(s.stage)>=lvl("Pilot agreed")).length} pilot agreed or later · ${mm.filter(s=>lvl(s.stage)>=lvl("Live")).length} live`;
+  $("#lm-sum").textContent = `${lm.filter(s=>s.stage==="Blocked").length} blocked at Amazon level`;
+  $("#mm-tasks").innerHTML = listOr(openTasks("MM"),"No open middle-mile actions.");
+  $("#lm-tasks").innerHTML = listOr(openTasks("LM"),"No open last-mile actions.");
 }
 function renderBoard(){
   const cols=["Next","Doing","Waiting","Done"];
@@ -520,48 +507,51 @@ function renderBoard(){
     const shown=c==="Done"?list.slice(-12):list;
     return `<div class="col"><h3>${c}<span class="muted num">${list.length}</span></h3>${shown.map(t=>{const dd=days(t.due);return `<div class="card" data-edit="tasks:${esc(t.id)}" tabindex="0">
       <div class="t">${esc(t.title)}</div>
-      <div class="m"><span class="chip ${t.obj==="OBJ-3"?"o3":""}">${esc(OBJS[t.obj]||"")}</span>${t.phase?`<span>${esc(t.phase)}</span>`:""}${t.owner?`<span>${esc(t.owner)}</span>`:""}${t.due?`<span class="${dd<0&&c!=="Done"?"overdue":""}">${fmtD(t.due)}</span>`:""}</div>
+      <div class="m"><span class="chip ${chipCls(t.obj)}">${esc(OBJS[t.obj]||"")}</span>${t.phase?`<span>${esc(t.phase)}</span>`:""}${t.owner?`<span>${esc(t.owner)}</span>`:""}${t.due?`<span class="${dd<0&&c!=="Done"?"overdue":""}">${fmtD(t.due)}</span>`:""}</div>
       ${canWrite?`<div>${selectHTML("tasks",t,"status",cols)}</div>`:""}</div>`;}).join("")||`<div class="muted small" style="padding:6px">Empty</div>`}</div>`;
   }).join("");
 }
-function logLine(l){
-  const pc={Decision:"info",Evidence:"ok",Risk:"bad",Meeting:"",Update:""};
-  const u=safeUrl(l.link);
-  return `<div class="li" data-edit="log:${esc(l.id)}" style="cursor:pointer">
-    <div class="when">${l.date?fmtD(l.date):""}</div>
-    <div style="min-width:0;overflow-wrap:anywhere">${esc(l.text)}${u?` <a href="${esc(u)}" target="_blank" rel="noopener">Open</a>`:""}</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:end"><span class="pill ${pc[l.kind]||""}">${esc(l.kind||"")}</span><span class="chip ${l.obj==="OBJ-3"?"o3":""}">${esc(OBJS[l.obj]||"")}</span></div></div>`;
-}
 function renderLog(){
-  const ls=S.log.slice().sort((a,b)=>(pd(b.date)||0)-(pd(a.date)||0));
-  $("#log-list").innerHTML = ls.length?ls.map(logLine).join(""):`<div class="empty">No entries yet. Log decisions, meetings and proof as they happen.</div>`;
+  $("#log-list").innerHTML = listOr(S.log.slice().sort((a,b)=>(pd(b.date)||0)-(pd(a.date)||0)),"No entries yet. Log decisions, meetings and proof as they happen.",logLine);
 }
 function renderSources(){
-  const groups=[["OBJ-3","#3 Vendor registration"],["OBJ-1","#1 First DSP per station"],["OBJ-2","#2 Additional DSPs"]];
+  const groups=[["VA","Vendor Approval"],["MM","Station Conversions · Middle Mile"],["LM","Station Conversions · Last Mile"]];
   const keep=s=> srcFilter==="all"?true: srcFilter==="Retire"?s.role==="Retire": s.role!=="Retire";
   const rank={Core:0,Supporting:1,Retire:2};
   $("#src-cols").innerHTML = groups.map(([o,l])=>{
-    const list=S.sources.filter(s=>(s.obj===o||(s.obj==="ALL"&&o==="OBJ-3"))&&keep(s)).sort((a,b)=>(rank[a.role]??3)-(rank[b.role]??3)||(pd(b.updated)||0)-(pd(a.updated)||0));
-    return `<div class="panel"><h3>${l}${o==="OBJ-3"?' <span class="muted small">(+ cross-cutting)</span>':""}</h3>${list.length?list.map(s=>{const u=safeUrl(s.url);return `<div class="src">
+    const list=S.sources.filter(s=>(s.obj===o||(s.obj==="ALL"&&o==="VA"))&&keep(s)).sort((a,b)=>(rank[a.role]??3)-(rank[b.role]??3)||(pd(b.updated)||0)-(pd(a.updated)||0));
+    return `<div class="panel"><h3>${l}</h3>${list.length?list.map(s=>{const u=safeUrl(s.url);return `<div class="src">
       <div style="min-width:0">${u?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(s.title)}</a>`:`<b>${esc(s.title)}</b>`}
-        <p>${esc(s.what||"")}</p><p>${esc(s.kind||"")}${s.updated?" · updated "+fmtD(s.updated):""}</p></div>
+        <p>${esc(s.what||"")}</p><p>${esc(s.kind||"")}${s.updated?" · "+fmtD(s.updated):""}</p></div>
       <div style="display:grid;gap:4px;justify-items:end"><span class="pill ${s.role==="Core"?"ok":s.role==="Retire"?"bad":"info"}">${esc(s.role||"")}</span>${canWrite?`<button class="btn sm" data-edit="sources:${esc(s.id)}">Edit</button>`:""}</div></div>`;}).join(""):`<div class="empty">None in this view.</div>`}</div>`;
   }).join("");
 }
+function renderSchedules(){
+  const all=S.schedules.slice().sort((a,b)=>(tied(b)-tied(a))||((b.enabled==="on")-(a.enabled==="on"))||String(a.name).localeCompare(String(b.name)));
+  const t=all.filter(tied), on=all.filter(r=>r.enabled==="on");
+  $("#sch-banner").innerHTML = all.length?`<b>${all.length}</b> scheduled tasks (${on.length} on). <b>${t.length}</b> tied to Vendor Approval or Station Conversions; <b>${all.length-t.length}</b> not tied. Tasks created only in the Cowork desktop app aren't visible from here.`:`No scheduled tasks loaded yet.`;
+  const list=all.filter(r=>schFilter==="all"?true:schFilter==="tied"?tied(r):!tied(r));
+  $("#sch-rows").innerHTML = list.length?list.map(r=>`<tr data-edit="schedules:${esc(r.id)}" style="cursor:pointer">
+    <td style="min-width:180px"><b>${esc(r.name)}</b>${r.notes?`<div class="sub">${esc(r.notes)}</div>`:""}</td>
+    <td style="min-width:120px">${esc(r.schedule||"")}${r.lastRun?`<div class="sub">Last: ${esc(r.lastRun)}</div>`:""}</td>
+    <td><span class="onoff ${r.enabled==="on"?"on":"off"}">${r.enabled==="on"?"On":"Off"}</span></td>
+    <td class="tags">${tagsOf(r).map(g=>`<span class="tag ${esc(g)}">${esc(g)}</span>`).join("")}</td>
+    <td style="min-width:150px">${esc(r.recommendation||"")}</td>
+    <td style="min-width:240px">${esc(r.does||"")}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">None in this view.</div></td></tr>`;
+}
 function renderMethod(){
-  const ph=[["Initiate","Objectives, money and term gates are set (Exhibit A). Stations named."],
-    ["Plan","Registration steps are mapped. Stations are ranked and DSPs identified with unit counts."],
-    ["Execute","Daily lane actions: registration steps, station openings, DSP pursuits."],
-    ["Monitor","Friday stale sweep, tier flags, monthly update to Michael."],
-    ["Close","Confirmation email within 24h, evidence logged, verified, then paid within 30 days."]];
+  const ph=[["Initiate","Two initiatives scoped. Exhibit A #3 trigger and term gate set."],
+    ["Plan","Approval steps mapped. Middle Mile sites and Last Mile gates listed with owners."],
+    ["Execute","Daily lane actions: approval asks, pilot onboarding, site visits."],
+    ["Monitor","Friday waiting-list sweep, monthly update to Michael, scheduled-task hygiene."],
+    ["Close","Written confirmation forwarded within 24h, evidence logged, verified, paid within 30 days."]];
   const c=k=>S.tasks.filter(t=>t.phase===k&&t.status!=="Done").length;
   $("#phases").innerHTML = ph.map(([k,v])=>`<div><b>${k}</b><small>${v}</small><small class="num" style="color:var(--ink)">${c(k)} open action${c(k)===1?"":"s"}</small></div>`).join("");
 }
-function renderAll(){ renderClock(); renderLanes(); renderToday(); renderReg(); renderStations(); renderBoard(); renderLog(); renderSources(); renderMethod();
+function renderAll(){ renderClock(); renderLanes(); renderToday(); renderApproval(); renderStations(); renderBoard(); renderLog(); renderSources(); renderSchedules(); renderMethod();
   document.querySelectorAll("[data-add]").forEach(b=>b.hidden=!canWrite); }
 
-/* ---------- Routing ---------- */
-const VIEWS=["today","registration","stations","board","log","sources","method"];
+const VIEWS=["today","approval","stations","board","log","sources","schedules","method"];
 function route(){
   const h=(location.hash||"").slice(1); const v=VIEWS.includes(h)?h:"today";
   document.querySelectorAll("section[data-view]").forEach(s=>s.hidden=s.dataset.view!==v);
@@ -569,39 +559,34 @@ function route(){
 }
 addEventListener("hashchange",route);
 
-/* ---------- Drawer ---------- */
 function openDrawer(col,id){
   const sc=SCHEMA[col]; const rec=id?S[col].find(r=>r.id===id):null;
   if(id&&!rec) return;
-  const base=rec||defaults(col);
-  const ro=!canWrite;
+  const base=rec||defaults(col); const ro=!canWrite;
   const field=([k,l,type,req,opts])=>{
-    const v=base[k]??""; const idA=`f-${col}-${k}`;
-    if(type==="select") return `<label for="${idA}">${l}<select id="${idA}" name="${k}" ${ro?"disabled":""}>${opts.map(o=>`<option value="${esc(o)}"${o===v?" selected":""}>${esc(col!=="stations"&&OBJS[o]?OBJS[o]:o)}</option>`).join("")}</select></label>`;
+    let v=base[k]??""; if(Array.isArray(v)) v=v.join(", ");
+    const idA=`f-${col}-${k}`;
+    if(type==="select") return `<label for="${idA}">${l}<select id="${idA}" name="${k}" ${ro?"disabled":""}>${opts.map(o=>`<option value="${esc(o)}"${o===v?" selected":""}>${esc(OBJS[o]&&k==="obj"?OBJS[o]:o)}</option>`).join("")}</select></label>`;
     if(type==="textarea") return `<label for="${idA}">${l}<textarea id="${idA}" name="${k}" ${ro?"readonly":""}>${esc(v)}</textarea></label>`;
-    return `<label for="${idA}">${l}<input id="${idA}" name="${k}" type="${type==="url"?"url":type}" value="${esc(v)}" ${req?"required":""} ${ro?"readonly":""}></label>`;
+    return `<label for="${idA}">${l}<input id="${idA}" name="${k}" type="${type}" value="${esc(v)}" ${req?"required":""} ${ro?"readonly":""}></label>`;
   };
-  let extra="";
-  if(col==="dsps"){ const t=tier(base.units,base.slot); extra=`<div class="panel" id="tier-box" style="padding:10px"><b>Tier value:</b> <span class="num">${money(t.v)}</span></div>`; }
   $("#drawer-root").innerHTML=`<div class="scrim" data-close></div>
   <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h">
     <header><h3 id="dr-h" style="font-size:19px">${rec?(ro?"":"Edit ")+sc.label:"New "+sc.label.toLowerCase()}</h3><button class="btn sm" data-close>Close</button></header>
-    <form id="dr-form" novalidate>${sc.fields.map(field).join("")}${extra}${ro?'<p class="ro-note">You can view this record. Editing needs Contributor access or higher.</p>':""}</form>
+    <form id="dr-form" novalidate>${sc.fields.map(field).join("")}${rec&&safeUrl(rec.source)?`<a href="${esc(rec.source)}" target="_blank" rel="noopener">Open source</a>`:""}${ro?'<p class="ro-note">You can view this record. Editing needs Contributor access or higher.</p>':""}</form>
     <footer>${rec&&!ro?`<button class="btn danger" id="dr-del" type="button">Delete</button>`:"<span></span>"}${ro?"":`<button class="btn primary" form="dr-form" type="submit">${rec?"Save":"Add"}</button>`}</footer>
   </aside>`;
   const f=$("#dr-form"); setTimeout(()=>f.querySelector("input,select,textarea")?.focus(),0);
-  if(col==="dsps") f.addEventListener("input",()=>{const fd=new FormData(f);$("#tier-box").innerHTML=`<b>Tier value:</b> <span class="num">${money(tier(fd.get("units"),fd.get("slot")).v)}</span>`;});
   f.addEventListener("submit",async e=>{
     e.preventDefault(); if(ro) return;
     const fd=new FormData(f); const body={};
-    sc.fields.forEach(([k,,type,req])=>{let v=(fd.get(k)??"").toString().trim(); if(type==="number"&&v!=="") v=+v; body[k]=v;});
+    sc.fields.forEach(([k,,type])=>{let v=(fd.get(k)??"").toString().trim(); if(type==="number"&&v!=="") v=+v; body[k]=v;});
+    if(col==="schedules") body.tags=String(body.tags||"").split(",").map(t=>t.trim()).filter(Boolean);
     const miss=sc.fields.find(([k,,,req])=>req&&(body[k]===""||body[k]===undefined));
     if(miss){ toast(`${miss[1]} is required`); return; }
     body.updatedAt=new Date().toISOString();
-    try{
-      const ref=rec?db.doc(`${col}/${rec.id}`):db.collection(col).doc();
-      await ref.set(body); closeDrawer(); toast(rec?"Saved":"Added");
-    }catch(err){ handleWriteErr(err); }
+    try{ const ref=rec?db.doc(`${col}/${rec.id}`):db.collection(col).doc(); const {id:_omit,...rest}=rec||{}; await ref.set({...rest,...body}); closeDrawer(); toast(rec?"Saved":"Added"); }
+    catch(err){ handleWriteErr(err); }
   });
   const del=$("#dr-del");
   if(del) del.addEventListener("click",async()=>{
@@ -611,12 +596,13 @@ function openDrawer(col,id){
 }
 function defaults(col){
   const h=(location.hash||"").slice(1); const d=new Date().toISOString().slice(0,10);
-  if(col==="tasks") return {obj:h==="registration"?"OBJ-3":objFilter!=="all"?objFilter:h==="stations"?"OBJ-1":"OBJ-3",status:"Next",phase:"Execute",owner:"Brooke"};
+  const o=h==="stations"?"MM":objFilter!=="all"?objFilter:"VA";
+  if(col==="tasks") return {obj:o,status:"Next",phase:"Execute",owner:"Brooke"};
   if(col==="regsteps") return {order:(S.regsteps.reduce((m,s)=>Math.max(m,+s.order||0),0)+1),status:"Not started",owner:"Brooke"};
-  if(col==="dsps") return {stage:"Identified",slot:"First at station",lastTouch:d};
-  if(col==="log") return {date:d,obj:h==="registration"?"OBJ-3":"OBJ-1",kind:"Evidence"};
-  if(col==="stations") return {named:"Other target"};
-  if(col==="sources") return {role:"Supporting",kind:"Artifact",obj:"OBJ-3"};
+  if(col==="sites") return {track:"Middle Mile",stage:"Identified",lastTouch:d};
+  if(col==="log") return {date:d,obj:o,kind:"Evidence"};
+  if(col==="sources") return {role:"Supporting",kind:"Artifact",obj:"VA"};
+  if(col==="schedules") return {enabled:"on"};
   return {};
 }
 function closeDrawer(){ $("#drawer-root").innerHTML=""; }
@@ -626,7 +612,6 @@ function handleWriteErr(err){
   else toast("Couldn't save: "+((err&&err.message)||"unknown error"));
 }
 
-/* ---------- Events ---------- */
 document.addEventListener("click",e=>{
   const go=e.target.closest("[data-go]"); if(go){ location.hash=go.dataset.go; return; }
   if(e.target.closest("[data-close]")){ closeDrawer(); return; }
@@ -635,25 +620,24 @@ document.addEventListener("click",e=>{
   const ed=e.target.closest("[data-edit]"); if(ed){ e.preventDefault(); const [c,id]=ed.dataset.edit.split(":"); openDrawer(c,id); return; }
   const seg=e.target.closest(".seg button"); if(seg){
     const g=seg.parentElement; g.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b===seg?"true":"false"));
-    if(g.id==="dsp-filter"){dspFilter=seg.dataset.f;renderStations();}
     if(g.id==="obj-filter"){objFilter=seg.dataset.f;renderBoard();}
     if(g.id==="src-filter"){srcFilter=seg.dataset.f;renderSources();}
+    if(g.id==="sch-filter"){schFilter=seg.dataset.f;renderSchedules();}
   }
 });
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape") closeDrawer();
-  if(e.key==="Enter"&&e.target.matches(".card[data-edit]")){ const [c,id]=e.target.dataset.edit.split(":"); openDrawer(c,id); }
+  if(e.key==="Enter"&&e.target.matches("[data-edit][tabindex]")){ const [c,id]=e.target.dataset.edit.split(":"); openDrawer(c,id); }
 });
 document.addEventListener("change",async e=>{
   const s=e.target.closest("select.inline-sel"); if(!s||!db) return;
   const [c,id,f]=s.dataset.inline.split(":");
   const patch={[f]:s.value,updatedAt:new Date().toISOString()};
-  if(c==="dsps") patch.lastTouch=new Date().toISOString().slice(0,10);
+  if(c==="sites") patch.lastTouch=new Date().toISOString().slice(0,10);
   if(c==="regsteps"&&s.value==="Done") patch.date=new Date().toISOString().slice(0,10);
   try{ await db.doc(`${c}/${id}`).update(patch); toast("Updated"); }catch(err){ handleWriteErr(err); }
 });
 
-/* ---------- Boot ---------- */
 route(); renderAll();
 (async()=>{
   try{
@@ -662,9 +646,8 @@ route(); renderAll();
     if(!db){ $("#lanes").insertAdjacentHTML("afterend",`<div class="sub small">Live data isn't available in this view. Sign in to claude.ai to see and update the hub.</div>`); return; }
     const w=user?await user.can("data.write"):null; canWrite = w!==false;
     Object.keys(S).forEach(col=>{
-      db.collection(col).onSnapshot(snap=>{
-        S[col]=snap.docs.map(d=>({id:d.id,...d.data()})); loaded[col]=true; renderAll();
-      },err=>{ console.warn(col,err&&err.code); });
+      db.collection(col).onSnapshot(snap=>{ S[col]=snap.docs.map(d=>({id:d.id,...d.data()})); renderAll(); },
+        err=>{ console.warn(col,err&&err.code); });
     });
     renderAll();
   }catch(err){ console.warn(err); }
