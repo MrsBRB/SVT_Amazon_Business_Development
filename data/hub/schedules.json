@@ -1,0 +1,573 @@
+[
+  {
+    "does": "Reruns FMCSA/NHTSA Fleet Signals for four markets, checks HubSpot ownership, rebuilds and republishes the SVT Fleet CRM, reports truck fleets with a new reason to call.",
+    "enabled": "off",
+    "id": "trig_0129HK2eFZY2djfxcR3ozmcg",
+    "lastRun": "Nov 12, 2026 succeeded (37 s)",
+    "name": "Weekly Fleet Signals refresh",
+    "notes": "Truck fleet / Fleet Signals prospecting. Last run very short (37 s), may not have completed.",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Thursdays 4:23 PM CT",
+    "tags": [
+      "DSP"
+    ],
+    "touches": [
+      "SVT Fleet CRM https://claude.ai/artifact/HUW5xbodnt54rTaB6Late7",
+      "Mac: 08 Tools/Fleet Signals, 08 Tools/DSP CRM, 07 Prospect Research/Fleet Signals",
+      "HubSpot (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Imports the nightly Accountable2You activity report from Gmail into a home network activity dashboard.",
+    "enabled": "on",
+    "id": "trig_014odZkhMjZd3D9NmF89kc73",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "Nightly Accountable2You import",
+    "notes": "Personal/home. Leave as is.",
+    "recommendation": "Not related",
+    "schedule": "Daily 12:40 AM CT",
+    "tags": [
+      "OTHER"
+    ],
+    "touches": [
+      "Home Network Activity dashboard https://claude.ai/artifact/J76oLk2S8Z4pppAHceQz3p (dataset a2y)",
+      "Gmail (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Sources and verifies Amazon DSPs in target markets, writes a private review list, pushes Brooke-approved rows to HubSpot, updates the Lead Engine dashboard sweep section.",
+    "enabled": "off",
+    "id": "trig_0152a1TmAPTHYK1ufdoK5BRJ",
+    "lastRun": "Nov 10, 2026 succeeded",
+    "name": "SVT market sourcing sweep",
+    "notes": "Writes to HubSpot. Last run finished in about 5 seconds despite SUCCEEDED status, so it likely did no real work (check that run's session).",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Tuesdays 8:48 AM CT",
+    "tags": [
+      "DSP"
+    ],
+    "touches": [
+      "SVT Lead Engine dashboard https://claude.ai/code/artifact/6ee45b0a-8c7a-48a1-be60-b0e037b715dd (sweep object)",
+      "SharePoint 07 Prospect Research/Lead Engine/ (review list CSV, report)",
+      "HubSpot (creates company records for approved rows)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Pulls HubSpot email open/click counts, rebuilds the DSP CRM on the Mac and republishes the SVT Fleet CRM.",
+    "enabled": "off",
+    "id": "trig_015ui4ELPUVDdwwANjyeCRiy",
+    "lastRun": "Nov 13, 2026 succeeded",
+    "name": "SVT Fleet CRM evening refresh",
+    "notes": "CRM refresh. Last run finished in about 5 seconds despite SUCCEEDED status, so it likely did no real work (check that run's session).",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Weekdays 6:07 PM CT",
+    "tags": [
+      "DSP"
+    ],
+    "touches": [
+      "SVT Fleet CRM https://claude.ai/artifact/HUW5xbodnt54rTaB6Late7",
+      "Mac: 08 Tools/DSP CRM (hubspot_email_engagement.json)",
+      "HubSpot (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Older version of the SVT Lead Engine run.",
+    "enabled": "off",
+    "id": "trig_016zEt8tSUNDXrcN8eJqT1HY",
+    "lastRun": "Nov 3, 2026 succeeded",
+    "name": "SVT lead engine — weekly run",
+    "notes": "Already off. Superseded by 'SVT Lead Engine Weekly (Code)'.",
+    "recommendation": "Pause (distraction)",
+    "schedule": "Mondays 6:22 AM CT",
+    "tags": [
+      "DSP"
+    ],
+    "touches": [
+      "SVT Lead Engine dashboard https://claude.ai/code/artifact/6ee45b0a-8c7a-48a1-be60-b0e037b715dd",
+      "SharePoint Lead Engine folder"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Old board-based OBJ-3 weekly status report.",
+    "enabled": "off",
+    "id": "trig_017EpxGxiN4h5TbPBp2WaGft",
+    "lastRun": "Oct 16, 2026 succeeded",
+    "name": "OBJ-3 weekly status report",
+    "notes": "Already off. Superseded by the ClickUp version (trig_01MhF6bVCdvtNAuSBeRtt8Ds). Leave off.",
+    "recommendation": "Pause (distraction)",
+    "schedule": "Fridays 3:47 PM CT",
+    "tags": [
+      "VA"
+    ],
+    "touches": [
+      "Retired board https://claude.ai/artifact/9bJJfAPnZ4qqGFKdYYyLJt (read)",
+      "SharePoint OBJ-3 Weekly Status",
+      "Outlook email"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Checks HubSpot, Outlook, calendar and Granola for Amazon activity since the last business day, updates this hub's tasks, steps, sites and log, plans three outcomes (Vendor Approval first), drafts up to 3 messages and emails you the summary.",
+    "enabled": "on",
+    "id": "trig_017mx4nhoAKqHz5iVwNhd82w",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "Amazon hub morning check",
+    "notes": "Still uses the Oct 22 priority (Las Vegas, then footprint DSPs, then Amazon routes). Not updated with the Nov 16 Amazon-first priority the close-out got. Plans all ClickUp work, not only VA.",
+    "recommendation": "Rewritten Nov 16: reads and updates this hub only",
+    "schedule": "Weekdays 8:52 AM CT",
+    "tags": [
+      "VA",
+      "SC-MM",
+      "SC-LM"
+    ],
+    "touches": "Writes: this hub. Reads: HubSpot, Outlook, Granola. Emails brooke.benkert@svtfleet.com only.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Runs the SVT Lead Engine repo: DSP master list, NHTSA recalls, HubSpot call-list check, uploads outputs to SharePoint and republishes the Lead Engine dashboard.",
+    "enabled": "on",
+    "id": "trig_019wyeVrYoQkWt1jUjksorkf",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "SVT Lead Engine Weekly (Code)",
+    "notes": "DSP lead list engine. Note schedule mismatch: name says weekly, cron is daily.",
+    "recommendation": "Pause manually: created outside Claude, so only you can turn it off (claude.ai/code/routines/trig_019wyeVrYoQkWt1jUjksorkf)",
+    "schedule": "Daily 1:43 PM CT (named weekly but cron runs every day)",
+    "tags": [
+      "DSP"
+    ],
+    "touches": [
+      "SVT Lead Engine dashboard https://claude.ai/code/artifact/6ee45b0a-8c7a-48a1-be60-b0e037b715dd",
+      "SharePoint 07 Prospect Research/Lead Engine/",
+      "GitHub repo (pushes code changes)",
+      "HubSpot (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Builds a weekly Progress / Open Items / Actions summary for Mike from trackers and posts it to Dailybot.",
+    "enabled": "off",
+    "id": "trig_01BH45qoowirxegJc8CiCBES",
+    "lastRun": "Oct 13, 2026 succeeded",
+    "name": "Weekly Mike Summary",
+    "notes": "Already off. Contains a credential (Dailybot API key in the prompt). Dailybot was turned off Oct 19; recommend deleting this task or removing the key and rotating it.",
+    "recommendation": "Pause (distraction)",
+    "schedule": "Mondays 9:57 AM CT (cron is 7:57 AM Pacific)",
+    "tags": [
+      "WF",
+      "OTHER"
+    ],
+    "touches": [
+      "Mac: 07 Prospect Research/Weekly Mike Summary - <date>.md",
+      "Apex trackers (read)",
+      "Dailybot"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Old board-based version of the Amazon approval close-out.",
+    "enabled": "off",
+    "id": "trig_01BL2PCjcFWXbM3eiJs6fAKG",
+    "lastRun": "Oct 16, 2026 succeeded",
+    "name": "Amazon approval close-out",
+    "notes": "Already off. Superseded by the ClickUp version (trig_01WE7s4tCsGuLTq27jKVK4h2). Leave off.",
+    "recommendation": "Pause (distraction)",
+    "schedule": "Weekdays 4:20 PM CT",
+    "tags": [
+      "VA"
+    ],
+    "touches": [
+      "Retired board https://claude.ai/artifact/9bJJfAPnZ4qqGFKdYYyLJt (wrote tasks/routes)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Read-only pull of HubSpot deal stages and contact email engagement into the Exhibit A Board.",
+    "enabled": "off",
+    "id": "trig_01BYLxzU7am5KWCKr9hAKq1r",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "SVT Exhibit A – HubSpot Pull",
+    "notes": "Commission tracker refresh. Silent unless a deal closes.",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Daily 6:00 AM CT",
+    "tags": [
+      "OTHER",
+      "VA",
+      "DSP"
+    ],
+    "touches": [
+      "Exhibit A Board https://claude.ai/code/artifact/21dab926-a187-4ffd-8b39-40acee06cdfa (objectives hubspotLive)",
+      "HubSpot (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Updates nine account pages, Las Vegas Fleets, four DSP market sheets and three shop DSP lists, then rebuilds the pinned Account Hub.",
+    "enabled": "on",
+    "id": "trig_01CEfRJUtoXZoZjUWrb3HRgw",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "SVT Account Hub daily refresh (no DSP pages)",
+    "notes": "The Amazon Opportunity page (VA) and DSP Station Conversions page (SC) are core; the other seven account pages are enterprise accounts and the market sheets/shop lists are DSP. Split the Amazon and Station Conversions pages out or re-point them to the new hub.",
+    "recommendation": "Rewritten Nov 16: DSP pages, market sheets and shop lists dropped; Amazon page reads this hub (read only)",
+    "schedule": "Weekdays 6:59 AM CT",
+    "tags": [
+      "VA",
+      "SC-LM",
+      "DSP",
+      "OTHER"
+    ],
+    "touches": [
+      "Account Hub https://claude.ai/artifact/KKfinCf4a6nx8A8C1AMe3R (pinned)",
+      "Amazon Opportunity https://claude.ai/artifact/LVunDRdpg99UQBNuej3wqA",
+      "DSP Station Conversions https://claude.ai/artifact/Ah3BRwYdGKCiwKhEvW9ryk",
+      "ZO Motors https://claude.ai/artifact/UViiWykfTxHsKXyNe3Jh4w",
+      "Axle Mobility https://claude.ai/artifact/TAKuctoCo8xhLw5d1Q77y1",
+      "Desert North Lumber https://claude.ai/artifact/REZvr6moAJ8C3AUbLxH4mB",
+      "Bark Bus https://claude.ai/artifact/Q9DXTd1uq7Yn3ut66wgzna",
+      "Moon Star Express https://claude.ai/artifact/83wnAaxTBnMTezYXyHr1CF",
+      "Cintas https://claude.ai/artifact/K66KTkWw5h9CatyyMZmFZm",
+      "Eversource/ESG https://claude.ai/artifact/7EWPHyMcCbNRPHMjo1dKcq",
+      "Contact panel kit https://claude.ai/artifact/82VHCHcaXUGNeYZH2h1eyj (read)",
+      "Las Vegas Lead Board https://claude.ai/artifact/X6mH7MqWYfB5BzZVdA9Z7W (read)",
+      "HubSpot, Outlook, Granola, ClickUp (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Generates the monthly SVT invoice and the companion activity record from the Apex tracker.",
+    "enabled": "on",
+    "id": "trig_01CFfjWKgPtTEZZmAx3PYD9G",
+    "lastRun": "Oct 26, 2026 succeeded",
+    "name": "SVT Monthly Invoice (Last Monday)",
+    "notes": "Contract admin, keep running outside the hub. Name says 'Last Monday' but cron is the 26th and prompt says 'first of the month'. Prompt contains a tax ID (EIN), not a credential, but sensitive.",
+    "recommendation": "Not related",
+    "schedule": "26th of each month 8:00 AM CT",
+    "tags": [
+      "OTHER"
+    ],
+    "touches": [
+      "SharePoint 03 Invoices/, Activity Record 2026 - SVT.md, Invoice Register 2026.csv",
+      "Apex Fleet Consulting - Tracker.xlsx (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Proposes HubSpot deal-stage moves or milestone notes from the Exhibit A Board and writes them only after Brooke approves in that run.",
+    "enabled": "off",
+    "id": "trig_01CgLSnXmiPkKho85TWkQxda",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "SVT Exhibit A – HubSpot push approval",
+    "notes": "Commission tracker sync covering all six Exhibit A objectives (including amazon-vendor and DSP conversions).",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Daily 7:00 AM CT",
+    "tags": [
+      "OTHER",
+      "VA",
+      "DSP"
+    ],
+    "touches": [
+      "Exhibit A Board https://claude.ai/code/artifact/21dab926-a187-4ffd-8b39-40acee06cdfa (sync/config lastPush)",
+      "HubSpot deals (writes after approval)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Refreshes the Lead Desk dashboard, per-lead lead-state files and the Live Leads PDF from the lead packet refresh log and routing memos.",
+    "enabled": "off",
+    "id": "trig_01DGidSPgwBZSNFNdsb8B86m",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "Lead Desk refresh",
+    "notes": "Apex lead routing and enterprise accounts.",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Mon, Wed, Fri 7:59 AM CT",
+    "tags": [
+      "OTHER",
+      "DSP"
+    ],
+    "touches": [
+      "Lead Desk https://claude.ai/artifact/1YeZsBMzACaLj6n6eyFeZB",
+      "Mac: Pipeline/, Apex Pipeline/, 00 Dashboard/ (lead-state.json, Live Leads PDF, refresh log)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Refreshes Daniel's job search dashboard from a dedicated Outlook folder and job postings.",
+    "enabled": "off",
+    "id": "trig_01EDMBrobDNBn1E2t9pD9NSg",
+    "lastRun": "Nov 5, 2026 succeeded",
+    "name": "Daniel job search dashboard refresh",
+    "notes": "Personal. Already off.",
+    "recommendation": "Not related",
+    "schedule": "Daily 7:19 AM and 4:19 PM CT",
+    "tags": [
+      "OTHER"
+    ],
+    "touches": [
+      "Daniel's Next Deployment dashboard https://claude.ai/artifact/Fch1uaYHfKm23s5pUreVRz",
+      "Project 'Daniel Job Search' docs",
+      "Outlook folder 'Daniel Job Mail' (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Refreshes the Apex Pipeline Board (Exhibit A objectives, prospects, partner portal, Wix website leads).",
+    "enabled": "off",
+    "id": "trig_01F8EsnrgfheCrFiZ6CEPmo2",
+    "lastRun": "Nov 13, 2026 succeeded",
+    "name": "Apex Pipeline Board refresh",
+    "notes": "Apex Fleet Consulting pipeline. Shows the Amazon vendor objective only as a 'Tracked in ClickUp' link. Last run finished in about 5 seconds despite SUCCEEDED status, so it likely did no real work (check that run's session).",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Fridays 7:15 AM CT",
+    "tags": [
+      "OTHER"
+    ],
+    "touches": [
+      "Apex Pipeline Board https://claude.ai/code/artifact/89f66500-6d68-4dbc-a2f1-a60a12570bbf",
+      "Exhibit A Board https://claude.ai/code/artifact/21dab926-a187-4ffd-8b39-40acee06cdfa (read)",
+      "Contact panel kit https://claude.ai/artifact/82VHCHcaXUGNeYZH2h1eyj (read)",
+      "Wix form submissions (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Syncs the SVT Las Vegas Call Log (Excel) into the Las Vegas Lead Board and emails Brooke new activity.",
+    "enabled": "off",
+    "id": "trig_01HideYxHPFeXA6r9LJ42Aib",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "Las Vegas Lead Board updates",
+    "notes": "Las Vegas DSP and fleet call log. Runs 5 times a day.",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Weekdays every 2 hours, 9 AM to 5 PM CT",
+    "tags": [
+      "DSP"
+    ],
+    "touches": [
+      "SVT Las Vegas Lead Board https://claude.ai/artifact/X6mH7MqWYfB5BzZVdA9Z7W (log, leads, sync)",
+      "OneDrive 'SVT Las Vegas Call Log.xlsx' (read)",
+      "Outlook send to brooke.benkert@svtfleet.com"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Afternoon change-check that rebuilds lead packet PDFs for roster accounts with new activity; also flags movement on Amazon objective HubSpot deals.",
+    "enabled": "off",
+    "id": "trig_01J2nrkvJu95YgsAQZELzbBM",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "Daily lead packet refresh (afternoon)",
+    "notes": "Apex lead packets for enterprise/DSP roster. Only the Amazon-deal flag is VA. Last run finished in about 5 seconds despite SUCCEEDED status, so it likely did no real work (check that run's session).",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Weekdays 3:30 PM CT",
+    "tags": [
+      "OTHER",
+      "VA"
+    ],
+    "touches": [
+      "Mac: account deal folders, 07 Prospect Research/Lead Packet Refresh Log.md",
+      "HubSpot, Outlook, trackers (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Writes next week's SVT outreach playbook as a Claude Doc (DSPs, Las Vegas, truck fleets, recalls, Amazon confirmation routes, enterprise) and rebuilds the DSP Outreach Hub.",
+    "enabled": "off",
+    "id": "trig_01J82ARuckhWXk7tai9K6YDr",
+    "lastRun": "Nov 13, 2026 succeeded",
+    "name": "Weekly outreach playbook (next week)",
+    "notes": "Mostly DSP/truck outreach with one 'Amazon confirmation routes and enterprise accounts' section. Last run finished in about 5 seconds despite SUCCEEDED status, so it likely did no real work (check that run's session).",
+    "recommendation": "Paused Nov 16 (reversible): DSP outreach playbook",
+    "schedule": "Fridays 1:43 PM CT",
+    "tags": [
+      "DSP",
+      "WF",
+      "VA",
+      "OTHER"
+    ],
+    "touches": [
+      "DSP Outreach Hub https://claude.ai/artifact/XUS3cv4Uy1c6V8QqqYLhfz",
+      "New Claude Doc 'SVT Outreach Playbook - Week of ...'",
+      "Daily Playbook Pages https://claude.ai/artifact/1ccvN4Dy5YT1rPJW49jWp6 (read)",
+      "Mac: 08 Tools/DSP Outreach Hub, DSP CRM crm_data.json",
+      "HubSpot, Granola, NHTSA (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Reviews Brooke's ticks, notes and attachments on the Daily Playbook Pages, re-plans the week, proposes new tasks/insights and touches to log.",
+    "enabled": "off",
+    "id": "trig_01KBVmmymGUaAW6xvBcyttCk",
+    "lastRun": "Nov 13, 2026 succeeded",
+    "name": "Daily playbook review",
+    "notes": "Generic daily workflow driven by DSP outreach priority (Las Vegas, footprint DSPs first). Its V-codes (Amazon Vendor Approval tasks) are the only VA piece; could move to the hub.",
+    "recommendation": "Paused Nov 16 (reversible): DSP playbook workflow; Amazon parts now covered by the hub morning check and close-out",
+    "schedule": "Weekdays 5:53 PM CT",
+    "tags": [
+      "WF",
+      "DSP",
+      "VA"
+    ],
+    "touches": [
+      "Daily Playbook Pages https://claude.ai/artifact/EDxztTpLT3Zn9ngLM6tXUo (writes plan/adjust)",
+      "Last week's page https://claude.ai/artifact/1ccvN4Dy5YT1rPJW49jWp6 (read, Mondays)",
+      "SVT Outreach Playbook Claude Doc (may append a line)",
+      "Apex Deal Tracker.xlsx Outreach Log (read)",
+      "ClickUp, calendar, Granola (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Friday report on Vendor Approval and Station Conversions from this hub, cross-checked against email and meetings, saved to SharePoint and emailed.",
+    "enabled": "on",
+    "id": "trig_01MhF6bVCdvtNAuSBeRtt8Ds",
+    "lastRun": "Nov 13, 2026 succeeded",
+    "name": "Amazon hub weekly status report",
+    "notes": "Core VA reporting. Still reads the retired board's guides and includes a WIN1/DSP Demand route row; point it at the new hub as source of truth.",
+    "recommendation": "Rewritten Nov 16: report built from this hub",
+    "schedule": "Fridays 3:47 PM CT",
+    "tags": [
+      "VA",
+      "SC-MM",
+      "SC-LM"
+    ],
+    "touches": "Reads: this hub, HubSpot, Outlook, Granola. Writes: SharePoint OBJ-3 Weekly Status folder. Emails brooke.benkert@svtfleet.com cc Apex.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Morning change-check that rebuilds lead packet PDFs for roster accounts with new activity.",
+    "enabled": "off",
+    "id": "trig_01NDXbTdwce9RwstcThjjT5d",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "Daily lead packet refresh",
+    "notes": "Last run finished in about 5 seconds despite SUCCEEDED status, so it likely did no real work (check that run's session).",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Weekdays 7:00 AM CT",
+    "tags": [
+      "OTHER"
+    ],
+    "touches": [
+      "Mac: account deal folders, 07 Prospect Research/Lead Packet Refresh Log.md",
+      "HubSpot, Outlook, trackers (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Drafts Brooke's weekly update to Mike and open-items list for Lon from the old Amazon board and trackers.",
+    "enabled": "off",
+    "id": "trig_01Pfa1JNTSf8qVCmVL8ykafC",
+    "lastRun": "never",
+    "name": "Mike and Lon update drafts",
+    "notes": "Already off and never ran. Built on the retired board. Other prompts reference a 'Mike and Lon update drafts (ClickUp)' task that is not in this list, so it may be a Cowork local task.",
+    "recommendation": "Pause (distraction)",
+    "schedule": "Thursdays 9:13 AM CT",
+    "tags": [
+      "VA",
+      "WF"
+    ],
+    "touches": [
+      "Retired board https://claude.ai/artifact/9bJJfAPnZ4qqGFKdYYyLJt (read)",
+      "SharePoint templates and OBJ-3 Weekly Status folder",
+      "Apex Deal Tracker / Apex tracker (read)",
+      "Outlook email to brooke.benkert@svtfleet.com"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Refreshes Brooke's confidential personal job search dashboard.",
+    "enabled": "on",
+    "id": "trig_01UVDeiKVA1Hjn1tQPLqyZVn",
+    "lastRun": "Nov 16, 2026 succeeded",
+    "name": "Job search dashboard refresh",
+    "notes": "Personal and confidential. Keep out of the hub.",
+    "recommendation": "Not related",
+    "schedule": "Daily 7:49 AM and 4:49 PM CT",
+    "tags": [
+      "OTHER"
+    ],
+    "touches": [
+      "Job Search Command Center https://claude.ai/artifact/7tksL3rbVdn9HiLZU8xG2r",
+      "iCloud 'Job Search' folder on the Mac",
+      "Personal Gmail and LinkedIn via Chrome (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Old board-based daily Amazon approval check with Structured time blocks.",
+    "enabled": "off",
+    "id": "trig_01V1YQnUQyUph5UkDVdR8Nn2",
+    "lastRun": "Oct 19, 2026 succeeded",
+    "name": "Amazon approval daily push",
+    "notes": "Already off. Superseded by the ClickUp morning check (trig_017mx4nhoAKqHz5iVwNhd82w). Leave off.",
+    "recommendation": "Pause (distraction)",
+    "schedule": "Weekdays 8:52 AM CT",
+    "tags": [
+      "VA"
+    ],
+    "touches": [
+      "Retired board https://claude.ai/artifact/9bJJfAPnZ4qqGFKdYYyLJt (wrote)",
+      "Structured planner",
+      "Outlook email"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Weekly reconcile of the ONT42 Middle Mile Pilot dashboard from Outlook SVT folder, calendar, Granola and ClickUp (read only), then a Loop paste-in for Brooke.",
+    "enabled": "on",
+    "id": "trig_01VeH7WyqfqZdd15iiTFKbM8",
+    "lastRun": "never (created Nov 16, 2026, first run Nov 23)",
+    "name": "ONT42 dashboard + Loop weekly reconcile",
+    "notes": "Core SC task. Dashboard has a 'lastmile' track and an lmprep doc; Loop tree includes a 'Last Mile > DSP outreach' page, which is the only DSP spillover. Candidate data source for the new hub.",
+    "recommendation": "Keep (core)",
+    "schedule": "Mondays 7:41 AM CT",
+    "tags": [
+      "SC-MM",
+      "SC-LM"
+    ],
+    "touches": [
+      "ONT42 Middle Mile Pilot dashboard https://claude.ai/code/artifact/10c99e17-899f-4cae-a128-774d1e87465d (ArtifactData collection 'pilot')",
+      "SVT Loop 'Amazon Business Development' (paste-in text only)",
+      "Outlook SVT folder, calendar, Granola, ClickUp (read)"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Finds today's Amazon sends, replies and meetings, sets hub tasks to Waiting or Next, starts follow-up countdowns, and gives tomorrow's top 3.",
+    "enabled": "on",
+    "id": "trig_01WE7s4tCsGuLTq27jKVK4h2",
+    "lastRun": "Nov 13, 2026 succeeded",
+    "name": "Amazon hub close-out",
+    "notes": "Prompt was updated Nov 16 to put Amazon (vendor approval + ONT42/ONT43 station conversions) first, but body still ranks Las Vegas and footprint DSPs and covers all ClickUp spaces.",
+    "recommendation": "Rewritten Nov 16: reads and updates this hub only",
+    "schedule": "Weekdays 4:20 PM CT",
+    "tags": [
+      "VA",
+      "SC-MM",
+      "SC-LM"
+    ],
+    "touches": "Writes: this hub. Reads: HubSpot, Outlook, Granola. Emails brooke.benkert@svtfleet.com only.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "does": "Writes every outreach touch from today into the Outreach Log tab of Apex Deal Tracker.xlsx and emails a summary.",
+    "enabled": "off",
+    "id": "trig_01WNwBL5vi25yTFbTN9zuxBf",
+    "lastRun": "Nov 13, 2026 succeeded",
+    "name": "Apex Deal Tracker logger",
+    "notes": "Apex tracker logging across all touches. Last run finished in about 5 seconds despite SUCCEEDED status, so it likely did no real work (check that run's session).",
+    "recommendation": "Paused Nov 16 (reversible)",
+    "schedule": "Weekdays 5:47 PM CT",
+    "tags": [
+      "WF",
+      "DSP",
+      "OTHER"
+    ],
+    "touches": [
+      "Apex Deal Tracker.xlsx Outreach Log on the Mac (writes)",
+      "ClickUp, HubSpot, Outlook, Granola (read)",
+      "Outlook email to brooke.benkert@svtfleet.com"
+    ],
+    "updatedAt": "2026-11-16T23:00:00Z"
+  }
+]

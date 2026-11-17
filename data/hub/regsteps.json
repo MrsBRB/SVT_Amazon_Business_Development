@@ -1,0 +1,112 @@
+[
+  {
+    "date": "2026-11-13",
+    "evidence": "Element Supplier ID 1113335. Element DSP Support case 20824927 (Nov 13): DSPs can find and select SVT. Shop work only, because SVT is not an approved mobile provider for Amazon. Any repair over $1.00 triggers review.",
+    "id": "r01",
+    "notes": "Matt Lizotte (Element SVP) confirmed on Oct 22 that 7 locations are in network. This is a channel, not Amazon's written confirmation.",
+    "order": 1,
+    "owner": "Brooke",
+    "status": "Done",
+    "title": "Get into the Element supplier network so DSPs can find and select SVT",
+    "updatedAt": "2026-11-16T18:00:00Z"
+  },
+  {
+    "date": "2026-10-20",
+    "evidence": "Registration completed Oct 20, including supply chain standards, safety conditions and NDA.",
+    "id": "r02",
+    "notes": "Amazon says this does not by itself make SVT a supplier.",
+    "order": 2,
+    "owner": "Brooke",
+    "status": "Done",
+    "title": "Complete Amazon Supplier Connect registration",
+    "updatedAt": "2026-11-16T18:00:00Z"
+  },
+  {
+    "date": "2026-09-01",
+    "evidence": "Vendor Exchange Support (Sept 1): \"does not currently meet the criteria for inclusion.\" No reply to the Oct 15 follow-up.",
+    "id": "r03",
+    "notes": "Parked. A meeting note dates the rejection to August.",
+    "order": 3,
+    "owner": "Brooke",
+    "status": "Done",
+    "title": "Vendor Exchange application",
+    "updatedAt": "2026-11-17T18:07:44.346Z"
+  },
+  {
+    "date": "2026-11-18",
+    "evidence": "Request sent Nov 6. Follow-up due Nov 18 (ClickUp 86bcng4un).",
+    "id": "r04",
+    "notes": "NJ and St. Louis have not been requested and have no owner.",
+    "order": 4,
+    "owner": "Rob Six (Element)",
+    "status": "In progress",
+    "title": "Clean up the Element location list: add Indio, Fenton and Smyrna; deactivate San Diego and Anaheim (closed)",
+    "updatedAt": "2026-11-16T18:00:00Z"
+  },
+  {
+    "date": "2026-11-25",
+    "evidence": "ONT42 agreed with Evan on Nov 10; ONT43 added Nov 13. Reach onboarding call held Nov 16 with Sidhant Mishra; Reach intake form submitted Nov 16. Go-live target about Nov 25. Edmund Park finishes the Relay Garage hookup 2–3 business days after Reach shares the locations. Evan Nov 16: the $3 Reach event fee is SVT's cost. Site visit set for Nov 17.",
+    "id": "r05",
+    "notes": "This is the path that produced Evan's Relay Garage email. The pilot itself is filed under Exhibit A's unpriced objective #6.",
+    "order": 5,
+    "owner": "Brooke",
+    "status": "In progress",
+    "title": "ONT42 / ONT43 middle-mile pilot: Reach account and Relay Garage hookup",
+    "updatedAt": "2026-11-17T14:55:00Z"
+  },
+  {
+    "date": "2026-11-17",
+    "evidence": "Evan Christodoulides emailed this on Nov 13 at about 2:31 PM. Forward it to Mike (ClickUp 86bcmw1u2) and get his ruling in writing.",
+    "id": "r06",
+    "notes": "Decision Nov 16 (Brooke): \"selectable vendor in Relay Garage\" does not say \"approved as an active, registered vendor\", and SVT's on-site clearance was described as running under DTNA's approval. Treat as supporting evidence only. Step 7 gets the firm confirmation.",
+    "order": 6,
+    "owner": "Brooke + Mike",
+    "status": "Blocked",
+    "title": "Evan's Nov 13 Relay Garage note is NOT the trigger on its own; firm confirmation needed",
+    "updatedAt": "2026-11-16T22:30:00Z"
+  },
+  {
+    "date": "2026-11-19",
+    "evidence": "Asked Nov 16, 3:55 PM (email \"SVT vendor status in Relay Garage: one clarifying question\", to Evan only): does being set up in Relay Garage mean SVT Fleet Solutions is an approved, active, registered vendor in Amazon's vendor network, or is there a separate approval or registration step? Waiting on reply; follow-up Nov 19.",
+    "id": "r07",
+    "notes": "If Evan hedges or points elsewhere, send the same three questions to Phil Hines (Vendor Strategy owns the third-party maintenance vendor network).",
+    "order": 7,
+    "owner": "Brooke",
+    "status": "In progress",
+    "title": "Get Evan (Amazon) to confirm in writing that SVT FLEET LLC is approved as an active, registered vendor, in its own name",
+    "updatedAt": "2026-11-17T16:00:00Z"
+  },
+  {
+    "date": "2026-11-20",
+    "evidence": "Phil Hines sync held Nov 13 with Mike and Lon. The TOM-site vendor network is set until a Q1 revisit. Phil will sync with Evan on a pilot. No RFP owner or timing was named. Bill Nordlund check-in due Nov 20.",
+    "id": "r08",
+    "notes": "Ask Phil what written confirmation Amazon issues and who sends it.",
+    "order": 8,
+    "owner": "Brooke",
+    "status": "In progress",
+    "title": "Vendor Strategy route: Phil Hines and Bill Nordlund",
+    "updatedAt": "2026-11-16T18:00:00Z"
+  },
+  {
+    "date": "2027-01-31",
+    "evidence": "",
+    "id": "r09",
+    "notes": "This date is the payment trigger. It must land inside the Initial Term (ends Jan 31, 2027). Ask SVT to forward it to Brooke the day it arrives.",
+    "order": 9,
+    "owner": "Amazon",
+    "status": "Not started",
+    "title": "Receive Amazon's written confirmation that SVT is an approved, active, registered vendor",
+    "updatedAt": "2026-11-16T18:00:00Z"
+  },
+  {
+    "date": "",
+    "evidence": "",
+    "id": "r10",
+    "notes": "$5,000. Payable within 30 days of SVT's verification, which is at SVT's sole discretion. Log the send in Decisions & Evidence.",
+    "order": 10,
+    "owner": "Brooke",
+    "status": "Not started",
+    "title": "Send the confirmation to Michael within 24h, then verification and payment",
+    "updatedAt": "2026-11-16T18:00:00Z"
+  }
+]

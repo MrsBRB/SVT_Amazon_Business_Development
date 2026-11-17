@@ -1,0 +1,281 @@
+[
+  {
+    "date": "2026-11-16",
+    "id": "l-20261116-evan-clarify",
+    "kind": "Evidence",
+    "link": "",
+    "obj": "VA",
+    "text": "Brooke emailed Evan Christodoulides (3:55 PM, Mike not copied): does being set up in Relay Garage mean SVT Fleet Solutions is an approved, active, registered vendor in Amazon's vendor network, or is there a separate approval or registration step still to complete?",
+    "updatedAt": "2026-11-17T16:00:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l-20261116-reach-account",
+    "kind": "Evidence",
+    "link": "",
+    "obj": "VA",
+    "text": "Reach intro call: Brooke said Amazon confirmed SVT is selectable in Relay Garage. Sidhant Mishra described SVT as a non-participating customer on Reach, with a backend Relay Garage integration already added for that location (a fleet account). This describes Reach and Relay Garage plumbing, not Amazon vendor approval, so it doesn't answer the Nov 16 question to Evan.",
+    "updatedAt": "2026-11-17T21:00:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l-20261116-reach-decisions",
+    "kind": "Decision",
+    "link": "",
+    "obj": "MM",
+    "text": "Reach intro call, agreed: (1) the pilot runs on the Reach UI only, with no SVT system and no repair-order integration at launch; (2) a two-site pilot (ONT42, ONT43) on a fresh Reach account and Relay Garage integration; (3) technicians use the Reach mobile app, dispatchers the web portal (Brooke to confirm with Mike); (4) the Reach API/MCP integration is built in the background while the pilot runs.",
+    "updatedAt": "2026-11-17T21:00:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l-20261116-reach-scope",
+    "kind": "Meeting",
+    "link": "",
+    "obj": "MM",
+    "text": "Reach intro call (Sidhant Mishra, Kuldeep Rana; Richard Barron for VVG IT): SVT services Class 1–8 and starts with middle-mile Class 7–8 at two sites. SVT rolls up under Velocity, so it isn't joining Reach's vendor network. $3 per event, $30 onboarding credited over the first 10 events, unlimited training. About two weeks to go live, aiming for before Thanksgiving.",
+    "updatedAt": "2026-11-17T21:00:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l-20261117-ont-scope",
+    "kind": "Update",
+    "link": "https://outlook.office365.com/owa/?ItemID=AAMkADVhOWQyMGY4LTZlNDgtNDkwOS1iMGZhLTEwMTY0N2JlNjE2ZQBGAAAAAAAwsKNNtEw%2FTK9Zo06wbn%2FdBwDAjL42b4gRTZxKV0kTgRDAAAAnYNeHAADAjL42b4gRTZxKV0kTgRDAAAC9uOA2AAA%3D&exvsurl=1&viewmodel=ReadMessageItem",
+    "obj": "MM",
+    "text": "Evan asked the group whether to include the other ONT sites in the market for SVT as part of a possible pilot or scope of work for a new offsite vendor. He asked Steven Olivo, Aaliyah Rosas and David Galanti where ONT coverage is thinnest and where SVT's mobile model fits, and Edmund Park and Mack Al Karam for the vendor performance view.",
+    "updatedAt": "2026-11-17T14:55:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l-20261117-ont-visit",
+    "kind": "Update",
+    "link": "https://outlook.office365.com/owa/?ItemID=AAMkADVhOWQyMGY4LTZlNDgtNDkwOS1iMGZhLTEwMTY0N2JlNjE2ZQBGAAAAAAAwsKNNtEw%2FTK9Zo06wbn%2FdBwDAjL42b4gRTZxKV0kTgRDAAAAnYNeHAADAjL42b4gRTZxKV0kTgRDAAAC9uOA1AAA%3D&exvsurl=1&viewmodel=ReadMessageItem",
+    "obj": "MM",
+    "text": "ONT42 visit locked for Tue Nov 17 about 11–12. Steven Olivo asked to confirm; Mike replied he will be there no later than 11:00.",
+    "updatedAt": "2026-11-17T14:55:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l-20261117-reach-fee",
+    "kind": "Evidence",
+    "link": "https://outlook.office365.com/owa/?ItemID=AAMkADVhOWQyMGY4LTZlNDgtNDkwOS1iMGZhLTEwMTY0N2JlNjE2ZQBGAAAAAAAwsKNNtEw%2FTK9Zo06wbn%2FdBwDAjL42b4gRTZxKV0kTgRDAAAAnYNeHAADAjL42b4gRTZxKV0kTgRDAAAC9uOA2AAA%3D&exvsurl=1&viewmodel=ReadMessageItem",
+    "obj": "MM",
+    "text": "Evan Christodoulides (5:39 PM ET): \"Amazon does not cover REACH event fees. The $3 per service event is SVT's cost as the vendor, so please set up the agreement on that basis.\"",
+    "updatedAt": "2026-11-17T14:55:00Z"
+  },
+  {
+    "date": "2026-11-17",
+    "id": "l-20261117-reach-saas",
+    "kind": "Update",
+    "link": "",
+    "obj": "MM",
+    "text": "Brooke sent Mike and Richard Barron the REACH Vantage License and Services Agreement (dated 11/17/2026) for the ONT42/43 pilot and asked for SVT's approval path for vendor agreements.",
+    "updatedAt": "2026-11-17T18:30:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l-20261117-vvg-it",
+    "kind": "Update",
+    "link": "https://outlook.office365.com/owa/?ItemID=AAMkADVhOWQyMGY4LTZlNDgtNDkwOS1iMGZhLTEwMTY0N2JlNjE2ZQBGAAAAAAAwsKNNtEw%2FTK9Zo06wbn%2FdBwDAjL42b4gRTZxKV0kTgRDAAAAnYNeHAADAjL42b4gRTZxKV0kTgRDAAAC9uOA0AAA%3D&exvsurl=1&viewmodel=ReadMessageItem",
+    "obj": "MM",
+    "text": "Richard Barron (VVG) handed the Reach to RO/Excede integration review to Shane Matthews' IT team, to follow pilot testing. Nothing needed from IT for go-live. Brooke leads from the SVT side; Shane's team takes it from here when Brooke is ready.",
+    "updatedAt": "2026-11-17T14:55:00Z"
+  },
+  {
+    "date": "2026-08-12",
+    "id": "l01",
+    "kind": "Decision",
+    "link": "",
+    "obj": "ALL",
+    "text": "Consulting Agreement and Exhibit A fully executed. Objective #3 trigger: written confirmation from Amazon that SVT has been approved as an active, registered vendor.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-08-21",
+    "id": "l02",
+    "kind": "Meeting",
+    "link": "https://notes.granola.ai/d/062ecabf-875e-4b73-b17c-47fd23b86648",
+    "obj": "VA",
+    "text": "Vendor Exchange application rejected (\"not taking new maintenance provider applications\"). Velocity is already an Amazon vendor; SVT to be set up as its own entity, not under Velocity.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-09-01",
+    "id": "l03",
+    "kind": "Evidence",
+    "link": "https://claude.ai/artifact/9bJJfAPnZ4qqGFKdYYyLJt",
+    "obj": "VA",
+    "text": "Vendor Exchange Support in writing: SVT \"does not currently meet the criteria for inclusion.\"",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-09-17",
+    "id": "l04",
+    "kind": "Meeting",
+    "link": "https://notes.granola.ai/d/be6363e8-65d8-4bad-a028-aa1e4bc13786",
+    "obj": "MM",
+    "text": "Hunter Davis (Amazon Middle Mile) forwarded SVT to Mack Al Karam (supplemental vendor coverage).",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-09-23",
+    "id": "l05",
+    "kind": "Meeting",
+    "link": "https://notes.granola.ai/d/8c1845cd-103e-43ba-8272-e96872b16898",
+    "obj": "MM",
+    "text": "Mack Al Karam: Reach integration is needed for direct Amazon onboarding. Priority markets EWR, ONT, Houston, Boston, DFW. The MSA path through Velocity is unclear.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-10-02",
+    "id": "l06",
+    "kind": "Meeting",
+    "link": "https://notes.granola.ai/d/78c39668-7ea4-434e-8d8e-b82ee04f3758",
+    "obj": "LM",
+    "text": "Jason Terry: Amazon isn't onboarding new vendors; route through Element and Wheels; Phil Hines is the right contact.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-10-06",
+    "id": "l07",
+    "kind": "Update",
+    "link": "https://claude.ai/artifact/6wEdQurX1ktpN2Fwvyts6s",
+    "obj": "MM",
+    "text": "NJ OEM unscheduled-repair pilot outline sent to Mack. Later superseded by the ONT42 pilot with Evan.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-10-20",
+    "id": "l08",
+    "kind": "Evidence",
+    "link": "https://claude.ai/artifact/LVunDRdpg99UQBNuej3wqA",
+    "obj": "VA",
+    "text": "Supplier Connect registration complete; Amazon says it doesn't by itself make SVT a supplier. Vishal Sanil: direct work needs a separate contract (RFP), next round before peak.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-10-22",
+    "id": "l09",
+    "kind": "Evidence",
+    "link": "https://claude.ai/artifact/LVunDRdpg99UQBNuej3wqA",
+    "obj": "VA",
+    "text": "Matt Lizotte (Element SVP): 7 SVT locations are in network. \"There may be a prohibition implemented by Amazon.\"",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-02",
+    "id": "l10",
+    "kind": "Risk",
+    "link": "https://claude.ai/artifact/KKfinCf4a6nx8A8C1AMe3R",
+    "obj": "LM",
+    "text": "Harry Cross (Amazon M&R): no on-site repairs at Amazon stations or off-sites, and no soliciting on site, for SPN vendors.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-06",
+    "id": "l11",
+    "kind": "Update",
+    "link": "https://claude.ai/artifact/LVunDRdpg99UQBNuej3wqA",
+    "obj": "LM",
+    "text": "Bill Nordlund passed SVT to Amazon's Vendor Strategy lead and pointed to Q1 2027 coverage planning; brought in Phil Hines.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-06",
+    "id": "l12",
+    "kind": "Meeting",
+    "link": "https://notes.granola.ai/d/200e3adb-8bed-4d34-80b7-a299215cfe93",
+    "obj": "MM",
+    "text": "Evan and Edmund Park: DTNA work requests up 50%; priority sites ONT42 and BOS42. Work orders go through Reach; a direct Relay Garage API is a 3–6 month effort.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-10",
+    "id": "l13",
+    "kind": "Meeting",
+    "link": "https://notes.granola.ai/d/81ef8d6d-a490-401b-aefa-200841100c59",
+    "obj": "VA",
+    "text": "Touchbase with Mike: on-site vendor approval is \"one of the biggest spiffs on your bonus plan.\" Middle Mile needs no Relay Garage; Last Mile must integrate with Relay Garage.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-10",
+    "id": "l14",
+    "kind": "Meeting",
+    "link": "https://notes.granola.ai/d/d9573ca3-bb8a-4457-857d-78d453b3c6fd",
+    "obj": "MM",
+    "text": "Evan agreed ONT42 as the pilot site. On-site entry under DTNA Avetta; invoicing via DTNA/Corcentric; pre-auth about $1,000.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-13",
+    "id": "l15",
+    "kind": "Evidence",
+    "link": "https://claude.ai/artifact/LVunDRdpg99UQBNuej3wqA",
+    "obj": "VA",
+    "text": "Element DSP Support (case 20824927): SVT is findable and selectable; shop work only; SVT isn't an approved mobile provider for Amazon.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-13",
+    "id": "l16",
+    "kind": "Evidence",
+    "link": "https://claude.ai/artifact/QjRJv6hQBvRYMhbAtwnmuE",
+    "obj": "VA",
+    "text": "Evan Christodoulides (evanlchr@amazon.com), about 2:31 PM: \"SVT is set up in Relay Garage as a selectable vendor.\"",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-13",
+    "id": "l17",
+    "kind": "Update",
+    "link": "https://claude.ai/artifact/QjRJv6hQBvRYMhbAtwnmuE",
+    "obj": "MM",
+    "text": "Evan added ONT43 to the visit and pilot scope. ONT42 has very little space; options are working off site nearby or ferrying units to ONT43 (dirt lot).",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-13",
+    "id": "l18",
+    "kind": "Meeting",
+    "link": "https://notes.granola.ai/d/e7ac4514-48a2-478f-a5e5-03c7b69eba1c",
+    "obj": "LM",
+    "text": "Phil Hines sync with Mike and Lon: TOM-site vendor network set until a Q1 revisit; APP sites each have a dedicated vendor; Phil to sync with Evan on a pilot; no RFP owner or timing.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l19",
+    "kind": "Meeting",
+    "link": "https://notes.granola.ai/d/bc133204-5032-4bc3-86fb-e25ff5ff6d20",
+    "obj": "MM",
+    "text": "Reach onboarding with Sidhant Mishra: new SVT service-provider account needed; ONT42 and ONT43 first sites; $3/event; go-live about Nov 25.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l20",
+    "kind": "Risk",
+    "link": "https://claude.ai/artifact/QjRJv6hQBvRYMhbAtwnmuE",
+    "obj": "VA",
+    "text": "Source conflict: the Focus Brief ticks the trigger on Evan's email; the Exhibit A Board and Amazon Opportunity say it isn't confirmed.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l21",
+    "kind": "Decision",
+    "link": "",
+    "obj": "VA",
+    "text": "Brooke: Evan's Relay Garage note isn't, on its own, Amazon's written confirmation. Requesting an explicit confirmation naming SVT FLEET LLC in its own name, with sites, scope and effective date.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  },
+  {
+    "date": "2026-11-16",
+    "id": "l22",
+    "kind": "Decision",
+    "link": "",
+    "obj": "ALL",
+    "text": "Hub scope narrowed to Amazon Vendor Approval and Amazon Station Conversions (Middle and Last Mile). DSP outreach, DSP leads and routing/workflow artifacts excluded.",
+    "updatedAt": "2026-11-16T23:00:00Z"
+  }
+]

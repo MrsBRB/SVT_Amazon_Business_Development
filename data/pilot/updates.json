@@ -1,0 +1,20 @@
+[
+  {
+    "amazon": true,
+    "amazonText": "Reach onboarding is underway. Reach is creating SVT's service-provider account with a new Relay Garage integration for ONT42 and ONT43. SVT dispatchers will use the Reach web portal and technicians the Reach mobile app. Reach estimates about two weeks to go live, targeting before Thanksgiving.",
+    "at": "2026-11-17T21:00:00Z",
+    "by": "",
+    "byName": "Brooke",
+    "date": "2026-11-16",
+    "id": "u-20261117-reach-notes",
+    "text": "Reach intro call (Nov 16) recap. Pilot runs on the Reach UI only, two sites, Class 7–8 middle-mile tractors first. Technicians on the Reach mobile app (works offline), dispatchers on the web portal. Reach is creating a fresh SVT account and Relay Garage integration (the existing account is fleet-only). $3 per event, $30 setup credited over the first 10 events, unlimited training. About two weeks to go live, aiming for before Thanksgiving. API/MCP integration to be built in the background."
+  },
+  {
+    "at": "2026-11-17T19:30:00Z",
+    "by": "",
+    "byName": "Brooke",
+    "date": "2026-11-17",
+    "id": "u-20261117-start",
+    "text": "Launch checklist set up. Site visit to ONT42 and ONT43 today with Steven Olivo. Reach agreement is with Mike and Richard for approval. Go-live target is Nov 25 (Reach's estimate)."
+  }
+]

@@ -205,6 +205,8 @@ td .sub{font-size:12px;color:var(--muted)}
 .rdrow{display:grid;grid-template-columns:128px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
 .rdrow:last-child{border-bottom:0}
 .upform{display:grid;grid-template-columns:1fr auto;gap:8px}
+.upform .share{grid-column:1/-1;font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.chip.amz{color:var(--info);border-color:var(--info)}
 .upform textarea{min-height:60px;border:1px solid var(--line);border-radius:var(--r-sm);padding:8px;background:var(--bg);color:var(--ink);font:inherit}
 @media (max-width:760px){.sitecards{grid-template-columns:1fr}.rdrow{grid-template-columns:1fr}.upform{grid-template-columns:1fr}}
 </style>
@@ -235,7 +237,7 @@ td .sub{font-size:12px;color:var(--muted)}
 <main><div class="wrap">
 
 <section data-view="checklist">
-  <div class="head"><div><h2>Launch checklist</h2><p>Items marked <b>Gate</b> must be Ready before go-live. Change a status as soon as it moves, and add the evidence (who confirmed, when) by clicking the item.</p></div>
+  <div class="head"><div><h2>Launch checklist</h2><p>Items marked <b>Gate</b> must be Ready before go-live. Change a status as soon as it moves, and add the evidence (who confirmed, when) by clicking the item. Items tagged <span class="chip amz">Amazon</span> also appear, without owners or evidence, on the Amazon status page.</p></div>
     <div class="tools">
       <div class="seg" id="rd-filter" role="group" aria-label="Filter checklist">
         <button aria-pressed="true" data-f="open">Not ready</button><button aria-pressed="false" data-f="gate">Gates</button><button aria-pressed="false" data-f="all">All</button>
@@ -317,7 +319,7 @@ td .sub{font-size:12px;color:var(--muted)}
 
 <section data-view="updates">
   <div class="head"><div><h2>Updates</h2><p>Short dated notes from the team: what happened, what was decided, what's blocked.</p></div></div>
-  <div class="panel" id="up-form-wrap"><form class="upform" id="up-form"><textarea id="up-text" aria-label="Update" placeholder="Add an update, e.g. &quot;Site visit done. ONT42 work area agreed by the fence line.&quot;"></textarea><button class="btn primary" type="submit">Post update</button></form></div>
+  <div class="panel" id="up-form-wrap"><form class="upform" id="up-form"><textarea id="up-text" aria-label="Update" placeholder="Add an update, e.g. &quot;Site visit done. ONT42 work area agreed by the fence line.&quot;"></textarea><button class="btn primary" type="submit">Post update</button><label class="share"><input type="checkbox" id="up-amz"> Also show on the Amazon page (Amazon sees this text as written)</label></form></div>
   <div class="panel"><div class="list" id="up-list"></div></div>
 </section>
 
@@ -332,7 +334,9 @@ const GO_LIVE="2026-11-25";
 const AREAS=["Contract & terms","Reach & Relay Garage","Site access & safety","People, parts & equipment","Billing","Scope & success measures","Communication","ONT43 site"];
 const STAT=["Not started","In progress","Waiting","Blocked","Ready"];
 const FIELDS=[["item","Item","text",true],["area","Area","select",false,AREAS],["status","Status","select",false,STAT],["gate","Blocks go-live?","select",false,["Gate","Nice to have"]],
-  ["site","Site","select",false,["ONT42 + ONT43","ONT42","ONT43"]],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands","textarea"],["order","Order","number"]];
+  ["site","Site","select",false,["ONT42 + ONT43","ONT42","ONT43"]],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands (internal)","textarea"],["order","Order","number"],
+  ["amazon","Show on the Amazon page?","select",false,["Hide","Show"]],["party","Amazon page: who's on it","select",false,["SVT","Amazon","Reach","SVT + Amazon","SVT + Reach","Reach + Amazon"]],
+  ["amazonText","Amazon page wording (leave blank to use the item name)","text"]];
 const TL=[["2026-11-06","Amazon and SVT review the DTNA work-request backlog; ONT42 named a priority site",1],
   ["2026-11-10","ONT42 agreed as the pilot site with Evan",1],["2026-11-13","ONT43 added to the pilot scope; SVT set up in Relay Garage as a selectable vendor",1],
   ["2026-11-16","Reach onboarding session; intake form submitted; Amazon confirms the $3 event fee is SVT's cost",1],
@@ -365,7 +369,7 @@ function renderChecklist(){
     const list=all.filter(keep).sort((x,y)=>(+x.order||99)-(+y.order||99));const rd=all.filter(r=>r.status==="Ready").length;
     return `<div class="panel"><div class="head" style="align-items:baseline"><h3>${esc(a)}</h3><span class="small muted">${rd}/${all.length} ready</span></div>${list.length?list.map(r=>{const dd=days(r.due);return `<div class="rdrow">
       <div>${canWrite?sel(r):`<span class="pill ${pc[r.status]||""}">${esc(r.status)}</span>`}</div>
-      <div style="min-width:0;cursor:pointer" data-edit="${esc(r.id)}"><div style="font-weight:600">${esc(r.item)} ${r.gate!=="Nice to have"?'<span class="chip o3">Gate</span>':""}</div>
+      <div style="min-width:0;cursor:pointer" data-edit="${esc(r.id)}"><div style="font-weight:600">${esc(r.item)} ${r.gate!=="Nice to have"?'<span class="chip o3">Gate</span>':""} ${r.amazon==="Show"?'<span class="chip amz" title="Shown on the Amazon page">Amazon</span>':""}</div>
       <div class="small muted">${esc(r.site||"")} · ${r.owner?esc(r.owner):"owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${fmtD(r.due)}</span>`:""}</div>
       ${r.evidence?`<div class="small" style="margin-top:2px">${esc(r.evidence)}</div>`:""}</div></div>`}).join(""):`<div class="small muted">All ready in this area.</div>`}</div>`}).join("");
   $("#rd-areas").innerHTML=html||`<div class="empty">The checklist is loading. If it stays empty, sign in to claude.ai to see it.</div>`;
@@ -375,7 +379,7 @@ async function renderUpdates(){
   const ups=S.updates.slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));
   let names={};
   try{const ids=[...new Set(ups.map(u=>u.by).filter(Boolean))];if(user&&ids.length&&user.profiles){const ps=await user.profiles(ids);for(const i of ids)names[i]=(ps[i]&&ps[i].name)||""}}catch(e){}
-  $("#up-list").innerHTML=ups.length?ups.map(u=>`<div class="li"><div class="when">${esc(u.date||(u.at||"").slice(0,10))}</div><div style="min-width:0;overflow-wrap:anywhere">${esc(u.text)}</div><div class="small muted">${esc(names[u.by]||u.byName||"")}</div></div>`).join(""):`<div class="empty">No updates yet. Post the first one above.</div>`;
+  $("#up-list").innerHTML=ups.length?ups.map(u=>`<div class="li"><div class="when">${esc(u.date||(u.at||"").slice(0,10))}</div><div style="min-width:0;overflow-wrap:anywhere">${esc(u.text)}</div><div class="small muted" style="display:grid;gap:4px;justify-items:end">${esc(names[u.by]||u.byName||"")}${canWrite?`<button class="btn sm" data-amz-up="${esc(u.id)}" aria-pressed="${u.amazon===true}">${u.amazon===true?"On Amazon page":"Share with Amazon"}</button>`:(u.amazon===true?'<span class="chip amz">Amazon</span>':"")}</div></div>`).join(""):`<div class="empty">No updates yet. Post the first one above.</div>`;
   $("#up-form-wrap").hidden=!canWrite;
 }
 function renderAll(){renderKpis();renderChecklist();renderTimeline();renderUpdates();document.querySelectorAll("[data-add]").forEach(b=>b.hidden=!canWrite)}
@@ -404,6 +408,7 @@ function werr(err){if(err&&err.code==="invalid_argument"){canWrite=false;renderA
 document.addEventListener("click",e=>{
   if(e.target.closest("[data-close]")){close();return}
   const a=e.target.closest("[data-add]");if(a){if(db)openDrawer();return}
+  const au=e.target.closest("[data-amz-up]");if(au){const u=S.updates.find(x=>x.id===au.dataset.amzUp);if(u&&db)db.doc("updates/"+u.id).update({amazon:u.amazon!==true}).then(()=>toast(u.amazon!==true?"Will show on the Amazon page":"Removed from the Amazon page")).catch(werr);return}
   if(e.target.closest("select.inline-sel"))return;
   const ed=e.target.closest("[data-edit]");if(ed){openDrawer(ed.dataset.edit);return}
   const sg=e.target.closest(".seg button");if(sg){sg.parentElement.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b===sg?"true":"false"));rdFilter=sg.dataset.f;renderChecklist()}
@@ -412,7 +417,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
 document.addEventListener("change",async e=>{const s=e.target.closest("select.inline-sel");if(!s||!db)return;
   try{await db.doc("readiness/"+s.dataset.inline).update({status:s.value,updatedAt:new Date().toISOString()});toast("Updated")}catch(err){werr(err)}});
 $("#up-form").addEventListener("submit",async e=>{e.preventDefault();const t=$("#up-text").value.trim();if(!t||!db)return;
-  try{const id=user?await user.id():null;await db.collection("updates").add({text:t,at:new Date().toISOString(),date:new Date().toISOString().slice(0,10),by:id||""});$("#up-text").value="";toast("Posted")}catch(err){werr(err)}});
+  try{const id=user?await user.id():null;await db.collection("updates").add({text:t,at:new Date().toISOString(),date:new Date().toISOString().slice(0,10),by:id||"",amazon:$("#up-amz").checked});$("#up-text").value="";$("#up-amz").checked=false;toast("Posted")}catch(err){werr(err)}});
 route();renderAll();
 (async()=>{try{
   user=await window.claude?.use?.("user"); db=await window.claude?.use?.("db");
