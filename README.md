@@ -11,9 +11,9 @@ DSP outreach, DSP leads and routing workflows are out of scope for this repo.
 
 | Dashboard | Who it's for | Live page | Source code | Snapshot |
 |---|---|---|---|---|
-| Amazon Business Development Hub | Brooke (internal, includes Exhibit A) | [Open](https://claude.ai/artifact/KNGV7Q89vw2EJNrFfwq3uo) | [`hub/`](hub/exhibit-a-priority-hub.html) | [`status/hub.md`](status/hub.md) |
-| ONT42 / ONT43 Pilot Launch | SVT and VVG team (Mike, Lon, Mark, VVG IT) | [Open](https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H) | [`pilot/`](pilot/ont42-pilot-launch.html) | [`status/pilot.md`](status/pilot.md) |
-| ONT42 / ONT43 Repair Pilot: status for Amazon | Evan Christodoulides and the Amazon Middle Mile team | [Open](https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668) | [`amazon/`](amazon/ont-pilot-amazon-status.html) | [`status/amazon.md`](status/amazon.md) |
+| **Amazon BD Hub · Internal Only** | Brooke only (includes Exhibit A) | [Open](https://claude.ai/artifact/KNGV7Q89vw2EJNrFfwq3uo) | [`hub/`](hub/exhibit-a-priority-hub.html) | [`status/hub.md`](status/hub.md) |
+| **ONT Pilot · SVT Team** | SVT and VVG team (Mike, Lon, Mark, VVG IT). Not for Amazon or Reach | [Open](https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H) | [`pilot/`](pilot/ont42-pilot-launch.html) | [`status/pilot.md`](status/pilot.md) |
+| **ONT Pilot · Amazon View** | Evan Christodoulides and the Amazon Middle Mile team | [Open](https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668) | [`amazon/`](amazon/ont-pilot-amazon-status.html) | [`status/amazon.md`](status/amazon.md) |
 
 The live pages are claude.ai artifacts. Each keeps its data in its own database, and the links open only for people the page has been shared with (Share menu on the page).
 
