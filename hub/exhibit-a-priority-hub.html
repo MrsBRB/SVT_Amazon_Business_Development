@@ -227,6 +227,7 @@ td .sub{font-size:12px;color:var(--muted)}
     <a href="#today">Today</a>
     <a href="#approval">Vendor Approval</a>
     <a href="#stations">Station Conversions</a>
+    <a href="#readiness">Pilot Readiness</a>
     <a href="#board">Action Board</a>
     <a href="#log">Decisions &amp; Evidence</a>
     <a href="#sources">Sources</a>
@@ -270,6 +271,18 @@ td .sub{font-size:12px;color:var(--muted)}
   <div class="track-h"><h3>Last Mile (Amazon-level access)</h3><span class="muted small" id="lm-sum"></span></div>
   <div class="sites" id="lm-sites"></div>
   <div class="panel"><h3>Open actions · Last Mile</h3><div id="lm-tasks"></div></div>
+</section>
+
+<section data-view="readiness">
+  <div class="head"><div><h2>Pilot Launch Readiness · ONT42 / ONT43</h2>
+    <p>Everything that has to be true before SVT takes its first Amazon work request in Reach. Items marked <b>Gate</b> block go-live. The ONT42 pilot dashboard keeps the full plan; this list is the launch checklist.</p></div>
+    <div class="tools">
+      <div class="seg" id="rd-filter" role="group" aria-label="Filter readiness items">
+        <button aria-pressed="true" data-f="open">Not ready</button><button aria-pressed="false" data-f="gate">Gates</button><button aria-pressed="false" data-f="all">All</button>
+      </div>
+      <button class="btn primary" data-add="readiness">Add item</button></div></div>
+  <div class="grid3" id="rd-summary"></div>
+  <div id="rd-areas" style="display:grid;gap:14px"></div>
 </section>
 
 <section data-view="board">
@@ -360,11 +373,17 @@ const SCHEMA = {
   sources:{label:"Source",fields:[
     ["title","Title","text",true],["url","Link","url"],["obj","Initiative","select",false,Object.keys(OBJS)],
     ["role","Role","select",false,["Core","Supporting","Retire"]],["kind","Kind","select",false,["Artifact","Meeting","Doc"]],["updated","Last updated","date"],["what","What it gives you","textarea"]]},
+  readiness:{label:"Readiness item",fields:[
+    ["item","Item","text",true],["area","Area","select",false,["Contract & terms","Reach & Relay Garage","Site access & safety","People, parts & equipment","Billing","Scope & success measures","Communication","ONT43 site"]],
+    ["status","Status","select",false,["Not started","In progress","Waiting","Blocked","Ready"]],["gate","Blocks go-live?","select",false,["Gate","Nice to have"]],
+    ["site","Site","select",false,["ONT42 + ONT43","ONT42","ONT43"]],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands","textarea"],["ref","Pilot dashboard id","text"],["order","Order","number"]]},
   schedules:{label:"Scheduled task",fields:[
     ["name","Name","text",true],["schedule","When","text"],["enabled","On?","select",false,["on","off"]],["lastRun","Last run","text"],
     ["tags","Tags (comma separated)","text"],["recommendation","Recommendation","text"],["does","What it does","textarea"],["touches","Reads / writes","textarea"],["notes","Notes","textarea"]]}
 };
-const S = {tasks:[],regsteps:[],sites:[],log:[],sources:[],schedules:[]};
+const S = {tasks:[],regsteps:[],sites:[],log:[],sources:[],schedules:[],readiness:[]};
+const GO_LIVE="2026-11-25";
+let rdFilter="open";
 let db=null, canWrite=false, objFilter="all", srcFilter="use", schFilter="tied";
 
 const $ = s => document.querySelector(s);
@@ -421,7 +440,7 @@ function renderLanes(){
     <h2>Station Conversions · Middle Mile</h2>
     <div class="top"><span class="big num">${mm.length}</span><span class="meta">sites tracked${mmTop?` · lead: ${esc(mmTop.code)} (${esc(mmTop.stage)})`:""}</span></div>
     <div class="bar"><i style="width:${mmPct}%"></i></div>
-    <div class="meta">${mmTop&&mmTop.next?esc(mmTop.next):"Add the first site"}</div>
+    <div class="meta">${(()=>{const r=rdStats();return r.n?`Launch readiness: ${r.ready}/${r.n} gates ready · go-live target ${fmtD(GO_LIVE)} (${days(GO_LIVE)}d)`:(mmTop&&mmTop.next?esc(mmTop.next):"Add the first site");})()}</div>
     <div class="next"><b>Next action</b>${nx(openTasks("MM")[0])}</div>
   </button>
   <button class="lane" data-go="stations">
@@ -499,6 +518,37 @@ function renderStations(){
   $("#mm-tasks").innerHTML = listOr(openTasks("MM"),"No open middle-mile actions.");
   $("#lm-tasks").innerHTML = listOr(openTasks("LM"),"No open last-mile actions.");
 }
+function rdStats(){
+  const g=S.readiness.filter(r=>r.gate!=="Nice to have");
+  return {n:g.length,ready:g.filter(r=>r.status==="Ready").length,blocked:g.filter(r=>r.status==="Blocked").length,
+    waiting:g.filter(r=>r.status==="Waiting").length,all:S.readiness.length};
+}
+function renderReadiness(){
+  const st=rdStats(); const d=days(GO_LIVE);
+  const pct=st.n?Math.round(st.ready/st.n*100):0;
+  const overdue=S.readiness.filter(r=>r.status!=="Ready"&&days(r.due)!==null&&days(r.due)<0).length;
+  $("#rd-summary").innerHTML=`
+    <div class="panel"><h3>Go-live target</h3><div class="big num" style="font-family:var(--f-head);font-size:30px;font-weight:700">${fmtD(GO_LIVE)}</div>
+      <div class="small muted">${d>=0?d+" days away":"passed "+(-d)+" days ago"}. Reach's estimate, not an agreed Amazon start date. Mike's Nov 13 debrief mentioned Jan 1; confirm with Evan.</div></div>
+    <div class="panel"><h3>Gates ready</h3><div class="num" style="font-family:var(--f-head);font-size:30px;font-weight:700">${st.ready}/${st.n} <span class="small muted">(${pct}%)</span></div>
+      <div class="bar" style="background:var(--panel-2);margin-top:6px"><i style="width:${pct}%;background:var(--ok)"></i></div></div>
+    <div class="panel"><h3>Attention</h3><div class="small">${st.blocked} blocked · ${st.waiting} waiting on others · ${overdue} past due</div>
+      <div class="small muted" style="margin-top:6px">Go-live needs every gate Ready.</div></div>`;
+  const areas=SCHEMA.readiness.fields[1][4];
+  const keep=r=>rdFilter==="all"?true:rdFilter==="gate"?r.gate!=="Nice to have":r.status!=="Ready";
+  const pc={"Ready":"ok","In progress":"info","Waiting":"warn","Blocked":"bad"};
+  $("#rd-areas").innerHTML=areas.map(a=>{
+    const all=S.readiness.filter(r=>(r.area||"")===a); if(!all.length) return "";
+    const list=all.filter(keep).sort((x,y)=>(+x.order||99)-(+y.order||99));
+    const rd=all.filter(r=>r.status==="Ready").length;
+    return `<div class="panel"><div class="track-h"><h3>${esc(a)}</h3><span class="small muted">${rd}/${all.length} ready</span></div>${list.length?`<div class="list">${list.map(r=>{const dd=days(r.due);return `<div class="li" style="grid-template-columns:120px 1fr auto">
+      <div>${canWrite?selectHTML("readiness",r,"status",SCHEMA.readiness.fields[2][4]):`<span class="pill ${pc[r.status]||""}">${esc(r.status||"")}</span>`}</div>
+      <div style="min-width:0;cursor:pointer" data-edit="readiness:${esc(r.id)}"><div style="font-weight:600">${esc(r.item)} ${r.gate!=="Nice to have"?'<span class="chip o3">Gate</span>':""}</div>
+        <div class="small muted">${esc(r.site||"")}${r.owner?" · "+esc(r.owner):" · owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${fmtD(r.due)}</span>`:""}</div>
+        ${r.evidence?`<div class="small" style="margin-top:2px">${esc(r.evidence)}</div>`:""}</div>
+      <div class="small muted">${esc(r.ref||"")}</div></div>`;}).join("")}</div>`:`<div class="muted small">All ready in this area.</div>`}</div>`;
+  }).join("") || `<div class="empty">No readiness items yet.</div>`;
+}
 function renderBoard(){
   const cols=["Next","Doing","Waiting","Done"];
   const ts=S.tasks.filter(t=>objFilter==="all"||t.obj===objFilter);
@@ -548,10 +598,10 @@ function renderMethod(){
   const c=k=>S.tasks.filter(t=>t.phase===k&&t.status!=="Done").length;
   $("#phases").innerHTML = ph.map(([k,v])=>`<div><b>${k}</b><small>${v}</small><small class="num" style="color:var(--ink)">${c(k)} open action${c(k)===1?"":"s"}</small></div>`).join("");
 }
-function renderAll(){ renderClock(); renderLanes(); renderToday(); renderApproval(); renderStations(); renderBoard(); renderLog(); renderSources(); renderSchedules(); renderMethod();
+function renderAll(){ renderClock(); renderLanes(); renderToday(); renderApproval(); renderStations(); renderReadiness(); renderBoard(); renderLog(); renderSources(); renderSchedules(); renderMethod();
   document.querySelectorAll("[data-add]").forEach(b=>b.hidden=!canWrite); }
 
-const VIEWS=["today","approval","stations","board","log","sources","schedules","method"];
+const VIEWS=["today","approval","stations","readiness","board","log","sources","schedules","method"];
 function route(){
   const h=(location.hash||"").slice(1); const v=VIEWS.includes(h)?h:"today";
   document.querySelectorAll("section[data-view]").forEach(s=>s.hidden=s.dataset.view!==v);
@@ -603,6 +653,7 @@ function defaults(col){
   if(col==="log") return {date:d,obj:o,kind:"Evidence"};
   if(col==="sources") return {role:"Supporting",kind:"Artifact",obj:"VA"};
   if(col==="schedules") return {enabled:"on"};
+  if(col==="readiness") return {status:"Not started",gate:"Gate",site:"ONT42 + ONT43",area:"Reach & Relay Garage",order:99};
   return {};
 }
 function closeDrawer(){ $("#drawer-root").innerHTML=""; }
@@ -623,6 +674,7 @@ document.addEventListener("click",e=>{
     if(g.id==="obj-filter"){objFilter=seg.dataset.f;renderBoard();}
     if(g.id==="src-filter"){srcFilter=seg.dataset.f;renderSources();}
     if(g.id==="sch-filter"){schFilter=seg.dataset.f;renderSchedules();}
+    if(g.id==="rd-filter"){rdFilter=seg.dataset.f;renderReadiness();}
   }
 });
 document.addEventListener("keydown",e=>{
