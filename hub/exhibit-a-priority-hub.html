@@ -154,6 +154,13 @@ td .sub{font-size:12px;color:var(--muted)}
 .li .when{font-family:var(--f-head);font-weight:600;color:var(--muted)}
 .src{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
 .src:last-child{border-bottom:0}
+.drop{border:2px dashed var(--line);border-radius:var(--r-lg);padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:end;margin-bottom:14px;background:var(--panel)}
+.drop.over{border-color:var(--accent);background:var(--panel-2)}
+.drop label{display:grid;gap:4px;font-size:13px;color:var(--muted);font-weight:600}
+.drop select{min-height:36px}
+.drop .hint{flex:1 1 220px;font-size:13px;color:var(--muted);align-self:center}
+.doc-ty{display:inline-block;min-width:38px;text-align:center;font-size:11px;font-weight:700;border-radius:var(--r-sm);padding:2px 4px;background:var(--info-bg);color:var(--info);margin-right:6px}
+#doc-status{font-size:13px;color:var(--muted);margin:-6px 0 12px;min-height:1em}
 .src a{font-weight:700;text-decoration:none}
 .src a:hover{text-decoration:underline}
 .src p{margin:2px 0 0;font-size:13px;color:var(--muted)}
@@ -230,6 +237,7 @@ td .sub{font-size:12px;color:var(--muted)}
     <a href="#readiness">Pilot Readiness</a>
     <a href="#board">Action Board</a>
     <a href="#log">Decisions &amp; Evidence</a>
+    <a href="#docs">Documents</a>
     <a href="#sources">Sources</a>
     <a href="#schedules">Scheduled Tasks</a>
     <a href="#method">Method</a>
@@ -301,6 +309,22 @@ td .sub{font-size:12px;color:var(--muted)}
   <div class="panel"><div class="list" id="log-list"></div></div>
 </section>
 
+<section data-view="docs">
+  <div class="head"><div><h2>Documents</h2><p>Files for Vendor Approval and Station Conversions: the agreement, Amazon correspondence, COIs, pilot paperwork, site photos. PDF, images, CSV, Markdown, JSON or text up to 20 MB. Word, Excel and PowerPoint files can't be stored here; save them as PDF first.</p></div>
+    <div class="tools"><div class="seg" id="doc-filter" role="group" aria-label="Filter documents">
+      <button aria-pressed="true" data-f="all">All</button><button aria-pressed="false" data-f="VA">Vendor Approval</button><button aria-pressed="false" data-f="MM">Middle Mile</button><button aria-pressed="false" data-f="LM">Last Mile</button></div></div></div>
+  <div class="drop" id="doc-drop" hidden>
+    <label for="doc-obj">Initiative<select id="doc-obj">
+      <option value="VA">Vendor Approval</option><option value="MM">Middle Mile</option><option value="LM">Last Mile</option><option value="ALL">All</option></select></label>
+    <label for="doc-cat">Category<select id="doc-cat"></select></label>
+    <input type="file" id="doc-file" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.svg,.csv,.md,.json,.txt,.mp4,.webm">
+    <button class="btn primary" type="button" id="doc-pick">Upload files</button>
+    <span class="hint">or drop files anywhere in this box</span>
+  </div>
+  <div id="doc-status" role="status" aria-live="polite"></div>
+  <div class="panel"><div class="list" id="doc-list"></div></div>
+</section>
+
 <section data-view="sources">
   <div class="head"><div><h2>Sources</h2><p>Only artifacts and meetings with facts about Vendor Approval or Station Conversions. DSP lead lists, outreach and routing/workflow artifacts are excluded. Core = use it, Supporting = reference, Retire = superseded by this hub.</p></div>
     <div class="tools"><div class="seg" id="src-filter" role="group" aria-label="Filter sources">
@@ -354,6 +378,7 @@ const TERM_END = new Date("2027-01-31T23:59:59");
 const OBJS = {VA:"Vendor Approval",MM:"Middle Mile",LM:"Last Mile",ALL:"All"};
 const SITE_STAGES = ["Identified","Scoping","Site visit","Pilot agreed","Onboarding","Live","Converted","Blocked","Paused"];
 const LADDER = ["Identified","Scoping","Site visit","Pilot agreed","Onboarding","Live","Converted"];
+const DOC_CATS = ["Agreement & contract","Amazon correspondence","Insurance / COI","Vendor registration","Pilot (ONT42/ONT43)","Site / station","Billing & rates","Other"];
 const SCHEMA = {
   tasks:{label:"Action",fields:[
     ["title","Action","text",true],["obj","Initiative","select",false,Object.keys(OBJS)],
@@ -377,13 +402,17 @@ const SCHEMA = {
     ["item","Item","text",true],["area","Area","select",false,["Contract & terms","Reach & Relay Garage","Site access & safety","People, parts & equipment","Billing","Scope & success measures","Communication","ONT43 site"]],
     ["status","Status","select",false,["Not started","In progress","Waiting","Blocked","Ready"]],["gate","Blocks go-live?","select",false,["Gate","Nice to have"]],
     ["site","Site","select",false,["ONT42 + ONT43","ONT42","ONT43"]],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands","textarea"],["ref","Pilot dashboard id","text"],["order","Order","number"]]},
+  docs:{label:"Document",fields:[
+    ["name","File name","text",true],["obj","Initiative","select",false,Object.keys(OBJS)],["category","Category","select",false,DOC_CATS],
+    ["docDate","Document date","date"],["note","What it is / why it matters","textarea"]]},
   schedules:{label:"Scheduled task",fields:[
     ["name","Name","text",true],["schedule","When","text"],["enabled","On?","select",false,["on","off"]],["lastRun","Last run","text"],
     ["tags","Tags (comma separated)","text"],["recommendation","Recommendation","text"],["does","What it does","textarea"],["touches","Reads / writes","textarea"],["notes","Notes","textarea"]]}
 };
-const S = {tasks:[],regsteps:[],sites:[],log:[],sources:[],schedules:[],readiness:[]};
+const S = {tasks:[],regsteps:[],sites:[],log:[],sources:[],schedules:[],readiness:[],docs:[]};
 const GO_LIVE="2026-11-25";
 let rdFilter="open";
+let viewerName="", assets=null, docFilter="all", docUsage=null;
 let db=null, canWrite=false, objFilter="all", srcFilter="use", schFilter="tied";
 
 const $ = s => document.querySelector(s);
@@ -576,6 +605,61 @@ function renderSources(){
       <div style="display:grid;gap:4px;justify-items:end"><span class="pill ${s.role==="Core"?"ok":s.role==="Retire"?"bad":"info"}">${esc(s.role||"")}</span>${canWrite?`<button class="btn sm" data-edit="sources:${esc(s.id)}">Edit</button>`:""}</div></div>`;}).join(""):`<div class="empty">None in this view.</div>`}</div>`;
   }).join("");
 }
+const DOC_TYPES={pdf:"application/pdf",png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",webp:"image/webp",svg:"image/svg+xml",
+  csv:"text/csv",md:"text/markdown",markdown:"text/markdown",json:"application/json",txt:"text/plain",mp4:"video/mp4",webm:"video/webm"};
+const fmtSize = b => !b?"":b<1024?b+" B":b<1048576?(b/1024).toFixed(0)+" KB":b<1073741824?(b/1048576).toFixed(1)+" MB":+(b/1073741824).toFixed(1)+" GB";
+const docTy = r => { const t=r.contentType||""; return t==="application/pdf"?"PDF":t.startsWith("image/")?"IMG":t.startsWith("video/")?"VID":(String(r.name||"").split(".").pop()||"FILE").toUpperCase().slice(0,4); };
+function renderDocs(){
+  const drop=$("#doc-drop"); drop.hidden=!(assets&&canWrite);
+  const cat=$("#doc-cat"); if(!cat.options.length) cat.innerHTML=DOC_CATS.map(c=>`<option>${esc(c)}</option>`).join("");
+  const groups=[["VA","Vendor Approval"],["MM","Station Conversions · Middle Mile"],["LM","Station Conversions · Last Mile"],["ALL","General"]];
+  const list=S.docs.filter(d=>docFilter==="all"||d.obj===docFilter||d.obj==="ALL");
+  const meter=docUsage?`<div class="sub small" style="margin-bottom:8px">${docUsage.files} file${docUsage.files===1?"":"s"} · ${fmtSize(docUsage.bytes)} of ${fmtSize(docUsage.maxBytes)} used</div>`:"";
+  if(!list.length){ $("#doc-list").innerHTML=meter+`<div class="empty">${S.docs.length?"None in this view.":(assets&&canWrite?"No documents yet. Upload the first one above.":"No documents yet.")}</div>`; return; }
+  $("#doc-list").innerHTML = meter+groups.map(([o,l])=>{
+    const g=list.filter(d=>(d.obj||"ALL")===o).sort((a,b)=>String(b.uploadedAt||"").localeCompare(String(a.uploadedAt||"")));
+    if(!g.length) return "";
+    return `<h3 style="margin:12px 0 4px">${l}</h3>`+g.map(d=>`<div class="src">
+      <div style="min-width:0"><span class="doc-ty">${esc(docTy(d))}</span>${d.assetId?`<a href="/_blob/${encodeURIComponent(d.assetId)}" target="_blank" rel="noopener">${esc(d.name)}</a>`:`<b>${esc(d.name)}</b>`}
+        ${d.note?`<p>${esc(d.note)}</p>`:""}<p>${[d.category,d.docDate?fmtD(d.docDate):"",fmtSize(d.sizeBytes),d.uploadedAt?"added "+fmtD(String(d.uploadedAt).slice(0,10)):"",d.by?"by "+d.by:""].filter(Boolean).map(esc).join(" · ")}</p></div>
+      <div style="display:grid;gap:4px;justify-items:end">${canWrite?`<button class="btn sm" data-edit="docs:${esc(d.id)}">Edit</button>`:""}</div></div>`).join("");
+  }).join("");
+}
+function docStatus(m){ $("#doc-status").textContent=m||""; }
+function refreshUsage(){ if(!assets) return; assets.list().then(r=>{ docUsage=r&&r.usage; renderDocs(); }).catch(()=>{}); }
+const DOC_ERR={too_large:"is over the size limit (20 MB, or 2 MB for SVG). Compress or split it.",
+  unsupported_type:"isn't a supported file type. Save Word, Excel or PowerPoint files as PDF first.",
+  invalid_request:"couldn't be read. Text files must be UTF-8; empty files can't be uploaded.",
+  quota_or_state:"couldn't be stored: the hub's file storage is full or unavailable right now.",
+  rate_limited:"wasn't uploaded: too many uploads at once. Wait a moment and try again.",
+  upstream_auth:"wasn't uploaded: your session expired. Reload the page and sign in again.",
+  not_granted:"wasn't uploaded: you need edit access to add files.",
+  capability_disabled:"wasn't uploaded: file uploads aren't available in this view."};
+async function uploadFiles(files){
+  if(!assets||!canWrite||!db) return;
+  const obj=$("#doc-obj").value, category=$("#doc-cat").value; let ok=0;
+  for(const f of files){
+    const ext=String(f.name.split(".").pop()||"").toLowerCase(); const type=DOC_TYPES[ext];
+    if(!type){ toast(`${f.name} ${DOC_ERR.unsupported_type}`); continue; }
+    if(f.size>(type==="image/svg+xml"?2:20)*1048576){ toast(`${f.name} ${DOC_ERR.too_large}`); continue; }
+    docStatus(`Uploading ${f.name}…`);
+    try{
+      let r;
+      try{ r=await assets.upload(f,{type}); }
+      catch(e){ if(e&&e.code==="store_unavailable"){ await new Promise(z=>setTimeout(z,1500)); r=await assets.upload(f,{type}); } else throw e; }
+      await db.collection("docs").doc().set({assetId:r.id,name:f.name,contentType:r.contentType,sizeBytes:r.sizeBytes,obj,category,
+        docDate:"",note:"",uploadedAt:new Date().toISOString(),by:viewerName||""});
+      ok++;
+    }catch(e){
+      const code=e&&e.code;
+      if(code==="capability_disabled"||code==="capability_removed"){ assets=null; renderDocs(); }
+      if(code==="invalid_argument"){ handleWriteErr(e); break; }
+      toast(`${f.name} ${DOC_ERR[code]||"couldn't be uploaded. Try again."}`);
+    }
+  }
+  docStatus(ok?`${ok} file${ok===1?"":"s"} uploaded. Use Edit to add a note.`:"");
+  $("#doc-file").value=""; refreshUsage();
+}
 function renderSchedules(){
   const all=S.schedules.slice().sort((a,b)=>(tied(b)-tied(a))||((b.enabled==="on")-(a.enabled==="on"))||String(a.name).localeCompare(String(b.name)));
   const t=all.filter(tied), on=all.filter(r=>r.enabled==="on");
@@ -598,10 +682,10 @@ function renderMethod(){
   const c=k=>S.tasks.filter(t=>t.phase===k&&t.status!=="Done").length;
   $("#phases").innerHTML = ph.map(([k,v])=>`<div><b>${k}</b><small>${v}</small><small class="num" style="color:var(--ink)">${c(k)} open action${c(k)===1?"":"s"}</small></div>`).join("");
 }
-function renderAll(){ renderClock(); renderLanes(); renderToday(); renderApproval(); renderStations(); renderReadiness(); renderBoard(); renderLog(); renderSources(); renderSchedules(); renderMethod();
+function renderAll(){ renderClock(); renderLanes(); renderToday(); renderApproval(); renderStations(); renderReadiness(); renderBoard(); renderLog(); renderSources(); renderDocs(); renderSchedules(); renderMethod();
   document.querySelectorAll("[data-add]").forEach(b=>b.hidden=!canWrite); }
 
-const VIEWS=["today","approval","stations","readiness","board","log","sources","schedules","method"];
+const VIEWS=["today","approval","stations","readiness","board","log","docs","sources","schedules","method"];
 function route(){
   const h=(location.hash||"").slice(1); const v=VIEWS.includes(h)?h:"today";
   document.querySelectorAll("section[data-view]").forEach(s=>s.hidden=s.dataset.view!==v);
@@ -641,7 +725,13 @@ function openDrawer(col,id){
   const del=$("#dr-del");
   if(del) del.addEventListener("click",async()=>{
     if(del.dataset.armed!=="1"){ del.dataset.armed="1"; del.textContent="Confirm delete"; return; }
-    try{ await db.doc(`${col}/${rec.id}`).delete(); closeDrawer(); toast("Deleted"); }catch(err){ handleWriteErr(err); }
+    try{
+      if(col==="docs"&&rec.assetId){
+        if(!assets){ toast("Deleting files needs edit access in the full hub view"); return; }
+        await assets.delete(rec.assetId);
+      }
+      await db.doc(`${col}/${rec.id}`).delete(); closeDrawer(); toast("Deleted"); refreshUsage();
+    }catch(err){ if(err&&err.code&&DOC_ERR[err.code]) toast("Couldn't delete: "+err.message); else handleWriteErr(err); }
   });
 }
 function defaults(col){
@@ -666,6 +756,7 @@ function handleWriteErr(err){
 document.addEventListener("click",e=>{
   const go=e.target.closest("[data-go]"); if(go){ location.hash=go.dataset.go; return; }
   if(e.target.closest("[data-close]")){ closeDrawer(); return; }
+  if(e.target.closest("#doc-pick")){ $("#doc-file").click(); return; }
   const add=e.target.closest("[data-add]"); if(add){ if(db) openDrawer(add.dataset.add); return; }
   if(e.target.closest("select.inline-sel")) return;
   const ed=e.target.closest("[data-edit]"); if(ed){ e.preventDefault(); const [c,id]=ed.dataset.edit.split(":"); openDrawer(c,id); return; }
@@ -675,12 +766,19 @@ document.addEventListener("click",e=>{
     if(g.id==="src-filter"){srcFilter=seg.dataset.f;renderSources();}
     if(g.id==="sch-filter"){schFilter=seg.dataset.f;renderSchedules();}
     if(g.id==="rd-filter"){rdFilter=seg.dataset.f;renderReadiness();}
+    if(g.id==="doc-filter"){docFilter=seg.dataset.f;renderDocs();}
   }
 });
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape") closeDrawer();
   if(e.key==="Enter"&&e.target.matches("[data-edit][tabindex]")){ const [c,id]=e.target.dataset.edit.split(":"); openDrawer(c,id); }
 });
+document.addEventListener("change",e=>{ if(e.target.id==="doc-file"&&e.target.files.length) uploadFiles([...e.target.files]); });
+(()=>{ const d=$("#doc-drop");
+  ["dragenter","dragover"].forEach(t=>d.addEventListener(t,e=>{ e.preventDefault(); d.classList.add("over"); }));
+  ["dragleave","drop"].forEach(t=>d.addEventListener(t,e=>{ e.preventDefault(); d.classList.remove("over"); }));
+  d.addEventListener("drop",e=>{ const fs=[...(e.dataTransfer&&e.dataTransfer.files||[])]; if(fs.length) uploadFiles(fs); });
+})();
 document.addEventListener("change",async e=>{
   const s=e.target.closest("select.inline-sel"); if(!s||!db) return;
   const [c,id,f]=s.dataset.inline.split(":");
@@ -697,6 +795,9 @@ route(); renderAll();
     db=await window.claude?.use?.("db");
     if(!db){ $("#lanes").insertAdjacentHTML("afterend",`<div class="sub small">Live data isn't available in this view. Sign in to claude.ai to see and update the hub.</div>`); return; }
     const w=user?await user.can("data.write"):null; canWrite = w!==false;
+    try{ assets=await window.claude.use("assets"); }catch(_){ assets=null; }
+    try{ const me=user&&user.me?await user.me():null; viewerName=(me&&me.name)||""; }catch(_){}
+    refreshUsage();
     Object.keys(S).forEach(col=>{
       db.collection(col).onSnapshot(snap=>{ S[col]=snap.docs.map(d=>({id:d.id,...d.data()})); renderAll(); },
         err=>{ console.warn(col,err&&err.code); });
