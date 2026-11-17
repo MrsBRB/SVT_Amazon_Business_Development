@@ -1,0 +1,423 @@
+<title>ONT42 Pilot Launch</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: dispatch-board command page. Navy masthead with the three objectives as lanes, then tabbed work surfaces (registration stepper, station grid + DSP pipeline, action board, log, sources, method). */
+:root{
+  --navy:#1c365e; --red:#e01e2e; --steel:#5b6b7f; --gray:#e6e9ed;
+  --bg:#f4f6f9; --panel:#ffffff; --panel-2:#eef1f5; --ink:#1c365e; --ink-2:#3c4c63; --muted:#5b6b7f; --line:#d5dbe3;
+  --mast:#1c365e; --mast-ink:#ffffff; --mast-muted:#c4cfdd;
+  --ok:#1f7a4d; --ok-bg:#e3f3ea; --warn:#9a5b00; --warn-bg:#fdf0d9; --bad:#b4141f; --bad-bg:#fbe3e5; --info:#1c365e; --info-bg:#e3eaf4;
+  --accent:#e01e2e;
+  --f-head:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Source Sans 3",Arial,sans-serif;
+  --r-sm:4px; --r-md:8px; --r-lg:14px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1626; --panel:#15223a; --panel-2:#1b2b47; --ink:#e8eef7; --ink-2:#c3cee0; --muted:#93a3ba; --line:#2a3b58;
+  --mast:#0f2242; --mast-ink:#ffffff; --mast-muted:#a9b8cf;
+  --ok:#6fd3a0; --ok-bg:#163a2b; --warn:#f2bf62; --warn-bg:#3b2e14; --bad:#ff8a92; --bad-bg:#43191e; --info:#9fc0ef; --info-bg:#1d3150;
+  --accent:#ff4b58; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1626; --panel:#15223a; --panel-2:#1b2b47; --ink:#e8eef7; --ink-2:#c3cee0; --muted:#93a3ba; --line:#2a3b58;
+  --mast:#0f2242; --mast-ink:#ffffff; --mast-muted:#a9b8cf;
+  --ok:#6fd3a0; --ok-bg:#163a2b; --warn:#f2bf62; --warn-bg:#3b2e14; --bad:#ff8a92; --bad-bg:#43191e; --info:#9fc0ef; --info-bg:#1d3150;
+  --accent:#ff4b58; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+h1,h2,h3{font-family:var(--f-head);text-wrap:balance;margin:0}
+a{color:var(--info)}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num{font-variant-numeric:tabular-nums}
+
+/* Masthead */
+.mast{background:var(--mast);color:var(--mast-ink)}
+.mast .wrap{padding-block:22px 18px;display:grid;gap:18px}
+.eyebrow{font-family:var(--f-head);letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--mast-muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.eyebrow .rule{width:28px;height:3px;background:#e01e2e;display:inline-block}
+.mast h1{font-size:clamp(26px,4vw,38px);font-weight:600;line-height:1.05}
+.mast .sub{color:var(--mast-muted);max-width:70ch}
+.clock{display:flex;gap:22px;flex-wrap:wrap}
+.clock div{display:grid}
+.clock b{font-family:var(--f-head);font-size:28px;font-weight:700;line-height:1}
+.clock span{font-size:12px;color:var(--mast-muted);letter-spacing:.06em;text-transform:uppercase}
+
+.lanes{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px}
+.lane{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:var(--r-md);padding:14px;display:grid;gap:8px;min-width:0;cursor:pointer;text-align:left;color:var(--mast-ink)}
+.lane:hover{background:rgba(255,255,255,.11)}
+.lane.p1{border-color:#e01e2e;box-shadow:inset 0 3px 0 #e01e2e}
+.lane .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.lane .tag{font-family:var(--f-head);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mast-muted)}
+.lane .pri{font-family:var(--f-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:#e01e2e;color:#fff;border-radius:var(--r-sm);padding:1px 7px}
+.lane .pri.n{background:rgba(255,255,255,.18)}
+.lane h2{font-size:20px;font-weight:600}
+.lane .big{font-family:var(--f-head);font-size:26px;font-weight:700}
+.lane .meta{font-size:13px;color:var(--mast-muted)}
+.lane .next{font-size:14px;border-top:1px solid rgba(255,255,255,.14);padding-top:8px}
+.lane .next b{font-family:var(--f-head);letter-spacing:.06em;text-transform:uppercase;font-size:11px;color:var(--mast-muted);display:block}
+.bar{height:6px;border-radius:3px;background:rgba(255,255,255,.16);overflow:hidden}
+.bar i{display:block;height:100%;background:#fff}
+
+/* Tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--mast)}
+.tabs .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs a{font-family:var(--f-head);font-weight:600;letter-spacing:.04em;font-size:15px;padding:12px 14px;text-decoration:none;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+main .wrap{padding-block:22px 60px;display:grid;gap:22px}
+section[data-view]{display:grid;gap:18px}
+.head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+.head h2{font-size:24px;font-weight:600}
+.head p{margin:2px 0 0;color:var(--muted);max-width:75ch}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:var(--r-md);padding:7px 12px;cursor:pointer;font-weight:600;font-size:14px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+:root[data-theme="dark"] .btn.primary{background:#2c5490;border-color:#2c5490}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{background:#2c5490;border-color:#2c5490}}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.sm{padding:3px 8px;font-size:13px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.seg button{border:0;background:var(--panel);padding:6px 10px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink)}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;min-width:0}
+.panel h3{font-size:17px;font-weight:600;margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap;background:var(--panel-2);color:var(--ink-2)}
+.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.info{background:var(--info-bg);color:var(--info)}
+.chip{font-family:var(--f-head);font-size:12px;letter-spacing:.06em;font-weight:600;border:1px solid var(--line);border-radius:var(--r-sm);padding:0 6px;color:var(--muted)}
+.chip.o3{color:var(--accent);border-color:var(--accent)}
+.muted{color:var(--muted)} .small{font-size:13px}
+
+/* Stepper */
+.steps{display:grid;gap:0;counter-reset:s}
+.step{display:grid;grid-template-columns:34px 1fr auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
+.step:last-child{border-bottom:0}
+.dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-head);font-weight:700;font-size:14px;border:2px solid var(--line);color:var(--muted);background:var(--panel)}
+.step[data-s="Done"] .dot{background:var(--ok);border-color:var(--ok);color:var(--panel)}
+.step[data-s="In progress"] .dot{border-color:var(--info);color:var(--info)}
+.step[data-s="Blocked"] .dot{border-color:var(--bad);color:var(--bad)}
+.step .t{font-weight:700}
+.step .d{font-size:13px;color:var(--muted);margin-top:2px}
+.step .ev{font-size:13px;margin-top:4px;color:var(--ink-2)}
+.step .r{display:grid;gap:6px;justify-items:end}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th,td{padding:9px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:14px}
+th{font-family:var(--f-head);font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:12px;color:var(--muted);background:var(--panel-2);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+tr.grp td{background:var(--panel-2);font-family:var(--f-head);font-weight:600;font-size:15px;color:var(--ink)}
+td.money{font-family:var(--f-head);font-weight:700;font-size:16px;white-space:nowrap}
+td .sub{font-size:12px;color:var(--muted)}
+.inline-sel{border:1px solid var(--line);border-radius:var(--r-sm);background:var(--panel);padding:2px 4px;font-size:13px;max-width:140px}
+.flag{font-size:12px;color:var(--warn);font-weight:700}
+.stale{color:var(--bad);font-weight:700}
+
+/* Stations */
+.stations{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.st{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:12px;display:grid;gap:8px;min-width:0}
+.st.open{border-color:var(--ok);box-shadow:inset 0 3px 0 var(--ok)}
+.st .row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.st .code{font-family:var(--f-head);font-weight:700;font-size:20px}
+.slots{display:flex;gap:4px}
+.slots i{flex:1;height:8px;border-radius:2px;background:var(--panel-2);border:1px solid var(--line)}
+.slots i.f{background:var(--ok);border-color:var(--ok)}
+.slots i.p{background:var(--info-bg);border-color:var(--info)}
+
+/* Board */
+.board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.col{background:var(--panel-2);border-radius:var(--r-md);padding:10px;display:grid;gap:8px;align-content:start;min-width:0}
+.col h3{font-size:15px;display:flex;justify-content:space-between}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:10px;display:grid;gap:6px;cursor:pointer;min-width:0}
+.card:hover{border-color:var(--muted)}
+.card .t{font-weight:600;overflow-wrap:anywhere}
+.card .m{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)}
+.overdue{color:var(--bad);font-weight:700}
+
+/* Lists */
+.list{display:grid;gap:0}
+.li{display:grid;grid-template-columns:96px 1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:0}
+.grid3 .li{grid-template-columns:58px 1fr}
+.grid3 .li>*:last-child{grid-column:2;justify-self:start}
+.li .when{font-family:var(--f-head);font-weight:600;color:var(--muted)}
+.src{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.src:last-child{border-bottom:0}
+.src a{font-weight:700;text-decoration:none}
+.src a:hover{text-decoration:underline}
+.src p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+
+.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r-md)}
+.method ol,.method ul{margin:6px 0 0;padding-left:20px}
+.method li{margin:4px 0}
+.phase{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.phase div{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:12px;min-width:0}
+.phase b{font-family:var(--f-head);font-size:17px;display:block}
+.phase small{color:var(--muted);display:block;margin-top:4px}
+
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(8,15,28,.45);z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--panel);z-index:21;border-left:1px solid var(--line);display:grid;grid-template-rows:auto 1fr auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer header,.drawer footer{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}
+.drawer footer{border-bottom:0;border-top:1px solid var(--line)}
+.drawer form{overflow:auto;padding:14px 16px;display:grid;gap:12px;align-content:start}
+.drawer label{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+.drawer input,.drawer select,.drawer textarea{border:1px solid var(--line);border-radius:var(--r-sm);padding:7px 8px;background:var(--bg);font-weight:400;font-size:15px;color:var(--ink)}
+.drawer textarea{min-height:90px;resize:vertical}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--navy);color:#fff;padding:8px 14px;border-radius:var(--r-md);z-index:30;font-weight:600}
+.ro-note{font-size:13px;color:var(--muted)}
+
+@media (max-width:900px){.lanes{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.board{grid-template-columns:1fr 1fr}.phase{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.board{grid-template-columns:1fr}.phase{grid-template-columns:1fr}.step{grid-template-columns:30px 1fr}.step .r{grid-column:2;justify-items:start}.li{grid-template-columns:1fr}.li>*:last-child{justify-self:start}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.kpis{display:flex;gap:22px;flex-wrap:wrap}
+.kpis div{display:grid}
+.kpis b{font-family:var(--f-head);font-size:28px;font-weight:700;line-height:1}
+.kpis span{font-size:12px;color:var(--mast-muted);letter-spacing:.06em;text-transform:uppercase}
+.sitecards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:5px 12px;font-size:14px}
+.kv dt{color:var(--muted);font-weight:600}
+.kv dd{margin:0;min-width:0}
+.tl{display:grid;gap:0}
+.tl .ev{display:grid;grid-template-columns:90px 18px 1fr;gap:10px;align-items:start;padding:8px 0}
+.tl .dotc{width:12px;height:12px;border-radius:50%;margin-top:4px;background:var(--panel);border:2px solid var(--muted)}
+.tl .ev.done .dotc{background:var(--ok);border-color:var(--ok)}
+.tl .ev.next .dotc{border-color:var(--accent)}
+.tl .when{font-family:var(--f-head);font-weight:600;color:var(--muted)}
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.person{border:1px solid var(--line);border-radius:var(--r-md);padding:10px;background:var(--panel)}
+.person b{display:block}
+.person span{font-size:13px;color:var(--muted)}
+.rdrow{display:grid;grid-template-columns:128px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.rdrow:last-child{border-bottom:0}
+.upform{display:grid;grid-template-columns:1fr auto;gap:8px}
+.upform textarea{min-height:60px;border:1px solid var(--line);border-radius:var(--r-sm);padding:8px;background:var(--bg);color:var(--ink);font:inherit}
+@media (max-width:760px){.sitecards{grid-template-columns:1fr}.rdrow{grid-template-columns:1fr}.upform{grid-template-columns:1fr}}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="eyebrow"><span class="rule"></span>SVT Fleet Solutions · Amazon Middle Mile · Internal team page</div>
+    <div style="display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:end">
+      <div style="display:grid;gap:6px;min-width:0">
+        <h1>ONT42 / ONT43 Pilot Launch</h1>
+        <div class="sub">SVT repair support for Amazon's AFP tractor yards in Ontario, CA. Work requests arrive through Reach and connect to Amazon's Relay Garage. This page tracks what has to be true before SVT takes its first work request.</div>
+      </div>
+      <div class="kpis num" id="kpis"></div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Pilot sections">
+  <div class="wrap" id="tabs">
+    <a href="#checklist">Launch checklist</a>
+    <a href="#overview">Overview</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#team">Team</a>
+    <a href="#updates">Updates</a>
+  </div>
+</nav>
+
+<main><div class="wrap">
+
+<section data-view="checklist">
+  <div class="head"><div><h2>Launch checklist</h2><p>Items marked <b>Gate</b> must be Ready before go-live. Change a status as soon as it moves, and add the evidence (who confirmed, when) by clicking the item.</p></div>
+    <div class="tools">
+      <div class="seg" id="rd-filter" role="group" aria-label="Filter checklist">
+        <button aria-pressed="true" data-f="open">Not ready</button><button aria-pressed="false" data-f="gate">Gates</button><button aria-pressed="false" data-f="all">All</button>
+      </div>
+      <button class="btn primary" data-add="readiness">Add item</button></div></div>
+  <div class="grid3" id="rd-summary"></div>
+  <div id="rd-areas" style="display:grid;gap:14px"></div>
+</section>
+
+<section data-view="overview">
+  <div class="head"><div><h2>Overview</h2><p>What the pilot is, how work flows, and the two sites.</p></div></div>
+  <div class="grid2">
+    <div class="panel"><h3>How it works</h3>
+      <dl class="kv">
+        <dt>Customer</dt><dd>Amazon Middle Mile, AFP/APP tractor yards (owner: Evan Christodoulides)</dd>
+        <dt>Work requests</dt><dd>Through the Reach portal and mobile app. Reach connects to Amazon's Relay Garage, so the pilot needs no repair-order system integration.</dd>
+        <dt>Reach account</dt><dd>New SVT service-provider account. $3 per service event, paid by SVT. $30 setup fee, credited after 10 events.</dd>
+        <dt>Site access</dt><dd>On-site entry under DTNA's Avetta clearance. Safety vest required, no badge or orientation, gate code by email.</dd>
+        <dt>Approvals</dt><dd>Pre-authorization about $1,000 per OEM (to confirm for Reach).</dd>
+        <dt>Invoicing</dt><dd>Through DTNA / Corcentric (process and SVT owner to confirm).</dd>
+        <dt>Go-live</dt><dd id="golive-text"></dd>
+      </dl></div>
+    <div class="panel"><h3>Success measures (to agree with Amazon)</h3>
+      <ul style="margin:4px 0 0;padding-left:18px">
+        <li>Median days to complete a repair, against the ONT42 baseline of 10.9 days</li>
+        <li>Share of repairs open more than 7 and more than 14 days</li>
+        <li>Tractors down at any time</li>
+      </ul>
+      <p class="small muted" style="margin-top:10px">Next sites if the pilot works: EWR40 (New Jersey), then the EWR45 / PHL40 / PHL42 corridor. Amazon has also asked whether other ONT sites should join.</p></div>
+  </div>
+  <div class="sitecards">
+    <div class="panel"><h3>ONT42 · Ontario, CA</h3>
+      <dl class="kv">
+        <dt>Fleet</dt><dd>226 tractors: 133 CNG; Volvo 111, Freightliner 61</dd>
+        <dt>Repair time</dt><dd>10.9-day median today</dd>
+        <dt>Space</dt><dd>Very little room on site. Complex work goes off site nearby.</dd>
+        <dt>Coverage</dt><dd>SVT Corona / Inland Empire</dd>
+      </dl></div>
+    <div class="panel"><h3>ONT43 · Ontario, CA</h3>
+      <dl class="kv">
+        <dt>Fleet</dt><dd>147 tractors: 106 CNG; Volvo 86</dd>
+        <dt>Repair time</dt><dd>11.0-day median today</dd>
+        <dt>Space</dt><dd>More room, but a dirt lot with no pavement. Option: ferry ONT42 units here.</dd>
+        <dt>Coverage</dt><dd>SVT Corona / Inland Empire</dd>
+      </dl></div>
+  </div>
+</section>
+
+<section data-view="timeline">
+  <div class="head"><div><h2>Timeline</h2><p>Key dates so far and what's next.</p></div></div>
+  <div class="panel"><div class="tl" id="tl"></div></div>
+</section>
+
+<section data-view="team">
+  <div class="head"><div><h2>Team</h2><p>Who does what on the pilot.</p></div></div>
+  <div class="panel"><h3>SVT and VVG</h3><div class="people">
+    <div class="person"><b>Mike Thompson</b><span>President, SVT · sponsor, site visit, approvals</span></div>
+    <div class="person"><b>Brooke Benkert</b><span>Business development · launch coordination, Reach onboarding</span></div>
+    <div class="person"><b>Lon Samford</b><span>Director of Operations · technicians, hours, service levels</span></div>
+    <div class="person"><b>Mark Gallison</b><span>Director of Business Development, SoCal · site visit</span></div>
+    <div class="person"><b>Richard Barron</b><span>VP Global IT, VVG · Reach agreement review, IT</span></div>
+    <div class="person"><b>Shane Matthews</b><span>VVG IT · future Reach integration</span></div>
+  </div></div>
+  <div class="panel"><h3>Amazon</h3><div class="people">
+    <div class="person"><b>Evan Christodoulides</b><span>Pilot owner, Middle Mile</span></div>
+    <div class="person"><b>Steven Olivo</b><span>SoCal AFP Fleet Asset Specialist · site contact</span></div>
+    <div class="person"><b>Aaliyah Rosas</b><span>FAS · ONT42 APP yard</span></div>
+    <div class="person"><b>Scotty Gathright</b><span>ONT42 uptime</span></div>
+    <div class="person"><b>David Galanti</b><span>West Region FAS</span></div>
+    <div class="person"><b>Edmund Park</b><span>Relay Garage connection</span></div>
+  </div></div>
+  <div class="panel"><h3>Reach</h3><div class="people">
+    <div class="person"><b>Sidhant Mishra</b><span>Onboarding</span></div>
+    <div class="person"><b>Kuldeep Rana</b><span>Agreement and account setup</span></div>
+  </div></div>
+</section>
+
+<section data-view="updates">
+  <div class="head"><div><h2>Updates</h2><p>Short dated notes from the team: what happened, what was decided, what's blocked.</p></div></div>
+  <div class="panel" id="up-form-wrap"><form class="upform" id="up-form"><textarea id="up-text" aria-label="Update" placeholder="Add an update, e.g. &quot;Site visit done. ONT42 work area agreed by the fence line.&quot;"></textarea><button class="btn primary" type="submit">Post update</button></form></div>
+  <div class="panel"><div class="list" id="up-list"></div></div>
+</section>
+
+</div></main>
+
+<div id="drawer-root"></div>
+<div id="toast-root"></div>
+
+<script>
+(() => {
+const GO_LIVE="2026-11-25";
+const AREAS=["Contract & terms","Reach & Relay Garage","Site access & safety","People, parts & equipment","Billing","Scope & success measures","Communication","ONT43 site"];
+const STAT=["Not started","In progress","Waiting","Blocked","Ready"];
+const FIELDS=[["item","Item","text",true],["area","Area","select",false,AREAS],["status","Status","select",false,STAT],["gate","Blocks go-live?","select",false,["Gate","Nice to have"]],
+  ["site","Site","select",false,["ONT42 + ONT43","ONT42","ONT43"]],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands","textarea"],["order","Order","number"]];
+const TL=[["2026-11-06","Amazon and SVT review the DTNA work-request backlog; ONT42 named a priority site",1],
+  ["2026-11-10","ONT42 agreed as the pilot site with Evan",1],["2026-11-13","ONT43 added to the pilot scope; SVT set up in Relay Garage as a selectable vendor",1],
+  ["2026-11-16","Reach onboarding session; intake form submitted; Amazon confirms the $3 event fee is SVT's cost",1],
+  ["2026-11-17","Site visit to ONT42 and ONT43 (Mike, with Steven Olivo); Reach agreement sent for SVT approval",1],
+  ["2026-11-20","Operating model decision and option A / option B for Amazon",0],
+  [GO_LIVE,"Reach go-live target (Reach's estimate; start date still to confirm with Amazon)",0]];
+const S={readiness:[],updates:[]}; let db=null,user=null,canWrite=false,rdFilter="open";
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const pd=s=>{if(!s)return null;const d=new Date(s+"T00:00:00");return isNaN(d)?null:d};
+const days=s=>{const d=pd(s);return d?Math.round((d-today())/864e5):null};
+const fmtD=s=>{const d=pd(s);return d?d.toLocaleDateString(undefined,{month:"short",day:"numeric"}):""};
+function toast(m){const r=$("#toast-root");r.innerHTML=`<div class="toast" role="status">${esc(m)}</div>`;clearTimeout(toast.t);toast.t=setTimeout(()=>r.innerHTML="",2200)}
+function stats(){const g=S.readiness.filter(r=>r.gate!=="Nice to have");return{n:g.length,ready:g.filter(r=>r.status==="Ready").length,blocked:g.filter(r=>r.status==="Blocked").length,waiting:g.filter(r=>r.status==="Waiting").length}}
+function renderKpis(){const s=stats(),d=days(GO_LIVE);
+  $("#kpis").innerHTML=`<div><b>${s.ready}/${s.n||"–"}</b><span>gates ready</span></div><div><b>${d>=0?d:0}</b><span>days to go-live target</span></div><div><b>${s.blocked+s.waiting}</b><span>blocked or waiting</span></div>`;
+  $("#golive-text").textContent=`Target ${fmtD(GO_LIVE)} (Reach's estimate). The start date still needs Amazon's confirmation.`;}
+function sel(r){return `<select class="inline-sel" aria-label="Status" data-inline="${esc(r.id)}">${STAT.map(o=>`<option${o===r.status?" selected":""}>${o}</option>`).join("")}</select>`}
+function renderChecklist(){
+  const s=stats(),pct=s.n?Math.round(s.ready/s.n*100):0,d=days(GO_LIVE);
+  const over=S.readiness.filter(r=>r.status!=="Ready"&&days(r.due)!==null&&days(r.due)<0).length;
+  $("#rd-summary").innerHTML=`
+   <div class="panel"><h3>Go-live target</h3><div class="num" style="font-family:var(--f-head);font-size:30px;font-weight:700">${fmtD(GO_LIVE)}</div><div class="small muted">${d>=0?d+" days away":"passed "+(-d)+" days ago"}. Reach's estimate; confirm with Amazon.</div></div>
+   <div class="panel"><h3>Gates ready</h3><div class="num" style="font-family:var(--f-head);font-size:30px;font-weight:700">${s.ready}/${s.n} <span class="small muted">(${pct}%)</span></div><div style="height:6px;border-radius:3px;background:var(--panel-2);margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:${pct}%;background:var(--ok)"></i></div></div>
+   <div class="panel"><h3>Attention</h3><div class="small">${s.blocked} blocked · ${s.waiting} waiting on others · ${over} past due</div></div>`;
+  const keep=r=>rdFilter==="all"?true:rdFilter==="gate"?r.gate!=="Nice to have":r.status!=="Ready";
+  const pc={"Ready":"ok","In progress":"info","Waiting":"warn","Blocked":"bad"};
+  const html=AREAS.map(a=>{const all=S.readiness.filter(r=>r.area===a);if(!all.length)return"";
+    const list=all.filter(keep).sort((x,y)=>(+x.order||99)-(+y.order||99));const rd=all.filter(r=>r.status==="Ready").length;
+    return `<div class="panel"><div class="head" style="align-items:baseline"><h3>${esc(a)}</h3><span class="small muted">${rd}/${all.length} ready</span></div>${list.length?list.map(r=>{const dd=days(r.due);return `<div class="rdrow">
+      <div>${canWrite?sel(r):`<span class="pill ${pc[r.status]||""}">${esc(r.status)}</span>`}</div>
+      <div style="min-width:0;cursor:pointer" data-edit="${esc(r.id)}"><div style="font-weight:600">${esc(r.item)} ${r.gate!=="Nice to have"?'<span class="chip o3">Gate</span>':""}</div>
+      <div class="small muted">${esc(r.site||"")} · ${r.owner?esc(r.owner):"owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${fmtD(r.due)}</span>`:""}</div>
+      ${r.evidence?`<div class="small" style="margin-top:2px">${esc(r.evidence)}</div>`:""}</div></div>`}).join(""):`<div class="small muted">All ready in this area.</div>`}</div>`}).join("");
+  $("#rd-areas").innerHTML=html||`<div class="empty">The checklist is loading. If it stays empty, sign in to claude.ai to see it.</div>`;
+}
+function renderTimeline(){$("#tl").innerHTML=TL.map(([d,t,done])=>{const cls=done?"done":(days(d)>=0?"next":"");return `<div class="ev ${cls}"><div class="when">${fmtD(d)}</div><div class="dotc"></div><div>${esc(t)}</div></div>`}).join("")}
+async function renderUpdates(){
+  const ups=S.updates.slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  let names={};
+  try{const ids=[...new Set(ups.map(u=>u.by).filter(Boolean))];if(user&&ids.length&&user.profiles){const ps=await user.profiles(ids);for(const i of ids)names[i]=(ps[i]&&ps[i].name)||""}}catch(e){}
+  $("#up-list").innerHTML=ups.length?ups.map(u=>`<div class="li"><div class="when">${esc(u.date||(u.at||"").slice(0,10))}</div><div style="min-width:0;overflow-wrap:anywhere">${esc(u.text)}</div><div class="small muted">${esc(names[u.by]||u.byName||"")}</div></div>`).join(""):`<div class="empty">No updates yet. Post the first one above.</div>`;
+  $("#up-form-wrap").hidden=!canWrite;
+}
+function renderAll(){renderKpis();renderChecklist();renderTimeline();renderUpdates();document.querySelectorAll("[data-add]").forEach(b=>b.hidden=!canWrite)}
+const VIEWS=["checklist","overview","timeline","team","updates"];
+function route(){const h=(location.hash||"").slice(1);const v=VIEWS.includes(h)?h:"checklist";document.querySelectorAll("section[data-view]").forEach(s=>s.hidden=s.dataset.view!==v);document.querySelectorAll("#tabs a").forEach(a=>a.setAttribute("aria-current",a.getAttribute("href")==="#"+v?"page":"false"))}
+addEventListener("hashchange",route);
+function openDrawer(id){
+  const rec=id?S.readiness.find(r=>r.id===id):null; if(id&&!rec)return;
+  const base=rec||{status:"Not started",gate:"Gate",site:"ONT42 + ONT43",area:AREAS[1],order:99}; const ro=!canWrite;
+  const f=([k,l,t,req,opts])=>{const v=base[k]??"",i="f-"+k;
+    if(t==="select")return `<label for="${i}">${l}<select id="${i}" name="${k}" ${ro?"disabled":""}>${opts.map(o=>`<option${o===v?" selected":""}>${esc(o)}</option>`).join("")}</select></label>`;
+    if(t==="textarea")return `<label for="${i}">${l}<textarea id="${i}" name="${k}" ${ro?"readonly":""}>${esc(v)}</textarea></label>`;
+    return `<label for="${i}">${l}<input id="${i}" name="${k}" type="${t}" value="${esc(v)}" ${ro?"readonly":""}></label>`};
+  $("#drawer-root").innerHTML=`<div class="scrim" data-close></div><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h">
+    <header><h3 id="dr-h" style="font-size:19px">${rec?(ro?"Checklist item":"Edit item"):"New checklist item"}</h3><button class="btn sm" data-close>Close</button></header>
+    <form id="dr-form" novalidate>${FIELDS.map(f).join("")}${ro?'<p class="ro-note">You can view this item. Ask Brooke for edit access to change it.</p>':""}</form>
+    <footer><span></span>${ro?"":`<button class="btn primary" form="dr-form" type="submit">${rec?"Save":"Add"}</button>`}</footer></aside>`;
+  $("#dr-form").addEventListener("submit",async e=>{e.preventDefault();if(ro)return;const fd=new FormData(e.target);const body={};
+    FIELDS.forEach(([k,,t])=>{let v=(fd.get(k)??"").toString().trim();if(t==="number"&&v!=="")v=+v;body[k]=v});
+    if(!body.item){toast("Item is required");return}
+    body.updatedAt=new Date().toISOString();
+    try{const {id:_x,...rest}=rec||{};const ref=rec?db.doc("readiness/"+rec.id):db.collection("readiness").doc();await ref.set({...rest,...body});close();toast(rec?"Saved":"Added")}catch(err){werr(err)}});
+}
+function close(){$("#drawer-root").innerHTML=""}
+function werr(err){if(err&&err.code==="invalid_argument"){canWrite=false;renderAll();toast("You can view this page but not change it")}else toast("Couldn't save. Try again in a moment.")}
+document.addEventListener("click",e=>{
+  if(e.target.closest("[data-close]")){close();return}
+  const a=e.target.closest("[data-add]");if(a){if(db)openDrawer();return}
+  if(e.target.closest("select.inline-sel"))return;
+  const ed=e.target.closest("[data-edit]");if(ed){openDrawer(ed.dataset.edit);return}
+  const sg=e.target.closest(".seg button");if(sg){sg.parentElement.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b===sg?"true":"false"));rdFilter=sg.dataset.f;renderChecklist()}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+document.addEventListener("change",async e=>{const s=e.target.closest("select.inline-sel");if(!s||!db)return;
+  try{await db.doc("readiness/"+s.dataset.inline).update({status:s.value,updatedAt:new Date().toISOString()});toast("Updated")}catch(err){werr(err)}});
+$("#up-form").addEventListener("submit",async e=>{e.preventDefault();const t=$("#up-text").value.trim();if(!t||!db)return;
+  try{const id=user?await user.id():null;await db.collection("updates").add({text:t,at:new Date().toISOString(),date:new Date().toISOString().slice(0,10),by:id||""});$("#up-text").value="";toast("Posted")}catch(err){werr(err)}});
+route();renderAll();
+(async()=>{try{
+  user=await window.claude?.use?.("user"); db=await window.claude?.use?.("db");
+  if(!db){$("#rd-areas").innerHTML=`<div class="empty">Sign in to claude.ai to see the live checklist.</div>`;return}
+  const w=user?await user.can("data.write"):null; canWrite=w!==false;
+  ["readiness","updates"].forEach(c=>db.collection(c).onSnapshot(snap=>{S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));renderAll()},err=>console.warn(c,err&&err.code)));
+  renderAll();
+}catch(err){console.warn(err)}})();
+})();
+</script>

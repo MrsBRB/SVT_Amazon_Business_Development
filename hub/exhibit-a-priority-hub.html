@@ -275,12 +275,12 @@ td .sub{font-size:12px;color:var(--muted)}
 
 <section data-view="readiness">
   <div class="head"><div><h2>Pilot Launch Readiness · ONT42 / ONT43</h2>
-    <p>Everything that has to be true before SVT takes its first Amazon work request in Reach. Items marked <b>Gate</b> block go-live. The ONT42 pilot dashboard keeps the full plan; this list is the launch checklist.</p></div>
+    <p>Everything that has to be true before SVT takes its first Amazon work request in Reach. Items marked <b>Gate</b> block go-live. This is a read-only mirror: the live checklist your team edits is the shared <a href="https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H" target="_blank" rel="noopener">ONT42 / ONT43 Pilot Launch page</a>. The morning check and close-out keep both in step.</p></div>
     <div class="tools">
       <div class="seg" id="rd-filter" role="group" aria-label="Filter readiness items">
         <button aria-pressed="true" data-f="open">Not ready</button><button aria-pressed="false" data-f="gate">Gates</button><button aria-pressed="false" data-f="all">All</button>
       </div>
-      <button class="btn primary" data-add="readiness">Add item</button></div></div>
+      <a class="btn primary" href="https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H" target="_blank" rel="noopener" style="text-decoration:none">Open pilot page</a></div></div>
   <div class="grid3" id="rd-summary"></div>
   <div id="rd-areas" style="display:grid;gap:14px"></div>
 </section>
@@ -542,8 +542,8 @@ function renderReadiness(){
     const list=all.filter(keep).sort((x,y)=>(+x.order||99)-(+y.order||99));
     const rd=all.filter(r=>r.status==="Ready").length;
     return `<div class="panel"><div class="track-h"><h3>${esc(a)}</h3><span class="small muted">${rd}/${all.length} ready</span></div>${list.length?`<div class="list">${list.map(r=>{const dd=days(r.due);return `<div class="li" style="grid-template-columns:120px 1fr auto">
-      <div>${canWrite?selectHTML("readiness",r,"status",SCHEMA.readiness.fields[2][4]):`<span class="pill ${pc[r.status]||""}">${esc(r.status||"")}</span>`}</div>
-      <div style="min-width:0;cursor:pointer" data-edit="readiness:${esc(r.id)}"><div style="font-weight:600">${esc(r.item)} ${r.gate!=="Nice to have"?'<span class="chip o3">Gate</span>':""}</div>
+      <div><span class="pill ${pc[r.status]||""}">${esc(r.status||"")}</span></div>
+      <div style="min-width:0"><div style="font-weight:600">${esc(r.item)} ${r.gate!=="Nice to have"?'<span class="chip o3">Gate</span>':""}</div>
         <div class="small muted">${esc(r.site||"")}${r.owner?" · "+esc(r.owner):" · owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${fmtD(r.due)}</span>`:""}</div>
         ${r.evidence?`<div class="small" style="margin-top:2px">${esc(r.evidence)}</div>`:""}</div>
       <div class="small muted">${esc(r.ref||"")}</div></div>`;}).join("")}</div>`:`<div class="muted small">All ready in this area.</div>`}</div>`;
