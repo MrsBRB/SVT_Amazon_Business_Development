@@ -764,6 +764,7 @@ window.SVTLive = (() => {
   function paint() {
     const n = node(); if (!n) return;
     const t = last ? last.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}) : "";
+    if (window.__SNAPSHOT) { n.textContent = "Read-only snapshot · " + new Date(window.__SNAPSHOT.at).toLocaleString([], {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}); n.dataset.state = "live"; return; }
     n.textContent = pending ? "Saving…" : offline ? "Offline · changes sync when you reconnect" : last ? `Live · synced ${t}` : "Connecting…";
     n.dataset.state = pending ? "saving" : offline ? "offline" : "live";
   }

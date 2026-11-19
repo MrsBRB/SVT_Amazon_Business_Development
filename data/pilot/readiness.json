@@ -4,17 +4,17 @@
     "amazonText": "Reach service agreement signed",
     "area": "Contract & terms",
     "due": "2026-11-20",
-    "evidence": "Sent to Mike and Richard Nov 17, 11:55 AM, asking for SVT's approval path and signer.",
+    "evidence": "Sent to Mike and Richard Nov 17, 11:55 AM CT. Richard Barron (Nov 17, 5:49 PM ET): innovation can't sign contracts, so Mike should send it to Matt Flannery for review. Mike (Nov 17, 9:50 PM ET): he will get it to Matt Flannery to start the SaaS review process. Nov 18, 9:54 AM CT: Brooke asked Mike whether to reassign the DocHub signature to him, aiming to finish before Thanksgiving. Nov 18, 10:26 AM ET: Reach (Kuldeep Rana) sent a DocHub reminder to review and sign. Not signed yet.",
     "gate": "Gate",
     "id": "rd01",
     "item": "Reach agreement (Vantage License and Services Agreement) approved and signed",
     "order": 1,
-    "owner": "Mike / Richard Barron",
+    "owner": "Mike / Matt Flannery (review)",
     "party": "SVT",
     "ref": "p1-ti-09",
     "site": "ONT42 + ONT43",
     "status": "In progress",
-    "updatedAt": "2026-11-17T18:45:13.121Z"
+    "updatedAt": "2026-11-18T22:20:00Z"
   },
   {
     "amazon": "Hide",
@@ -185,7 +185,7 @@
     "amazonText": "Site visit to ONT42 and ONT43",
     "area": "Site access & safety",
     "due": "2026-11-17",
-    "evidence": "Mike on site by 11:00 Nov 17 with Steven Olivo.",
+    "evidence": "Held Nov 17. Mike (Nov 17, 9:50 PM ET): \"A group of us visited two large fleet locations today and they are ready to start sending us work as soon as we are ready.\" No written debrief yet on the ONT42 work area or the ONT43 lot.",
     "gate": "Gate",
     "id": "rd13",
     "item": "Site visit to ONT42 and ONT43 held",
@@ -194,8 +194,8 @@
     "party": "SVT + Amazon",
     "ref": "p1-sa-01",
     "site": "ONT42 + ONT43",
-    "status": "In progress",
-    "updatedAt": "2026-11-17T19:00:00Z"
+    "status": "Ready",
+    "updatedAt": "2026-11-18T14:55:00Z"
   },
   {
     "amazon": "Show",
@@ -389,7 +389,7 @@
     "amazonText": "Start date agreed and ONT42 work requests routed to SVT",
     "area": "Scope & success measures",
     "due": "",
-    "evidence": "Reach targets about Nov 25; Mike's Nov 13 debrief mentioned Jan 1.",
+    "evidence": "Nov 19: Brooke moved the proposed go-live to Mon Dec 7 (after Thanksgiving) to allow prep time; still to confirm with Evan. Reach setup details must reach Amazon by Wed Dec 2. Earlier: Reach targeted about Nov 25; Mike's Nov 13 debrief mentioned Jan 1.",
     "gate": "Gate",
     "id": "rd25",
     "item": "Target start date agreed and FAS confirms ONT42 work requests route to SVT",
@@ -399,7 +399,8 @@
     "ref": "p1-st-03",
     "site": "ONT42 + ONT43",
     "status": "Waiting",
-    "updatedAt": "2026-11-17T19:00:00Z"
+    "updatedAt": "2026-11-19T20:30:00Z",
+    "updatedBy": "Brooke"
   },
   {
     "amazon": "Show",

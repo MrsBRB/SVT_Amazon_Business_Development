@@ -43,5 +43,14 @@
     "status": "In progress",
     "taskId": "activate",
     "title": "Complete Reach service-provider activation"
+  },
+  {
+    "actor": "SVT project team",
+    "at": "2026-11-19T20:30:00Z",
+    "id": "a-20261119-golive",
+    "note": "SVT proposes moving the ONT42 go-live to Monday, December 7, after Thanksgiving, to allow time for Reach onboarding, training and the Amazon connection. The date is proposed and still to be confirmed with Amazon.",
+    "status": "Awaiting confirmation",
+    "taskId": "date",
+    "title": "Go-live moved to after Thanksgiving"
   }
 ]

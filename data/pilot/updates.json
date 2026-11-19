@@ -16,5 +16,13 @@
     "date": "2026-11-17",
     "id": "u-20261117-start",
     "text": "Launch checklist set up. Site visit to ONT42 and ONT43 today with Steven Olivo. Reach agreement is with Mike and Richard for approval. Go-live target is Nov 25 (Reach's estimate)."
+  },
+  {
+    "at": "2026-11-19T20:30:00Z",
+    "by": "",
+    "byName": "Brooke",
+    "date": "2026-11-19",
+    "id": "u-20261119-golive",
+    "text": "Go-live target moved to Monday, Dec 7 (after Thanksgiving) to give the team time to prepare. Reach setup details need to reach Amazon by Wed, Dec 2, so the Reach signature and location details (hours, users, roles) are still the critical path. Still to confirm with Evan."
   }
 ]

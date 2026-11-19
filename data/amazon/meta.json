@@ -1,12 +1,12 @@
 [
   {
-    "commitmentNote": "November 25 is proposed. Validate Reach onboarding/training and the 2–3 business day Amazon connection lead time before confirming go-live.",
-    "goLive": "2026-11-25",
+    "commitmentNote": "Go-live is proposed for Monday, December 7, after Thanksgiving, to allow time to prepare. Reach's setup details need to reach Amazon by December 2 for the 2–3 business day connection. Confirm the date once onboarding and training are scheduled.",
+    "goLive": "2026-12-07",
     "goLiveConfirmed": false,
-    "goLiveLabel": "Nov 25",
-    "goLiveNote": "Reach's estimate; start date to confirm with Amazon.",
+    "goLiveLabel": "Dec 7",
+    "goLiveNote": "Proposed for after Thanksgiving to allow prep time; to confirm with Amazon.",
     "id": "status",
     "source": "https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H",
-    "syncedAt": "2026-11-19T19:00:00Z"
+    "syncedAt": "2026-11-19T20:04:28Z"
   }
 ]

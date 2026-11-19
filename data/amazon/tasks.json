@@ -178,15 +178,15 @@
   {
     "blockedBy": "",
     "comments": [],
-    "detail": "Proposed target is Nov 25. Confirm onboarding and connection timing before setting a committed date.",
+    "detail": "Proposed go-live moved to Monday, Dec 7 (after Thanksgiving) to allow prep time. Confirm onboarding, training and Amazon connection timing before committing the date.",
     "due": "",
-    "evidence": "Proposed date not yet confirmed",
+    "evidence": "Proposed Dec 7, not yet confirmed",
     "gate": true,
     "id": "date",
     "order": 11,
     "owner": "SVT / Amazon",
     "priority": "High",
-    "rev": 1,
+    "rev": 2,
     "site": "Project-wide",
     "src": [
       "rd25"
@@ -194,7 +194,7 @@
     "status": "Awaiting confirmation",
     "stream": "Launch readiness",
     "title": "Confirm launch date and acceptance criteria",
-    "updatedAt": "2026-11-19T19:30:00Z",
+    "updatedAt": "2026-11-19T20:30:00Z",
     "updatedBy": "SVT project team"
   },
   {

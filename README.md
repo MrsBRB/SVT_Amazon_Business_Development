@@ -47,6 +47,14 @@ Hub (readiness mirror)     ONT Pilot · Amazon View  ── shared actions, comm
   - The 8:52 AM morning check and 4:20 PM close-out also sync, and add evidence from email and meetings.
 - **Who can edit.** Only people the page is shared with at Contributor or Editor level can change records. Viewers and Commenters can only read. People outside your organization (for example Amazon or SVT staff on other accounts) must be invited by email as **Editor**, and the page must not also be shared by public link.
 
+## Public read-only site (GitHub Pages)
+
+`docs/` is a public, no-login copy of the **Amazon View** and the **SVT Team page**. It has the same layout, views and PDF report as the live dashboards, but no editing. Brooke's hub is never published there.
+
+- **To rebuild it:** export the live data, run `python3 tools/snapshot.py <export_dir>`, then `python3 tools/build_public.py`, then commit `docs/`. A scheduled task does this twice each weekday.
+- **To host it:** in the repo's Settings → Pages, choose *Deploy from a branch*, pick this branch, and set the folder to `/docs`.
+- **Repo visibility:** GitHub's free plan only serves Pages from a public repo. A paid plan can serve them from a private one.
+
 ## Working in this repo
 
 All three dashboards share one design system (the SVT sidebar layout from the ChatGPT pilot template) and one report engine.
@@ -84,5 +92,6 @@ pilot/     Built: ONT Pilot · SVT Team
 amazon/    Built: ONT Pilot · Amazon View
 data/      JSON snapshots of each dashboard's database
 status/    Readable Markdown snapshots generated from data/
-tools/     build_pages.py (src + shared -> built pages), snapshot.py (data/ and status/)
+tools/     build_pages.py (src + shared -> built pages), snapshot.py (data/ and status/), build_public.py (docs/)
+docs/      Public read-only GitHub Pages site
 ```

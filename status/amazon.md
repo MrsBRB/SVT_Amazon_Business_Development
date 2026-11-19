@@ -2,8 +2,8 @@
 
 _Snapshot 2026-11-19. Live version: https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668. Edit the live page, not this file._
 
-**Go-live target:** 2026-11-25 (unconfirmed)  
-**Last synced:** 2026-11-19T19:00:00Z
+**Go-live target:** 2026-12-07 (unconfirmed)  
+**Last synced:** 2026-11-19T20:04:28Z
 
 **Launch gates complete:** 5 of 25
 
@@ -45,6 +45,7 @@ _Snapshot 2026-11-19. Live version: https://claude.ai/artifact/FVQgNvfAAnkuC6uZi
 
 | When | Action | Status | Update | By |
 |---|---|---|---|---|
+| 2026-11-19T20:30:00Z | Go-live moved to after Thanksgiving | Awaiting confirmation | SVT proposes moving the ONT42 go-live to Monday, December 7, after Thanksgiving, to allow time for Reach onboarding, training and the Amazon connection. The date is proposed and still to be confirmed with Amazon. | SVT project team |
 | 2026-11-18T16:30:00Z | Complete Reach service-provider activation | In progress | Reach issued the service-provider agreement for signature and SVT's review is under way, aiming to finish before Thanksgiving. Account activation follows signature. | SVT project team |
 | 2026-11-18T03:00:00Z | Site visit held at ONT42 and ONT43 | In progress | SVT visited ONT42 and ONT43 on November 17. The recommendation for nearby offsite work versus the ONT43 working area will be recorded here. | SVT project team |
 | 2026-11-16T23:30:00Z | Assess possible wider ONT coverage | Not started | Amazon requested input on possible wider ONT coverage. This is exploratory and does not change ONT42 primary / ONT43 add-on scope or establish new site approval. | SVT project team |
