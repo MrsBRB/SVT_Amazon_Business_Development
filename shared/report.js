@@ -62,7 +62,7 @@ window.SVTReport = (() => {
       if (D(l.date) < t0 || D(l.date) > t1) return;
       const lx = x(l.date).toFixed(1);
       s += `<line x1="${lx}" y1="${top - 4}" x2="${lx}" y2="${H - 4}" stroke="${l.color || "#1c365e"}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
-      s += `<rect x="${(+lx - 26).toFixed(1)}" y="${H - 12}" width="52" height="10" rx="2" fill="${l.color || "#1c365e"}"/><text x="${lx}" y="${H - 4.4}" font-size="7" fill="#fff" text-anchor="middle" font-weight="700">${esc(l.label)}</text>`;
+      const lw = Math.max(40, l.label.length * 4.6 + 8); s += `<rect x="${(+lx - lw / 2).toFixed(1)}" y="${H - 12}" width="${lw.toFixed(1)}" height="10" rx="2" fill="${l.color || "#1c365e"}"/><text x="${lx}" y="${H - 4.4}" font-size="7" fill="#fff" text-anchor="middle" font-weight="700">${esc(l.label)}</text>`;
     });
     if (now >= t0 && now <= t1) {
       const tx = x(now).toFixed(1);

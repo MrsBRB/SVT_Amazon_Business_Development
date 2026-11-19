@@ -464,7 +464,7 @@ const SCHEMA = {
     ["tags","Tags (comma separated)","text"],["recommendation","Recommendation","text"],["does","What it does","textarea"],["touches","Reads / writes","textarea"],["notes","Notes","textarea"]]}
 };
 const S = {tasks:[],regsteps:[],sites:[],log:[],sources:[],schedules:[],readiness:[],docs:[],techs:[],ros:[]};
-const GO_LIVE="2026-11-25";
+const GO_LIVE="2026-12-07";
 let rdFilter="open";
 let viewerName="", assets=null, docFilter="all", docUsage=null;
 let db=null, canWrite=false, objFilter="all", srcFilter="use", schFilter="tied";
@@ -926,12 +926,12 @@ function renderReport(){
     phases:[{label:"Vendor Approval (Exhibit A #3)",start:"2026-10-13",end:"2027-01-31",ids:ids("reg")},
       {label:"ONT42 / ONT43 pilot launch",start:"2026-11-10",end:GO_LIVE,ids:ids("rd")},
       {label:"Pilot go-live",milestone:true,date:GO_LIVE,note:`Proposed ${fmtD(GO_LIVE)}`},
-      {label:"ONT43 add-on",start:"2026-11-30",end:"2026-12-11",ids:rdIds(["rd31","rd32","rd33"])},
-      {label:"EWR40 expansion case",start:"2026-12-01",end:"2027-01-15",ids:["s:ewr40","t:t22"]},
+      {label:"ONT43 add-on",start:"2026-12-14",end:"2026-12-23",ids:rdIds(["rd31","rd32","rd33"])},
+      {label:"EWR40 expansion case",start:"2026-12-14",end:"2027-01-22",ids:["s:ewr40","t:t22"]},
       {label:"PHL corridor and BOS42",start:"2027-01-04",end:"2027-03-15",ids:["s:ewr-phl","s:bos42"]},
       {label:"Last Mile: Amazon-level access",start:"2027-01-04",end:"2027-03-31",ids:[...ids("lm-sites"),...ids("tasks-LM")]},
       {label:"Initial Term ends",milestone:true,date:"2027-01-31",note:"Jan 31, 2027 · incentive deadline",risk:last&&last.st!=="done"}],
-    lines:[{date:GO_LIVE,label:"GO-LIVE"},{date:"2027-01-31",label:"TERM END",color:"#e01e2e"}],
+    lines:[{date:"2026-11-26",label:"THANKSGIVING",color:"#8a96a6"},{date:GO_LIVE,label:"GO-LIVE"},{date:"2027-01-31",label:"TERM END",color:"#e01e2e"}],
     progress:[{label:"Vendor Approval path",match:i=>i.grp==="reg"},{label:"Pilot launch gates",match:i=>i.grp==="rd"},{label:"Actions · Vendor Approval",match:i=>i.grp==="tasks-VA"},{label:"Actions · Middle Mile",match:i=>i.grp==="tasks-MM"},{label:"Actions · Last Mile",match:i=>i.grp==="tasks-LM"},{label:"Middle Mile sites live",match:i=>i.grp==="mm-sites"},{label:"Last Mile markets open",match:i=>i.grp==="lm-sites"}],
     nextItems:tasks,nextTitle:"Next actions",extraRisks:extra,timelineNote:"Planned windows. Bars fill as linked steps, gates and actions complete.",
     confidential:"Confidential · Brooke only",footNote:"Includes Exhibit A incentive details. Do not forward.",source:"Source: Amazon BD hub, live records"});
