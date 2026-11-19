@@ -1,0 +1,225 @@
+<title>ONT Pilot · Amazon View</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>
+/*@SHELL_CSS*/
+/*@REPORT_CSS*/
+</style>
+
+<div class="shell">
+<aside>
+  <div class="brand"><img src="data:image/png;base64,__LOGO__" alt="SVT Fleet Solutions"></div>
+  <div class="project"><span class="eyebrow">Amazon pilot view</span><h3>Amazon<br>Middle Mile</h3><span class="pill">ONT42 PRIMARY · ONT43 ADD-ON</span></div>
+  <nav id="nav" aria-label="Pilot views"></nav>
+  <div class="sidebottom"><div class="live">● Amazon pilot view</div><p>Shared records · live updates</p><small>Prepared for Amazon Middle Mile by SVT Fleet Solutions.</small></div>
+</aside>
+<main>
+  <header class="top"><div>SVT Fleet Solutions <span>/ Amazon pilot view</span></div></header>
+  <section class="content">
+    <div class="between title"><div><div class="eyebrow red">Middle mile pilot / Ontario, CA</div><h1 id="view-title">Amazon pilot view</h1><p>Launch readiness, shared dependencies and pilot progress.</p></div><button class="primary" id="add" hidden>＋ Add action</button></div>
+    <div id="err" role="alert" class="alert" hidden></div>
+    <div id="view"></div>
+    <footer>SVT Fleet Solutions · Amazon pilot view<span>ONT42 primary / ONT43 add-on · Proposed dates require confirmation</span></footer>
+  </section>
+</main>
+</div>
+<div id="drawer-root"></div><div id="toast-root"></div>
+
+<script>/*@REPORT_JS*/</script>
+<script>
+(() => {
+const DEMAND=/*@DEMAND*/null;
+const STREAMS=["Launch readiness","Pilot performance","Reach onboarding","Service readiness","Site readiness","Technology readiness"];
+const STATUSES=["Not started","In progress","Awaiting response","Awaiting confirmation","Blocked","Done"];
+const SITES=["Project-wide","Both sites","ONT42","ONT43"];
+const TABS=[["Overview","◫","overview"],["Action board","▦","board"],["Sites & readiness","◎","sites"],["Weekly standup","◷","standup"],["Updates","≡","updates"],["Progress report","▤","report"]];
+const S={tasks:[],activity:[],meta:[]};
+let db=null,user=null,canWrite=false,ready=false,viewerName="";
+const F={q:"",stream:"All workstreams",site:"All sites",status:"All statuses",owner:"All owners",view:"Board"};
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtDue=d=>{if(!d)return"";const x=new Date(d+"T00:00:00");return isNaN(x)?d:x.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})};
+const fmtAt=a=>{const x=new Date(a);return isNaN(x)?"":x.toLocaleString()};
+const stCls=s=>s==="Done"?"s-done":s==="Blocked"?"s-blocked":s==="In progress"?"s-prog":"";
+function toast(m){$("#toast-root").innerHTML=`<div class="toast" role="status">${esc(m)}</div>`;clearTimeout(toast.t);toast.t=setTimeout(()=>$("#toast-root").innerHTML="",2400)}
+function showErr(m){const e=$("#err");e.hidden=!m;e.innerHTML=m?`<b>Couldn't save</b><p>${esc(m)}</p>`:""}
+const meta=()=>S.meta.find(m=>m.id==="status")||{};
+const tasksSorted=()=>S.tasks.slice().sort((a,b)=>(+a.order||99)-(+b.order||99));
+const gates=()=>S.tasks.filter(t=>t.gate);
+
+function card(t){return `<button class="task" data-open="${esc(t.id)}"><div class="between"><span class="eyebrow">${esc(t.stream)}</span>${t.gate?'<span class="gate">LAUNCH GATE</span>':""}</div><h3>${esc(t.title)}</h3><p>${esc(t.detail)}</p>${t.status==="Blocked"&&t.blockedBy?`<p><b>Blocked by:</b> ${esc((S.tasks.find(x=>x.id===t.blockedBy)||{}).title||"Task unavailable")}</p>`:""}<div class="tags"><span class="status ${stCls(t.status)}">${esc(t.status)}</span><span>${esc(t.site)}</span></div><div class="taskfoot"><span>${esc(t.owner)}</span><small>${t.due?esc(fmtDue(t.due)):"Date unconfirmed"}</small></div></button>`}
+
+function siteDemand(){return `<section aria-label="Site work demand"><div class="sectionhead"><h2>Site work demand · Amazon-provided snapshot</h2><small>Work types &amp; makes / models</small></div><p class="sourceNote">Historical work-request mix for support planning. Counts describe supplied records, not today’s open backlog or unique work orders.</p>${["ONT42","ONT43"].map(site=>{const d=DEMAND[site];return `<details class="panel compact"><summary>${site} · ${site==="ONT42"?"Primary":"Add-on"}<span>${d.records} work-request records · ${d.units} vehicles</span></summary><div class="demandGrid"><div><h3>Type of work</h3><div class="tags">${d.categories.map(([n,c])=>`<span>${esc(n)} <b>${c}</b></span>`).join("")}</div><p><b>Common components:</b> ${d.components.map(([n,c])=>`${esc(n)} (${c})`).join(" · ")}</p><p><b>Examples from Amazon’s descriptions:</b> ${site==="ONT42"?"Clutch replacement; transmission faults / no shifting; engine shutdown and low fuel or oil pressure; IPPC calibration.":"Transmission shift-solenoid faults (5910); radar calibration; radiator / engine leaks; misfire alerts; wiring and electrical faults."}</p><p class="sourceNote">Category counts count each distinct concern once per record. A record may have multiple concerns, so totals exceed the record count.</p></div><div><h3>Makes &amp; models needing support</h3><div class="tablewrap"><table><thead><tr><th>Make / model</th><th>Vehicles</th><th>WR records</th></tr></thead><tbody>${d.models.map(m=>`<tr><td>${esc(m.model)}</td><td>${m.units}</td><td>${m.records}</td></tr>`).join("")}</tbody></table></div></div></div><p class="sourceNote"><b>Sources:</b> Amazon’s DTNA WR Data.xlsx, Services sheet; site selected by Asset Domicile Site. Makes/models matched by Equipment ID to ATS Asset Inventory 2026-10-30.xlsx (October 29 snapshot). ${site==="ONT42"?"107 of 108 records matched; one vehicle has no inventory match.":"All 17 records matched."} Work-request modified dates in this subset: ${d.dateRange[0]}–${d.dateRange[1]}. These are modified dates, not opened dates. Multiple requests can refer to the same vehicle.</p><p><b>Planning implication:</b> ${site==="ONT42"?"Prioritize Cascadia transmission / clutch and engine diagnostic capability; retain support pathways for Volvo, International and Peterbilt.":"Plan Cascadia transmission and electrical diagnostics, with Volvo support and cooling / engine capability."} This is a planning interpretation of the supplied mix; confirm current demand with Amazon.</p></details>`}).join("")}</section>`}
+
+function ring(done,total){const r=70,c=2*Math.PI*r,p=total?done/total:0;return `<div class="ring" role="img" aria-label="${done} of ${total} gates complete"><svg viewBox="0 0 155 155" width="100%" height="100%"><circle cx="77.5" cy="77.5" r="${r}" fill="none" stroke="#5b6b7f" stroke-width="7"/><circle cx="77.5" cy="77.5" r="${r}" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(c*p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 77.5 77.5)"/></svg><div><strong>${ready?done+"/"+total:"—"}</strong><span>gates complete</span></div></div>`}
+
+function vOverview(){
+  const g=gates(),done=g.filter(t=>t.status==="Done").length,m=meta();
+  const latest=S.activity.slice().sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,5);
+  const next=tasksSorted().filter(t=>t.status!=="Done"&&t.gate).sort((a,b)=>(a.priority==="High"?0:1)-(b.priority==="High"?0:1)).slice(0,3);
+  return `<div class="hero"><div><span class="eyebrow">Launch readiness</span><h2>ONT42 first. ONT43 to follow.</h2><p>Reach web and mobile for the pilot. Native connection to Relay Garage.</p><div class="heroTags"><span>Proposed: ${esc(m.goLiveLabel||"Nov 25")} · ${m.goLiveConfirmed?"confirmed":"unconfirmed"}</span><span>Primary: ONT42</span><span>Add-on: ONT43</span></div></div>${ring(done,g.length)}</div>
+  <div class="stats"><article><span>Open launch gates</span><strong>${ready?g.length-done:"—"}</strong><small>Awaiting evidence or confirmation</small></article><article><span>Waiting on input</span><strong>${ready?S.tasks.filter(t=>t.status.startsWith("Awaiting")).length:"—"}</strong><small>Team and partner dependencies</small></article><article><span>In progress</span><strong>${ready?S.tasks.filter(t=>t.status==="In progress").length:"—"}</strong><small>Active actions</small></article><article><span>Blocked</span><strong>${ready?S.tasks.filter(t=>t.status==="Blocked").length:"—"}</strong><small>Resolve before proceeding</small></article></div>
+  <div class="alert"><b>Confirm the launch commitment</b><p>${esc(m.commitmentNote||"November 25 is proposed. Validate Reach onboarding/training and the 2–3 business day Amazon connection lead time before confirming go-live.")}</p></div>
+  ${siteDemand()}
+  <div class="sectionhead"><h2>Shared next actions</h2><button class="link" data-tab="board">View all →</button></div>
+  <div class="cards">${next.map(card).join("")||`<div class="empty">No open launch gates.</div>`}</div>
+  <div class="twocol"><article class="panel"><h2>Launch path</h2><div class="track"><b>Reach onboarding</b><p>Activate service-provider account, set up locations and users, complete web and mobile training.</p></div><div class="track"><b>Amazon connection</b><p>Reach sends setup details to Edmund Park. Amazon connects Relay Garage; team validates service-event flow and acceptance criteria.</p></div></article>
+  <article class="panel"><h2>Latest updates</h2>${latest.length?latest.map(a=>`<div class="activity"><b>${esc(a.title)}</b><p>${esc(a.note)}</p><small>${esc(a.actor||"Project team member")} · ${esc(fmtAt(a.at))}</small></div>`).join(""):`<p>No team updates recorded yet. Open an action to post progress or confirmation.</p>`}</article></div>`;
+}
+
+function vBoard(){
+  const owners=[...new Set(S.tasks.map(t=>t.owner).filter(Boolean))].sort();
+  const q=F.q.toLowerCase();
+  const list=tasksSorted().filter(t=>(F.stream==="All workstreams"||t.stream===F.stream)&&(F.site==="All sites"||t.site===F.site)&&(F.status==="All statuses"||t.status===F.status)&&(F.owner==="All owners"||t.owner===F.owner)&&(t.title+" "+t.owner+" "+t.detail).toLowerCase().includes(q));
+  const sel=(k,label,opts)=>`<select aria-label="${label}" data-f="${k}">${opts.map(o=>`<option${o===F[k]?" selected":""}>${esc(o)}</option>`).join("")}</select>`;
+  let body;
+  if(F.view==="Table") body=`<div class="tablewrap"><table><thead><tr><th>Action</th><th>Owner</th><th>Site</th><th>Status</th><th>Due</th></tr></thead><tbody>${list.map(t=>`<tr><td><button data-open="${esc(t.id)}">${esc(t.title)}</button></td><td>${esc(t.owner)}</td><td>${esc(t.site)}</td><td>${esc(t.status)}</td><td>${t.due?esc(fmtDue(t.due)):"Unconfirmed"}</td></tr>`).join("")}</tbody></table></div>`;
+  else body=`<div class="board">${["To do","In progress","Waiting / blocked","Complete"].map((s,i)=>{const l=list.filter(t=>i===0?t.status==="Not started":i===1?t.status==="In progress":i===2?["Awaiting confirmation","Awaiting response","Blocked"].includes(t.status):t.status==="Done");return `<div class="column"><h3>${s}<span>${l.length}</span></h3>${l.map(card).join("")}${l.length?"":'<p class="empty">No actions</p>'}</div>`}).join("")}</div>`;
+  return `<div class="toolbar"><input type="search" aria-label="Search actions" placeholder="Search actions or owners…" id="q" value="${esc(F.q)}">${sel("stream","Filter workstream",["All workstreams",...STREAMS])}${sel("site","Filter site",["All sites",...SITES])}</div>
+  <div class="toolbar">${sel("status","Filter status",["All statuses",...STATUSES])}${sel("owner","Filter owner",["All owners",...owners])}<button id="toggle-view">${F.view==="Board"?"Table view":"Board view"}</button></div>${body}`;
+}
+
+function vSites(){
+  const SC={ONT42:["Confirmed primary site","Limited onsite space. Confirm safe repair area and offsite route for complex work."],ONT43:["Add-on site","Confirm add-on activation date, working area and coverage separately."]};
+  return `${siteDemand()}<div class="twocol">${["ONT42","ONT43"].map(s=>`<article class="panel site"><span class="eyebrow">Ontario · Middle Mile</span><h2>${s}</h2><span class="status">${SC[s][0]}</span><p>${SC[s][1]}</p><p>Operating hours, coverage and first-event readiness require confirmation.</p></article>`).join("")}</div>
+  <h2>Launch readiness gates</h2><p>Primary go-live requires sign-off. Track add-on readiness by site.</p>
+  <div class="checklist">${tasksSorted().filter(t=>t.gate).map(t=>`<button data-open="${esc(t.id)}"><span>${t.status==="Done"?"☑":"□"} ${esc(t.title)}</span><span class="status ${stCls(t.status)}">${esc(t.status)}</span></button>`).join("")||'<p class="empty">No gates yet.</p>'}</div>`;
+}
+
+const GROUPS=[["Launch decisions & blockers",5],["Reach onboarding & training",8],["Site readiness & vehicle / WO review",8],["Technology & future integration",5],["Other open actions & expansion",6]];
+function group(t){const x=(t.title+" "+t.stream).toLowerCase();if(t.status==="Blocked"||/launch date|go.no.go|acceptance criteria/.test(x))return 0;if(/reach|saas|agreement|training|train |mobile|activation|location setup/.test(x)&&!/api|mcp|integration test|exceed|excede|map .*data/.test(x))return 1;if(/site|asset|inventory|backlog|safety|cng|volvo|utilization|coverage|work.request|measures|performance|technician|parts/.test(x))return 2;if(/api|mcp|integration|invoice|billing|aws|technical|relay|validation/.test(x))return 3;return 4}
+function vStandup(){
+  const open=S.tasks.filter(t=>t.status!=="Done");
+  return `<article class="panel"><div class="between"><h2>Weekly pilot standup · 35 minutes</h2><span class="status">${ready?open.length:"—"} open actions</span></div><p>ONT42 primary · ONT43 add-on. Proposed November 25 launch remains unconfirmed. Agenda reflects the latest saved actions in this view.</p><p><b>Attendees:</b> SVT (Brooke, Mike, Lon, Mark); Reach and Amazon owners as relevant. Meeting time: to be agreed.</p><p><b>For every open action:</b> owner update → blocker or decision → next step → committed date → completion evidence. Open an item below to record the outcome.</p></article>
+  ${!ready?"<p>Loading saved actions…</p>":GROUPS.map(([title,min],i)=>{const l=open.filter(t=>group(t)===i).sort((a,b)=>Number(!!b.gate)-Number(!!a.gate)||String(a.due||"9999").localeCompare(String(b.due||"9999")));return `<details class="panel compact"${i===0?" open":""}><summary>${min} min · ${title}<span>${l.length} actions</span></summary>${l.length?`<div class="tablewrap"><table><thead><tr><th>Open action</th><th>Owner</th><th>Status</th><th>Committed date</th></tr></thead><tbody>${l.map(t=>`<tr><td><button data-open="${esc(t.id)}">${t.gate?"Gate · ":""}${esc(t.title)}</button></td><td>${esc(t.owner)}</td><td>${esc(t.status)}</td><td>${t.due?esc(fmtDue(t.due)):"Agree at standup"}</td></tr>`).join("")}</tbody></table></div>`:"<p>No open actions in this group.</p>"}</details>`}).join("")}
+  <article class="panel"><h3>3 min · Read back commitments</h3><p>Confirm decisions, one accountable owner and date for each next step; identify escalations. Close actions only with evidence.</p><p><b>Standing decisions:</b> Reach activation status; Reach-to-Amazon handoff receipt; training and test completion; ONT42 go/no-go owner and date; ONT43 add-on timing; vehicle/WO baseline and reporting owner.</p></article>`;
+}
+
+const ST={"Done":"done","In progress":"prog","Awaiting response":"wait","Awaiting confirmation":"wait","Blocked":"blocked","Not started":"todo"};
+const LOGO_SRC="data:image/png;base64,__LOGO__";
+function reportCfg(){
+  const m=meta(), gl=m.goLive||"2026-11-25", R=SVTReport;
+  const items=tasksSorted().map(t=>({id:t.id,title:t.title,st:ST[t.status]||"todo",label:t.status,gate:!!t.gate,due:t.due,owner:t.owner,stream:t.stream}));
+  const by=id=>items.find(i=>i.id===id)||{};
+  const extra=[];
+  const cut=R.addBiz(gl,-3);
+  if(by("handoff").st==="todo") extra.push({lv:R.days(new Date(),cut)<=1?"high":"med",t:`Amazon connection hasn't started. It takes 2–3 business days after Reach sends the setup details, so they need to reach Amazon by ${R.fmt(cut)} to hold ${R.fmt(gl)}.`});
+  if(by("activate").st!=="done") extra.push({lv:"med",t:"Reach service-provider activation isn't complete. Location setup, users and training all follow it."});
+  if(!m.goLiveConfirmed) extra.push({lv:"med",t:`${R.fmt(gl)} is a proposed go-live, not a commitment. Confirm it once onboarding, training and the Amazon connection have dates.`});
+  return {id:"rp-amazon",logo:LOGO_SRC,eyebrow:"SVT Fleet Solutions × Amazon Middle Mile",title:"ONT42 / ONT43 Pilot · Progress Report",subtitle:"ONT42 primary · ONT43 add-on · Reach web and mobile with a native Relay Garage connection",
+    items,goLive:gl,goLiveConfirmed:!!m.goLiveConfirmed,range:["2026-11-02","2026-12-27"],
+    phases:[{label:"Scope & site selection",start:"2026-11-06",end:"2026-11-17",ids:["scope","visitheld"]},
+      {label:"Reach onboarding & activation",start:"2026-11-16",end:"2026-11-24",ids:["intake","session","agreement","activate"]},
+      {label:"Location setup & users",start:"2026-11-18",end:"2026-11-21",ids:["location","hours"]},
+      {label:"Amazon connection (Relay Garage)",start:"2026-11-20",end:gl,ids:["handoff","connection"]},
+      {label:"Training & end-to-end test",start:"2026-11-21",end:gl,ids:["training","test"]},
+      {label:"Site & service readiness",start:"2026-11-17",end:gl,ids:["visit","coi","avetta","access","ont42","techs","units","parts","backlog","invoicing","preauth"]},
+      {label:"ONT42 go-live",milestone:true,date:gl,note:`Proposed ${R.fmt(gl)}${m.goLiveConfirmed?"":" · unconfirmed"}`},
+      {label:"ONT43 add-on",start:"2026-11-30",end:"2026-12-11",ids:["ont43","ont43lot","ont43req"]},
+      {label:"Pilot measurement",start:gl,end:"2026-12-23",ids:["measures"]}],
+    lines:[{date:gl,label:"GO-LIVE",color:"#1c365e"}],
+    progress:STREAMS.map(s=>({label:s,match:i=>i.stream===s})).filter(g=>items.some(g.match)),
+    extraRisks:extra,timelineNote:"Planned windows from the proposed launch plan. Dates are not commitments.",
+    confidential:"Prepared for Amazon Middle Mile",footNote:"Shared pilot status from SVT Fleet Solutions",source:"Source: Amazon pilot view, live records"};
+}
+function vReport(){return `<div class="rp-tools"><button class="primary" id="rp-dl">Download PDF</button><button id="rp-print">Print</button><span class="note">One page, US Letter. Built from the live records in this view.</span></div><div class="rp-stage" id="rp-stage"></div>`}
+function vUpdates(){
+  const a=S.activity.slice().sort((x,y)=>String(y.at).localeCompare(String(x.at)));
+  return `<div class="alert"><b>Amazon pilot view updates</b><p>Only post information suitable for this audience. Statuses are meeting-reported or team-entered until supporting confirmation is recorded. Do not paste credentials, gate codes, private correspondence or contract terms.</p></div>${a.length?a.map(x=>`<article class="panel activity"><b>${esc(x.title)}${x.status?" · "+esc(x.status):""}</b><p>${esc(x.note)}</p><small>${esc(x.actor||"Project team member")} · ${esc(fmtAt(x.at))}</small></article>`).join(""):`<article class="panel"><p>No updates posted yet.</p></article>`}`;
+}
+
+let tab="overview";
+function render(){
+  $("#nav").innerHTML=TABS.map(([n,i,k])=>`<button data-tab="${k}"${tab===k?' aria-current="page"':""}><span aria-hidden="true">${i}</span>${n}</button>`).join("");
+  $("#view-title").textContent=tab==="overview"?"Amazon pilot view":TABS.find(x=>x[2]===tab)[0];
+  $("#add").hidden=!(db&&canWrite)||tab==="report";
+  const v={overview:vOverview,board:vBoard,sites:vSites,standup:vStandup,updates:vUpdates,report:vReport}[tab]();
+  const focusQ=document.activeElement&&document.activeElement.id==="q", pos=focusQ?document.activeElement.selectionStart:0;
+  $("#view").innerHTML=v;
+  if(focusQ){const q=$("#q");if(q){q.focus();q.setSelectionRange(pos,pos)}}
+  if(tab==="report") SVTReport.render($("#rp-stage"),reportCfg());
+}
+function setTab(k){tab=k;try{history.replaceState(null,"","#"+k)}catch(e){}render();scrollTo(0,0)}
+
+function openDrawer(t){
+  const isNew=!t, ro=!canWrite||!db;
+  const e=t?JSON.parse(JSON.stringify(t)):{id:"",title:"",owner:"Unassigned",stream:STREAMS[0],status:"Not started",priority:"Medium",site:"Project-wide",due:"",gate:false,detail:"",evidence:"Team-entered",comments:[],rev:0};
+  const opt=(arr,v)=>arr.map(o=>`<option${o===v?" selected":""}>${esc(o)}</option>`).join("");
+  const blockers=S.tasks.filter(x=>x.id!==e.id);
+  const dis=ro?" disabled":"";
+  $("#drawer-root").innerHTML=`<div class="overlay" data-close-scrim><form class="modal" role="dialog" aria-modal="true" aria-labelledby="dr-h" id="dr"><div class="between"><h2 id="dr-h">Action details</h2><button type="button" data-close aria-label="Close action">✕</button></div>
+  <p>Updates here are visible to users granted access to the amazon pilot view.</p>${ro?'<p class="ro-note">You can view this action. Ask SVT for edit access to change it.</p>':""}
+  <label>Action title<input name="title" required maxlength="300" value="${esc(e.title)}"${dis}></label>
+  <div class="twocol"><label>Owner<input name="owner" required value="${esc(e.owner)}"${dis}></label><label>Due date<input name="due" type="date" value="${esc(e.due)}"${dis}></label>
+  <label>Status<select name="status"${dis}>${opt(STATUSES,e.status)}</select></label>
+  <label id="blk-wrap"${e.status==="Blocked"?"":" hidden"}>Blocked by<select name="blockedBy"${dis}><option value="">External or not listed</option>${blockers.map(x=>`<option value="${esc(x.id)}"${x.id===e.blockedBy?" selected":""}>${esc(x.title)}</option>`).join("")}</select></label>
+  <label>Workstream<select name="stream"${dis}>${opt(STREAMS,e.stream)}</select></label><label>Site<select name="site"${dis}>${opt(SITES,e.site)}</select></label><label>Priority<select name="priority"${dis}>${opt(["High","Medium","Low"],e.priority)}</select></label></div>
+  <label class="checkbox"><input type="checkbox" name="gate"${e.gate?" checked":""}${dis}>Launch gate</label>
+  <label>Details<textarea name="detail"${dis}>${esc(e.detail)}</textarea></label>
+  <label>Confirmation / evidence reference<input name="evidence" value="${esc(e.evidence)}"${dis}></label>
+  ${ro?"":`<label>Team update<textarea name="update" placeholder="Progress, blocker or confirmation suitable for this audience"></textarea></label>`}
+  ${(e.comments||[]).map(c=>`<div class="comment">${esc(c.text)}<small>${esc(c.actor||"Project team member")} · ${esc(fmtAt(c.at))}</small></div>`).join("")}
+  <div id="dr-err" role="alert" class="alert" hidden></div>
+  ${ro?"":`<button class="primary" id="dr-save">Save update</button>`}</form></div>`;
+  const f=$("#dr");
+  f.status.addEventListener("change",()=>{$("#blk-wrap").hidden=f.status.value!=="Blocked"});
+  setTimeout(()=>(f.querySelector("input:not([disabled])")||f.querySelector("[data-close]")).focus(),0);
+  f.addEventListener("submit",async ev=>{ev.preventDefault();if(ro)return;
+    const btn=$("#dr-save"),errBox=$("#dr-err");errBox.hidden=true;
+    const fd=new FormData(f);const now=new Date().toISOString();
+    const body={...e,title:fd.get("title").trim(),owner:fd.get("owner").trim(),due:fd.get("due")||"",status:fd.get("status"),stream:fd.get("stream"),site:fd.get("site"),priority:fd.get("priority"),gate:!!fd.get("gate"),detail:fd.get("detail").trim(),evidence:fd.get("evidence").trim()};
+    body.blockedBy=body.status==="Blocked"?(fd.get("blockedBy")||""):"";
+    if(!body.title||!body.owner){errBox.hidden=false;errBox.innerHTML="<b>Missing information</b><p>Action title and owner are required.</p>";return}
+    if(body.blockedBy){let id=body.blockedBy,seen=new Set([body.id]);while(id){if(seen.has(id)){errBox.hidden=false;errBox.innerHTML="<b>Dependency loop</b><p>Tasks cannot block themselves or form a dependency cycle.</p>";return}seen.add(id);id=(S.tasks.find(x=>x.id===id)||{}).blockedBy}}
+    const note=(fd.get("update")||"").trim();
+    btn.disabled=true;btn.textContent="Saving…";
+    try{
+      if(isNew){body.id=db.collection("tasks").doc().id;body.order=99;body.comments=[];body.src=[]}
+      else{const cur=await db.doc("tasks/"+e.id).get();const c=cur.exists?cur.data():null;if(c&&(c.rev||0)!==(e.rev||0)){errBox.hidden=false;errBox.innerHTML="<b>Someone else just changed this action</b><p>Close and reopen it to see their changes, then save again.</p>";btn.disabled=false;btn.textContent="Save update";return}}
+      const changed=isNew||["title","owner","due","status","stream","site","priority","gate","detail","evidence","blockedBy"].some(k=>JSON.stringify(body[k])!==JSON.stringify(e[k]));
+      if(note) body.comments=[...(body.comments||[]),{text:note,actor:viewerName||"Project team member",at:now}];
+      body.rev=(e.rev||0)+1;body.updatedAt=now;body.updatedBy=viewerName||"Project team member";
+      await db.doc("tasks/"+body.id).set(body);
+      if(note||changed){const a={title:body.title,status:body.status,note:note||(isNew?"Action added.":"Action details updated."),actor:viewerName||"Project team member",at:now,taskId:body.id};await db.collection("activity").doc().set(a)}
+      if(body.status==="Done") await unblockDependents(body);
+      closeDrawer();toast(isNew?"Action added":"Saved");
+    }catch(err){btn.disabled=false;btn.textContent="Save update";errBox.hidden=false;
+      if(err&&err.code==="invalid_argument"){canWrite=false;render();errBox.innerHTML="<b>View only</b><p>You can view this pilot but not change it. Ask SVT for edit access.</p>"}
+      else errBox.innerHTML=`<b>Couldn't save</b><p>${esc((err&&err.message)||"Try again in a moment.")}</p>`}
+  });
+}
+async function unblockDependents(done){
+  for(const t of S.tasks.filter(x=>x.status==="Blocked"&&x.blockedBy===done.id)){
+    const now=new Date().toISOString();const back=t.resumeStatus&&t.resumeStatus!=="Blocked"?t.resumeStatus:"Not started";
+    await db.doc("tasks/"+t.id).set({...t,status:back,blockedBy:"",rev:(t.rev||0)+1,updatedAt:now,updatedBy:"Automatic dependency update"});
+    await db.collection("activity").doc().set({title:t.title,status:back,note:"Unblocked automatically because the selected blocking task was completed.",actor:"Automatic dependency update",at:now,taskId:t.id});
+  }
+}
+function closeDrawer(){$("#drawer-root").innerHTML="";const b=document.querySelector("[data-last-open]");if(b)b.focus()}
+
+document.addEventListener("click",e=>{
+  const tb=e.target.closest("[data-tab]");if(tb){setTab(tb.dataset.tab);return}
+  if(e.target.closest("[data-close]")||e.target.matches("[data-close-scrim]")){closeDrawer();return}
+  const o=e.target.closest("[data-open]");if(o){const t=S.tasks.find(x=>x.id===o.dataset.open);if(t)openDrawer(t);return}
+  if(e.target.closest("#add")){if(db&&canWrite)openDrawer(null);return}
+  if(e.target.closest("#rp-dl")){SVTReport.download($("#rp-stage"),`SVT-Amazon-ONT-Pilot-Progress-${new Date().toISOString().slice(0,10)}.pdf`,toast);return}
+  if(e.target.closest("#rp-print")){window.print();return}
+  if(e.target.closest("#toggle-view")){F.view=F.view==="Board"?"Table":"Board";render()}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer-root").innerHTML)closeDrawer()});
+document.addEventListener("input",e=>{if(e.target.id==="q"){F.q=e.target.value;render()}});
+document.addEventListener("change",e=>{const s=e.target.closest("select[data-f]");if(s){F[s.dataset.f]=s.value;render()}});
+
+const h=(location.hash||"").slice(1);if(TABS.some(x=>x[2]===h))tab=h;
+render();
+(async()=>{try{
+  user=await window.claude?.use?.("user"); db=await window.claude?.use?.("db");
+  if(!db){$("#view").insertAdjacentHTML("afterbegin",`<div class="alert"><b>Live data isn't available here</b><p>Sign in to claude.ai to see the pilot's shared records.</p></div>`);return}
+  const w=user?await user.can("data.write"):null; canWrite=w!==false;
+  try{const me=user&&user.me?await user.me():null;viewerName=(me&&me.name)||""}catch(_){}
+  let pending=new Set(Object.keys(S));
+  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));pending.delete(c);if(!pending.size)ready=true;if(!$("#drawer-root").innerHTML||true)render()},err=>{console.warn(c,err&&err.code);pending.delete(c);if(!pending.size)ready=true;render()}));
+}catch(err){console.warn(err)}})();
+})();
+</script>

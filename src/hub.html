@@ -1,0 +1,867 @@
+<title>Amazon BD Hub · Internal Only</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: dispatch-board command page. Navy masthead with the three objectives as lanes, then tabbed work surfaces (registration stepper, station grid + DSP pipeline, action board, log, sources, method). */
+:root{
+  --navy:#1c365e; --red:#e01e2e; --steel:#5b6b7f; --gray:#e6e9ed;
+  --bg:#f4f6f9; --panel:#ffffff; --panel-2:#eef1f5; --ink:#1c365e; --ink-2:#3c4c63; --muted:#5b6b7f; --line:#d5dbe3;
+  --mast:#1c365e; --mast-ink:#ffffff; --mast-muted:#c4cfdd;
+  --ok:#1f7a4d; --ok-bg:#e3f3ea; --warn:#9a5b00; --warn-bg:#fdf0d9; --bad:#b4141f; --bad-bg:#fbe3e5; --info:#1c365e; --info-bg:#e3eaf4;
+  --accent:#e01e2e;
+  --f-head:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Source Sans 3",Arial,sans-serif;
+  --r-sm:4px; --r-md:8px; --r-lg:14px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1626; --panel:#15223a; --panel-2:#1b2b47; --ink:#e8eef7; --ink-2:#c3cee0; --muted:#93a3ba; --line:#2a3b58;
+  --mast:#0f2242; --mast-ink:#ffffff; --mast-muted:#a9b8cf;
+  --ok:#6fd3a0; --ok-bg:#163a2b; --warn:#f2bf62; --warn-bg:#3b2e14; --bad:#ff8a92; --bad-bg:#43191e; --info:#9fc0ef; --info-bg:#1d3150;
+  --accent:#ff4b58; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1626; --panel:#15223a; --panel-2:#1b2b47; --ink:#e8eef7; --ink-2:#c3cee0; --muted:#93a3ba; --line:#2a3b58;
+  --mast:#0f2242; --mast-ink:#ffffff; --mast-muted:#a9b8cf;
+  --ok:#6fd3a0; --ok-bg:#163a2b; --warn:#f2bf62; --warn-bg:#3b2e14; --bad:#ff8a92; --bad-bg:#43191e; --info:#9fc0ef; --info-bg:#1d3150;
+  --accent:#ff4b58; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+h1,h2,h3{font-family:var(--f-head);text-wrap:balance;margin:0}
+a{color:var(--info)}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num{font-variant-numeric:tabular-nums}
+
+/* Masthead */
+.mast{background:var(--mast);color:var(--mast-ink)}
+.mast .wrap{padding-block:22px 18px;display:grid;gap:18px}
+.eyebrow{font-family:var(--f-head);letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--mast-muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.eyebrow .rule{width:28px;height:3px;background:#e01e2e;display:inline-block}
+.mast h1{font-size:clamp(26px,4vw,38px);font-weight:600;line-height:1.05}
+.mast .sub{color:var(--mast-muted);max-width:70ch}
+.clock{display:flex;gap:22px;flex-wrap:wrap}
+.clock div{display:grid}
+.clock b{font-family:var(--f-head);font-size:28px;font-weight:700;line-height:1}
+.clock span{font-size:12px;color:var(--mast-muted);letter-spacing:.06em;text-transform:uppercase}
+
+.lanes{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px}
+.lane{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:var(--r-md);padding:14px;display:grid;gap:8px;min-width:0;cursor:pointer;text-align:left;color:var(--mast-ink)}
+.lane:hover{background:rgba(255,255,255,.11)}
+.lane.p1{border-color:#e01e2e;box-shadow:inset 0 3px 0 #e01e2e}
+.lane .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.lane .tag{font-family:var(--f-head);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mast-muted)}
+.lane .pri{font-family:var(--f-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:#e01e2e;color:#fff;border-radius:var(--r-sm);padding:1px 7px}
+.lane .pri.n{background:rgba(255,255,255,.18)}
+.lane h2{font-size:20px;font-weight:600}
+.lane .big{font-family:var(--f-head);font-size:26px;font-weight:700}
+.lane .meta{font-size:13px;color:var(--mast-muted)}
+.lane .next{font-size:14px;border-top:1px solid rgba(255,255,255,.14);padding-top:8px}
+.lane .next b{font-family:var(--f-head);letter-spacing:.06em;text-transform:uppercase;font-size:11px;color:var(--mast-muted);display:block}
+.bar{height:6px;border-radius:3px;background:rgba(255,255,255,.16);overflow:hidden}
+.bar i{display:block;height:100%;background:#fff}
+
+/* Tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--mast)}
+.tabs .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs a{font-family:var(--f-head);font-weight:600;letter-spacing:.04em;font-size:15px;padding:12px 14px;text-decoration:none;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+main .wrap{padding-block:22px 60px;display:grid;gap:22px}
+section[data-view]{display:grid;gap:18px}
+.head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+.head h2{font-size:24px;font-weight:600}
+.head p{margin:2px 0 0;color:var(--muted);max-width:75ch}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:var(--r-md);padding:7px 12px;cursor:pointer;font-weight:600;font-size:14px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+:root[data-theme="dark"] .btn.primary{background:#2c5490;border-color:#2c5490}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{background:#2c5490;border-color:#2c5490}}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.sm{padding:3px 8px;font-size:13px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.seg button{border:0;background:var(--panel);padding:6px 10px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink)}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;min-width:0}
+.panel h3{font-size:17px;font-weight:600;margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap;background:var(--panel-2);color:var(--ink-2)}
+.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.info{background:var(--info-bg);color:var(--info)}
+.chip{font-family:var(--f-head);font-size:12px;letter-spacing:.06em;font-weight:600;border:1px solid var(--line);border-radius:var(--r-sm);padding:0 6px;color:var(--muted)}
+.chip.o3{color:var(--accent);border-color:var(--accent)}
+.muted{color:var(--muted)} .small{font-size:13px}
+
+/* Stepper */
+.steps{display:grid;gap:0;counter-reset:s}
+.step{display:grid;grid-template-columns:34px 1fr auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
+.step:last-child{border-bottom:0}
+.dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-head);font-weight:700;font-size:14px;border:2px solid var(--line);color:var(--muted);background:var(--panel)}
+.step[data-s="Done"] .dot{background:var(--ok);border-color:var(--ok);color:var(--panel)}
+.step[data-s="In progress"] .dot{border-color:var(--info);color:var(--info)}
+.step[data-s="Blocked"] .dot{border-color:var(--bad);color:var(--bad)}
+.step .t{font-weight:700}
+.step .d{font-size:13px;color:var(--muted);margin-top:2px}
+.step .ev{font-size:13px;margin-top:4px;color:var(--ink-2)}
+.step .r{display:grid;gap:6px;justify-items:end}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th,td{padding:9px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:14px}
+th{font-family:var(--f-head);font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:12px;color:var(--muted);background:var(--panel-2);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+tr.grp td{background:var(--panel-2);font-family:var(--f-head);font-weight:600;font-size:15px;color:var(--ink)}
+td.money{font-family:var(--f-head);font-weight:700;font-size:16px;white-space:nowrap}
+td .sub{font-size:12px;color:var(--muted)}
+.inline-sel{border:1px solid var(--line);border-radius:var(--r-sm);background:var(--panel);padding:2px 4px;font-size:13px;max-width:140px}
+.flag{font-size:12px;color:var(--warn);font-weight:700}
+.stale{color:var(--bad);font-weight:700}
+
+/* Stations */
+.stations{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.st{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:12px;display:grid;gap:8px;min-width:0}
+.st.open{border-color:var(--ok);box-shadow:inset 0 3px 0 var(--ok)}
+.st .row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.st .code{font-family:var(--f-head);font-weight:700;font-size:20px}
+.slots{display:flex;gap:4px}
+.slots i{flex:1;height:8px;border-radius:2px;background:var(--panel-2);border:1px solid var(--line)}
+.slots i.f{background:var(--ok);border-color:var(--ok)}
+.slots i.p{background:var(--info-bg);border-color:var(--info)}
+
+/* Board */
+.board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.col{background:var(--panel-2);border-radius:var(--r-md);padding:10px;display:grid;gap:8px;align-content:start;min-width:0}
+.col h3{font-size:15px;display:flex;justify-content:space-between}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:10px;display:grid;gap:6px;cursor:pointer;min-width:0}
+.card:hover{border-color:var(--muted)}
+.card .t{font-weight:600;overflow-wrap:anywhere}
+.card .m{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)}
+.overdue{color:var(--bad);font-weight:700}
+
+/* Lists */
+.list{display:grid;gap:0}
+.li{display:grid;grid-template-columns:96px 1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:0}
+.grid3 .li{grid-template-columns:58px 1fr}
+.grid3 .li>*:last-child{grid-column:2;justify-self:start}
+.li .when{font-family:var(--f-head);font-weight:600;color:var(--muted)}
+.src{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.src:last-child{border-bottom:0}
+.drop{border:2px dashed var(--line);border-radius:var(--r-lg);padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:end;margin-bottom:14px;background:var(--panel)}
+.drop.over{border-color:var(--accent);background:var(--panel-2)}
+.drop label{display:grid;gap:4px;font-size:13px;color:var(--muted);font-weight:600}
+.drop select{min-height:36px}
+.drop .hint{flex:1 1 220px;font-size:13px;color:var(--muted);align-self:center}
+.doc-ty{display:inline-block;min-width:38px;text-align:center;font-size:11px;font-weight:700;border-radius:var(--r-sm);padding:2px 4px;background:var(--info-bg);color:var(--info);margin-right:6px}
+#doc-status{font-size:13px;color:var(--muted);margin:-6px 0 12px;min-height:1em}
+.src a{font-weight:700;text-decoration:none}
+.src a:hover{text-decoration:underline}
+.src p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+
+.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r-md)}
+.method ol,.method ul{margin:6px 0 0;padding-left:20px}
+.method li{margin:4px 0}
+.phase{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.phase div{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:12px;min-width:0}
+.phase b{font-family:var(--f-head);font-size:17px;display:block}
+.phase small{color:var(--muted);display:block;margin-top:4px}
+
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(8,15,28,.45);z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--panel);z-index:21;border-left:1px solid var(--line);display:grid;grid-template-rows:auto 1fr auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer header,.drawer footer{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}
+.drawer footer{border-bottom:0;border-top:1px solid var(--line)}
+.drawer form{overflow:auto;padding:14px 16px;display:grid;gap:12px;align-content:start}
+.drawer label{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+.drawer input,.drawer select,.drawer textarea{border:1px solid var(--line);border-radius:var(--r-sm);padding:7px 8px;background:var(--bg);font-weight:400;font-size:15px;color:var(--ink)}
+.drawer textarea{min-height:90px;resize:vertical}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--navy);color:#fff;padding:8px 14px;border-radius:var(--r-md);z-index:30;font-weight:600}
+.ro-note{font-size:13px;color:var(--muted)}
+
+@media (max-width:900px){.lanes{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.board{grid-template-columns:1fr 1fr}.phase{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.board{grid-template-columns:1fr}.phase{grid-template-columns:1fr}.step{grid-template-columns:30px 1fr}.step .r{grid-column:2;justify-items:start}.li{grid-template-columns:1fr}.li>*:last-child{justify-self:start}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.site{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:14px;display:grid;gap:8px;min-width:0;cursor:pointer;align-content:start}
+.site:hover{border-color:var(--muted)}
+.site.live{border-color:var(--ok);box-shadow:inset 0 3px 0 var(--ok)}
+.site.blocked{box-shadow:inset 0 3px 0 var(--bad)}
+.site .row{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.site .code{font-family:var(--f-head);font-weight:700;font-size:21px}
+.kv{display:grid;grid-template-columns:86px 1fr;gap:4px 10px;font-size:13px}
+.kv dt{color:var(--muted);font-weight:600}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.ladder{display:flex;gap:3px}
+.ladder i{flex:1;height:6px;border-radius:2px;background:var(--panel-2);border:1px solid var(--line)}
+.ladder i.f{background:var(--info);border-color:var(--info)}
+.sites{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.track-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.track-h h3{font-size:19px}
+.sched td.tags{white-space:nowrap}
+.tag{display:inline-block;font-family:var(--f-head);font-size:11px;letter-spacing:.06em;font-weight:700;border-radius:var(--r-sm);padding:0 6px;margin:0 3px 3px 0;border:1px solid var(--line);color:var(--muted)}
+.tag.VA{color:var(--accent);border-color:var(--accent)}
+.tag.SC-MM,.tag.SC-LM{color:var(--info);border-color:var(--info)}
+.onoff{font-weight:700;font-size:12px}
+.onoff.on{color:var(--ok)} .onoff.off{color:var(--muted)}
+.banner{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r-md);padding:10px 12px;font-size:14px}
+
+/*@SHELL_CSS*/
+/*@REPORT_CSS*/
+/* Hub on the SVT shell: remap the hub's tokens to the template palette */
+:root{--panel:#ffffff;--panel-2:#e6e9ed;--line:#e0e6ec;--bg:#ffffff;--r-md:8px;--r-lg:8px;--accent:#e01e2e;--mast:#1c365e;--mast-ink:#fff;--mast-muted:#d6dee8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--panel:#16243a;--panel-2:#1d2d47;--line:#2a3a54;--bg:#0f1a2b;--accent:#ff4b58}}
+:root[data-theme="dark"]{--panel:#16243a;--panel-2:#1d2d47;--line:#2a3a54;--bg:#0f1a2b;--accent:#ff4b58}
+body::before{display:none}
+.hubwrap{display:grid;gap:22px}
+section[data-view]>.head h2{display:none}
+section[data-view]>.head p{font-size:15px}
+.btn{border-radius:4px;padding:9px 14px}.btn.primary{background:var(--red);border-color:var(--red);color:#fff}.btn.primary:hover{background:var(--red-hover)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{background:var(--red);border-color:var(--red)}}
+:root[data-theme="dark"] .btn.primary{background:var(--red);border-color:var(--red)}
+.hub-hero{background:var(--navy);border-radius:8px;padding:28px 32px;color:#fff;display:grid;gap:22px}
+.hub-hero .eyebrow{color:#d6dee8}.hub-hero h2{color:#fff;font-size:28px;margin:8px 0 0}
+.hub-hero .clock{display:flex;gap:28px;flex-wrap:wrap}.hub-hero .clock b{font-family:var(--f-head);font-size:34px;font-weight:700;line-height:1;color:#fff}.hub-hero .clock span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#d6dee8}
+.lane h2{color:#fff}
+.panel h3{font-size:18px}
+.seg{border-radius:4px}.seg button{padding:9px 12px}
+.col{background:var(--gray);border-radius:8px;padding:14px}.card{border-radius:8px;padding:14px}
+.st,.site{border-radius:8px}
+.project .pill{background:none;color:#fff;border:1px solid #8090a7;border-radius:4px;font-weight:400;font-size:10px;letter-spacing:1px;padding:5px 8px}
+</style>
+
+<div class="shell">
+<aside>
+  <div class="brand"><img src="data:image/png;base64,__LOGO__" alt="SVT Fleet Solutions"></div>
+  <div class="project"><span class="eyebrow">Brooke only</span><h3>Amazon BD<br>Hub</h3><span class="pill">INTERNAL · EXHIBIT A</span></div>
+  <nav id="tabs" aria-label="Hub sections"><a href="#today"><span aria-hidden="true">◷</span>Today</a><a href="#approval"><span aria-hidden="true">◆</span>Vendor Approval</a><a href="#stations"><span aria-hidden="true">◎</span>Station Conversions</a><a href="#readiness"><span aria-hidden="true">☑</span>Pilot Readiness</a><a href="#board"><span aria-hidden="true">▦</span>Action Board</a><a href="#log"><span aria-hidden="true">≡</span>Decisions &amp; Evidence</a><a href="#docs"><span aria-hidden="true">▤</span>Documents</a><a href="#sources"><span aria-hidden="true">◫</span>Sources</a><a href="#schedules"><span aria-hidden="true">◴</span>Scheduled Tasks</a><a href="#method"><span aria-hidden="true">◇</span>Method</a><a href="#report"><span aria-hidden="true">▣</span>Progress report</a></nav>
+  <div class="side-links"><a href="https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H" target="_blank" rel="noopener">↗ ONT Pilot · SVT Team</a><a href="https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668" target="_blank" rel="noopener">↗ ONT Pilot · Amazon View</a></div>
+  <div class="sidebottom"><div class="live">● Brooke only</div><p>Shared records · live updates</p><small>Do not share outside SVT leadership.</small></div>
+</aside>
+<main>
+  <header class="top"><div>SVT Fleet Solutions <span>/ Amazon BD hub · internal only</span></div></header>
+  <section class="content">
+    <div class="between title"><div><div class="eyebrow red">Vendor approval &amp; station conversions / Brooke only</div><h1 id="view-title">Today</h1><p>Two initiatives only: Amazon Vendor Approval (Exhibit A #3) and Station Conversions, Middle Mile and Last Mile.</p></div></div>
+    <div class="hubwrap">
+
+<section data-view="today">
+  <div class="hub-hero"><div><span class="eyebrow">Exhibit A priorities · Initial Term ends Jan 31, 2027</span><h2>Vendor approval first. Stations next.</h2></div><div class="clock num" id="clock"></div><div class="lanes" id="lanes"></div></div>
+  <div class="head"><div><h2>Today</h2><p>The next move on each initiative, what's due this week, and who you're waiting on.</p></div>
+    <div class="tools"><button class="btn primary" data-add="tasks">Add action</button></div></div>
+  <div class="grid3" id="today-next"></div>
+  <div class="grid2">
+    <div class="panel"><h3>Overdue &amp; due this week</h3><div id="today-due"></div></div>
+    <div class="panel"><h3>Waiting on others</h3><div id="today-wait"></div></div>
+  </div>
+</section>
+
+<section data-view="approval">
+  <div class="head"><div><h2>Amazon Vendor Approval <span class="chip o3">PRIORITY 1 · EXHIBIT A #3</span></h2>
+    <p>$5,000 one time. It's earned on the date SVT receives written confirmation from Amazon that SVT has been approved as an active, registered vendor. It must land in the Initial Term (ends Jan 31, 2027). Log every step you drive, because Amazon controls the timing.</p></div>
+    <div class="tools"><button class="btn primary" data-add="regsteps">Add step</button></div></div>
+  <div class="grid2">
+    <div class="panel"><h3>Path to written confirmation</h3><div class="steps" id="reg-steps"></div></div>
+    <div style="display:grid;gap:18px;align-content:start">
+      <div class="panel"><h3>Open actions · Vendor Approval</h3><div id="reg-tasks"></div></div>
+      <div class="panel"><h3>Recent evidence &amp; decisions</h3><div id="reg-log"></div></div>
+    </div>
+  </div>
+</section>
+
+<section data-view="stations">
+  <div class="head"><div><h2>Amazon Station Conversions</h2>
+    <p>A site counts as converted when Amazon routes work to SVT there under SVT's own name. Middle Mile runs through Evan's AFP sites, with Reach and Relay Garage. Last Mile is gated at Amazon's level: the TOM-site vendor network is set until a Q1 review, on-site work needs a direct contract, and Amazon-paid work needs a Relay Garage integration.</p></div>
+    <div class="tools"><button class="btn primary" data-add="sites">Add site</button></div></div>
+  <div class="track-h"><h3>Middle Mile</h3><span class="muted small" id="mm-sum"></span></div>
+  <div class="sites" id="mm-sites"></div>
+  <div class="panel"><h3>Open actions · Middle Mile</h3><div id="mm-tasks"></div></div>
+  <div class="track-h"><h3>Last Mile (Amazon-level access)</h3><span class="muted small" id="lm-sum"></span></div>
+  <div class="sites" id="lm-sites"></div>
+  <div class="panel"><h3>Open actions · Last Mile</h3><div id="lm-tasks"></div></div>
+</section>
+
+<section data-view="readiness">
+  <div class="head"><div><h2>Pilot Launch Readiness · ONT42 / ONT43</h2>
+    <p>Everything that has to be true before SVT takes its first Amazon work request in Reach. Items marked <b>Gate</b> block go-live. This is a read-only mirror: the live checklist your team edits is the shared <a href="https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H" target="_blank" rel="noopener">ONT42 / ONT43 Pilot Launch page</a>. The morning check and close-out keep both in step.</p></div>
+    <div class="tools">
+      <div class="seg" id="rd-filter" role="group" aria-label="Filter readiness items">
+        <button aria-pressed="true" data-f="open">Not ready</button><button aria-pressed="false" data-f="gate">Gates</button><button aria-pressed="false" data-f="all">All</button>
+      </div>
+      <a class="btn primary" href="https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H" target="_blank" rel="noopener" style="text-decoration:none">Open pilot page</a></div></div>
+  <div class="grid3" id="rd-summary"></div>
+  <div id="rd-areas" style="display:grid;gap:14px"></div>
+</section>
+
+<section data-view="board">
+  <div class="head"><div><h2>Action Board</h2><p>Every action for the two initiatives, one card per action and one owner per card.</p></div>
+    <div class="tools">
+      <div class="seg" id="obj-filter" role="group" aria-label="Filter by initiative">
+        <button aria-pressed="true" data-f="all">All</button><button aria-pressed="false" data-f="VA">Vendor Approval</button><button aria-pressed="false" data-f="MM">Middle Mile</button><button aria-pressed="false" data-f="LM">Last Mile</button>
+      </div>
+      <button class="btn primary" data-add="tasks">Add action</button></div></div>
+  <div class="board" id="board"></div>
+</section>
+
+<section data-view="log">
+  <div class="head"><div><h2>Decisions &amp; Evidence</h2><p>A dated record of decisions, meetings and proof. If the trigger date or attribution is ever questioned, this record is your support.</p></div>
+    <div class="tools"><button class="btn primary" data-add="log">Add entry</button></div></div>
+  <div class="panel"><div class="list" id="log-list"></div></div>
+</section>
+
+<section data-view="docs">
+  <div class="head"><div><h2>Documents</h2><p>Files for Vendor Approval and Station Conversions: the agreement, Amazon correspondence, COIs, pilot paperwork, site photos. PDF, images, CSV, Markdown, JSON or text up to 20 MB. Word, Excel and PowerPoint files can't be stored here; save them as PDF first.</p></div>
+    <div class="tools"><div class="seg" id="doc-filter" role="group" aria-label="Filter documents">
+      <button aria-pressed="true" data-f="all">All</button><button aria-pressed="false" data-f="VA">Vendor Approval</button><button aria-pressed="false" data-f="MM">Middle Mile</button><button aria-pressed="false" data-f="LM">Last Mile</button></div></div></div>
+  <div class="drop" id="doc-drop" hidden>
+    <label for="doc-obj">Initiative<select id="doc-obj">
+      <option value="VA">Vendor Approval</option><option value="MM">Middle Mile</option><option value="LM">Last Mile</option><option value="ALL">All</option></select></label>
+    <label for="doc-cat">Category<select id="doc-cat"></select></label>
+    <input type="file" id="doc-file" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.svg,.csv,.md,.json,.txt,.mp4,.webm">
+    <button class="btn primary" type="button" id="doc-pick">Upload files</button>
+    <span class="hint">or drop files anywhere in this box</span>
+  </div>
+  <div id="doc-status" role="status" aria-live="polite"></div>
+  <div class="panel"><div class="list" id="doc-list"></div></div>
+</section>
+
+<section data-view="sources">
+  <div class="head"><div><h2>Sources</h2><p>Only artifacts and meetings with facts about Vendor Approval or Station Conversions. DSP lead lists, outreach and routing/workflow artifacts are excluded. Core = use it, Supporting = reference, Retire = superseded by this hub.</p></div>
+    <div class="tools"><div class="seg" id="src-filter" role="group" aria-label="Filter sources">
+      <button aria-pressed="true" data-f="use">Core + Supporting</button><button aria-pressed="false" data-f="Retire">Retire</button><button aria-pressed="false" data-f="all">All</button></div>
+      <button class="btn" data-add="sources">Add source</button></div></div>
+  <div class="grid3" id="src-cols"></div>
+</section>
+
+<section data-view="schedules">
+  <div class="head"><div><h2>Scheduled Tasks</h2><p>Every scheduled task on this account, tagged by initiative. VA = Vendor Approval, SC-MM / SC-LM = Station Conversions (Middle / Last Mile). Untagged tasks are distractions from this hub. Changes are not applied automatically; the recommendation column is a proposal.</p></div>
+    <div class="tools"><div class="seg" id="sch-filter" role="group" aria-label="Filter scheduled tasks">
+      <button aria-pressed="true" data-f="tied">Tied to initiatives</button><button aria-pressed="false" data-f="other">Not tied</button><button aria-pressed="false" data-f="all">All</button></div></div></div>
+  <div class="banner" id="sch-banner"></div>
+  <div class="tbl-wrap sched"><table>
+    <thead><tr><th>Scheduled task</th><th>When</th><th>State</th><th>Tags</th><th>Recommendation</th><th>What it does</th></tr></thead>
+    <tbody id="sch-rows"></tbody></table></div>
+</section>
+
+<section data-view="report">
+  <div class="rp-tools"><button class="btn primary" id="rp-dl">Download PDF</button><button class="btn" id="rp-print">Print</button><span class="note">One page, US Letter. Built from the hub's live records. Includes Exhibit A details: keep it to yourself.</span></div>
+  <div class="rp-stage" id="rp-stage"></div>
+</section>
+
+<section data-view="method">
+  <div class="head"><div><h2>Method</h2><p>How this hub runs the full project cycle, and the rules it applies.</p></div></div>
+  <div class="phase" id="phases"></div>
+  <div class="grid2 method">
+    <div class="panel"><h3>Operating rhythm</h3>
+      <ul>
+        <li><b>Daily (10 min):</b> open <i>Today</i>. Do the top card in each lane: Vendor Approval first, then Middle Mile, then Last Mile.</li>
+        <li><b>After every Amazon touch (under 2 min):</b> update the step or site, then add an evidence entry for anything you might need to prove later (who said what, in writing or in a meeting).</li>
+        <li><b>Friday (15 min):</b> clear the Waiting list. Chase or re-date anything older than 7 days.</li>
+        <li><b>Monthly, 1st:</b> send Michael a one-screen update covering approval status, site stages, blockers and decisions needed. Log it as evidence.</li>
+        <li><b>Within 24 hours of Amazon's written confirmation:</b> forward it to Michael with the date and the Exhibit A #3 amount, and log it.</li>
+      </ul></div>
+    <div class="panel"><h3>Rules the hub applies</h3>
+      <ul>
+        <li><b>Scope:</b> Amazon Vendor Approval and Amazon Station Conversions only. No DSP outreach, lead lists or routing workflows.</li>
+        <li><b>Trigger wording (Exhibit A #3):</b> "written confirmation from Amazon that SVT has been approved as an active, registered vendor." Element, Supplier Connect, DTNA clearance and "selectable in Relay Garage" don't count on their own.</li>
+        <li><b>Own name:</b> the confirmation must name SVT FLEET LLC, not SVT working under DTNA's or Velocity's approval.</li>
+        <li><b>Never claim it early:</b> don't call SVT "Amazon approved" in any message until the confirmation exists.</li>
+        <li><b>Station conversions and Exhibit A:</b> Middle Mile pilot work sits under Exhibit A's unpriced "other named opportunities" line. Agree the incentive with Michael in writing before more pilot work.</li>
+        <li><b>Earning gate:</b> objectives must be completed during the term. The Initial Term ends Jan 31, 2027.</li>
+      </ul></div>
+  </div>
+</section>
+
+</div>
+    <footer>SVT Fleet Solutions · Amazon BD hub<span>Internal only · Brooke Benkert · Includes Exhibit A details</span></footer>
+  </section>
+</main>
+</div>
+
+<div id="drawer-root"></div>
+<div id="toast-root"></div>
+
+<script>/*@REPORT_JS*/</script>
+<script>
+(() => {
+const TERM_END = new Date("2027-01-31T23:59:59");
+const OBJS = {VA:"Vendor Approval",MM:"Middle Mile",LM:"Last Mile",ALL:"All"};
+const SITE_STAGES = ["Identified","Scoping","Site visit","Pilot agreed","Onboarding","Live","Converted","Blocked","Paused"];
+const LADDER = ["Identified","Scoping","Site visit","Pilot agreed","Onboarding","Live","Converted"];
+const DOC_CATS = ["Agreement & contract","Amazon correspondence","Insurance / COI","Vendor registration","Pilot (ONT42/ONT43)","Site / station","Billing & rates","Other"];
+const SCHEMA = {
+  tasks:{label:"Action",fields:[
+    ["title","Action","text",true],["obj","Initiative","select",false,Object.keys(OBJS)],
+    ["status","Status","select",false,["Next","Doing","Waiting","Done"]],["phase","Phase","select",false,["Initiate","Plan","Execute","Monitor","Close"]],
+    ["owner","Owner","text"],["due","Due","date"],["site","Related site","text"],["notes","Notes","textarea"],["source","Source link","url"]]},
+  regsteps:{label:"Approval step",fields:[
+    ["order","Order","number",true],["title","Step","text",true],["status","Status","select",false,["Not started","In progress","Blocked","Done"]],
+    ["owner","Owner","text"],["date","Date (done or target)","date"],["evidence","Evidence / proof","textarea"],["notes","Notes","textarea"]]},
+  sites:{label:"Site",fields:[
+    ["code","Site code","text",true],["name","Location","text"],["track","Track","select",false,["Middle Mile","Last Mile"]],
+    ["stage","Stage","select",false,SITE_STAGES],["priority","Priority (1 = highest)","number"],["contact","Amazon contacts","text"],
+    ["fleet","Fleet / volume","text"],["coverage","SVT coverage","text"],["gate","What must happen to convert","textarea"],
+    ["next","Next step","text"],["due","Next step due","date"],["lastTouch","Last touch","date"],["notes","Notes","textarea"],["source","Source link","url"]]},
+  log:{label:"Log entry",fields:[
+    ["date","Date","date",true],["obj","Initiative","select",false,Object.keys(OBJS)],["kind","Type","select",false,["Decision","Evidence","Meeting","Risk","Update"]],
+    ["text","Entry","textarea",true],["link","Link","url"]]},
+  sources:{label:"Source",fields:[
+    ["title","Title","text",true],["url","Link","url"],["obj","Initiative","select",false,Object.keys(OBJS)],
+    ["role","Role","select",false,["Core","Supporting","Retire"]],["kind","Kind","select",false,["Artifact","Meeting","Doc"]],["updated","Last updated","date"],["what","What it gives you","textarea"]]},
+  readiness:{label:"Readiness item",fields:[
+    ["item","Item","text",true],["area","Area","select",false,["Contract & terms","Reach & Relay Garage","Site access & safety","People, parts & equipment","Billing","Scope & success measures","Communication","ONT43 site"]],
+    ["status","Status","select",false,["Not started","In progress","Waiting","Blocked","Ready"]],["gate","Blocks go-live?","select",false,["Gate","Nice to have"]],
+    ["site","Site","select",false,["ONT42 + ONT43","ONT42","ONT43"]],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands","textarea"],["ref","Pilot dashboard id","text"],["order","Order","number"]]},
+  docs:{label:"Document",fields:[
+    ["name","File name","text",true],["obj","Initiative","select",false,Object.keys(OBJS)],["category","Category","select",false,DOC_CATS],
+    ["docDate","Document date","date"],["note","What it is / why it matters","textarea"]]},
+  schedules:{label:"Scheduled task",fields:[
+    ["name","Name","text",true],["schedule","When","text"],["enabled","On?","select",false,["on","off"]],["lastRun","Last run","text"],
+    ["tags","Tags (comma separated)","text"],["recommendation","Recommendation","text"],["does","What it does","textarea"],["touches","Reads / writes","textarea"],["notes","Notes","textarea"]]}
+};
+const S = {tasks:[],regsteps:[],sites:[],log:[],sources:[],schedules:[],readiness:[],docs:[]};
+const GO_LIVE="2026-11-25";
+let rdFilter="open";
+let viewerName="", assets=null, docFilter="all", docUsage=null;
+let db=null, canWrite=false, objFilter="all", srcFilter="use", schFilter="tied";
+
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
+const pd = s => { if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; };
+const days = s => { const d=pd(s); return d?Math.round((d-today())/864e5):null; };
+const fmtD = s => { const d=pd(s); return d?d.toLocaleDateString(undefined,{month:"short",day:"numeric"}):""; };
+const safeUrl = u => /^https?:\/\//i.test(u||"") ? u : "";
+const tagsOf = r => Array.isArray(r.tags)?r.tags:String(r.tags||"").split(",").map(t=>t.trim()).filter(Boolean);
+const tied = r => tagsOf(r).some(t=>t==="VA"||t.startsWith("SC"));
+const chipCls = o => o==="VA"?"o3":"";
+function toast(msg){ const r=$("#toast-root"); r.innerHTML=`<div class="toast" role="status">${esc(msg)}</div>`; clearTimeout(toast.t); toast.t=setTimeout(()=>r.innerHTML="",2200); }
+
+function regProgress(){
+  const sorted=S.regsteps.slice().sort((a,b)=>(+a.order||0)-(+b.order||0));
+  const n=sorted.length, done=sorted.filter(s=>s.status==="Done").length;
+  const cur=sorted.find(s=>s.status==="In progress")||sorted.find(s=>s.status==="Not started")||sorted.find(s=>s.status!=="Done");
+  return {n,done,cur,blocked:sorted.some(s=>s.status==="Blocked")};
+}
+const openTasks = o => S.tasks.filter(t=>t.obj===o && t.status!=="Done")
+  .sort((a,b)=>(a.status==="Doing"?-1:0)-(b.status==="Doing"?-1:0) || (pd(a.due)||9e15)-(pd(b.due)||9e15));
+const sitesOf = tr => S.sites.filter(s=>s.track===tr).sort((a,b)=>(+a.priority||99)-(+b.priority||99));
+const lvl = st => LADDER.indexOf(st);
+
+function renderClock(){
+  const left=Math.ceil((TERM_END-today())/864e5);
+  const rp=regProgress();
+  const mm=sitesOf("Middle Mile"), live=mm.filter(s=>lvl(s.stage)>=lvl("Live")).length;
+  const waiting=S.tasks.filter(t=>t.status==="Waiting").length;
+  $("#clock").innerHTML = `
+    <div><b>${left}</b><span>days left in Initial Term</span></div>
+    <div><b>${rp.done}/${rp.n}</b><span>approval steps done</span></div>
+    <div><b>${live}/${mm.length}</b><span>middle-mile sites live</span></div>
+    <div><b>${waiting}</b><span>waiting on others</span></div>`;
+}
+function nx(t){ return t?`${esc(t.title)}${t.due?` <span class="meta">· ${fmtD(t.due)}</span>`:""}`:"None set"; }
+function renderLanes(){
+  const rp=regProgress(), mm=sitesOf("Middle Mile"), lm=sitesOf("Last Mile");
+  const mmTop=mm.slice().sort((a,b)=>lvl(b.stage)-lvl(a.stage))[0];
+  const lmBlocked=lm.filter(s=>s.stage==="Blocked").length;
+  const mmPct=mm.length?Math.round(mm.reduce((a,s)=>a+Math.max(0,lvl(s.stage)),0)/(mm.length*(LADDER.length-1))*100):0;
+  $("#lanes").innerHTML = `
+  <button class="lane p1" data-go="approval">
+    <div class="top"><span class="tag" style="border:0;color:var(--mast-muted)">Initiative 1 · Exhibit A #3</span><span class="pri">Priority 1</span></div>
+    <h2>Amazon Vendor Approval</h2>
+    <div class="top"><span class="big num">$5,000</span><span class="meta">${rp.done}/${rp.n} steps done${rp.blocked?" · <b>a step is blocked</b>":""}</span></div>
+    <div class="bar"><i style="width:${rp.n?Math.round(rp.done/rp.n*100):0}%"></i></div>
+    <div class="meta">Current step: ${rp.cur?esc(rp.cur.title):"Not mapped yet"}</div>
+    <div class="next"><b>Next action</b>${nx(openTasks("VA")[0])}</div>
+  </button>
+  <button class="lane" data-go="stations">
+    <div class="top"><span class="tag" style="border:0;color:var(--mast-muted)">Initiative 2a</span><span class="pri n">Priority 2</span></div>
+    <h2>Station Conversions · Middle Mile</h2>
+    <div class="top"><span class="big num">${mm.length}</span><span class="meta">sites tracked${mmTop?` · lead: ${esc(mmTop.code)} (${esc(mmTop.stage)})`:""}</span></div>
+    <div class="bar"><i style="width:${mmPct}%"></i></div>
+    <div class="meta">${(()=>{const r=rdStats();return r.n?`Launch readiness: ${r.ready}/${r.n} gates ready · go-live target ${fmtD(GO_LIVE)} (${days(GO_LIVE)}d)`:(mmTop&&mmTop.next?esc(mmTop.next):"Add the first site");})()}</div>
+    <div class="next"><b>Next action</b>${nx(openTasks("MM")[0])}</div>
+  </button>
+  <button class="lane" data-go="stations">
+    <div class="top"><span class="tag" style="border:0;color:var(--mast-muted)">Initiative 2b</span><span class="pri n">Priority 3</span></div>
+    <h2>Station Conversions · Last Mile</h2>
+    <div class="top"><span class="big num">${lmBlocked}/${lm.length}</span><span class="meta">markets blocked at Amazon level</span></div>
+    <div class="bar"><i style="width:${lm.length?Math.round((lm.length-lmBlocked)/lm.length*100):0}%"></i></div>
+    <div class="meta">Gate: TOM-site network review in Q1; direct contract for on-site work</div>
+    <div class="next"><b>Next action</b>${nx(openTasks("LM")[0])}</div>
+  </button>`;
+}
+function taskLine(t){
+  const dd=days(t.due); const cls=dd!==null&&dd<0&&t.status!=="Done"?"overdue":"";
+  return `<div class="li" data-edit="tasks:${esc(t.id)}" style="cursor:pointer">
+    <div class="when ${cls}">${t.due?fmtD(t.due):"No date"}</div>
+    <div><div style="font-weight:600">${esc(t.title)}</div><div class="small muted">${esc(t.owner||"")}${t.status==="Waiting"?" · waiting":""}${t.site?" · "+esc(t.site):""}</div></div>
+    <div><span class="chip ${chipCls(t.obj)}">${esc(OBJS[t.obj]||t.obj||"")}</span></div></div>`;
+}
+const listOr = (arr,empty,fn=taskLine) => arr.length?`<div class="list">${arr.map(fn).join("")}</div>`:`<div class="empty">${empty}</div>`;
+function renderToday(){
+  $("#today-next").innerHTML = [["VA","Vendor Approval"],["MM","Middle Mile"],["LM","Last Mile"]].map(([o,l])=>
+    `<div class="panel"><h3>${l}</h3>${listOr(openTasks(o).slice(0,3),"No open actions. Add one so this lane always has a next move.")}</div>`).join("");
+  const due=S.tasks.filter(t=>t.status!=="Done"&&days(t.due)!==null&&days(t.due)<=7).sort((a,b)=>pd(a.due)-pd(b.due));
+  $("#today-due").innerHTML = listOr(due,"Nothing overdue or due in the next 7 days.");
+  const wait=S.tasks.filter(t=>t.status==="Waiting").sort((a,b)=>(pd(a.due)||9e15)-(pd(b.due)||9e15));
+  $("#today-wait").innerHTML = listOr(wait,"Nobody to chase right now.");
+}
+function selectHTML(col,rec,field,opts){
+  return `<select class="inline-sel" aria-label="${esc(field)}" data-inline="${col}:${esc(rec.id)}:${field}">${opts.map(o=>`<option${o===rec[field]?" selected":""}>${esc(o)}</option>`).join("")}</select>`;
+}
+function logLine(l){
+  const pc={Decision:"info",Evidence:"ok",Risk:"bad",Meeting:"",Update:""};
+  const u=safeUrl(l.link);
+  return `<div class="li" data-edit="log:${esc(l.id)}" style="cursor:pointer">
+    <div class="when">${l.date?fmtD(l.date):""}</div>
+    <div style="min-width:0;overflow-wrap:anywhere">${esc(l.text)}${u?` <a href="${esc(u)}" target="_blank" rel="noopener">Open</a>`:""}</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:end"><span class="pill ${pc[l.kind]||""}">${esc(l.kind||"")}</span><span class="chip ${chipCls(l.obj)}">${esc(OBJS[l.obj]||"")}</span></div></div>`;
+}
+function renderApproval(){
+  const steps=S.regsteps.slice().sort((a,b)=>(+a.order||0)-(+b.order||0));
+  const pc={"Done":"ok","In progress":"info","Blocked":"bad"};
+  $("#reg-steps").innerHTML = steps.length?steps.map((s,i)=>`<div class="step" data-s="${esc(s.status)}">
+    <div class="dot">${s.status==="Done"?"✓":i+1}</div>
+    <div style="min-width:0"><div class="t">${esc(s.title)}</div>
+      <div class="d">${esc(s.owner||"Owner not set")}${s.date?" · "+fmtD(s.date):""}</div>
+      ${s.evidence?`<div class="ev">${esc(s.evidence)}</div>`:""}${s.notes?`<div class="d">${esc(s.notes)}</div>`:""}</div>
+    <div class="r">${canWrite?selectHTML("regsteps",s,"status",SCHEMA.regsteps.fields[2][4]):`<span class="pill ${pc[s.status]||""}">${esc(s.status||"Not started")}</span>`}
+      ${canWrite?`<button class="btn sm" data-edit="regsteps:${esc(s.id)}">Edit</button>`:""}</div></div>`).join("")
+    : `<div class="empty">No approval steps yet. Add the first step.</div>`;
+  $("#reg-tasks").innerHTML = listOr(openTasks("VA"),"No open approval actions.");
+  $("#reg-log").innerHTML = listOr(S.log.filter(l=>l.obj==="VA").sort((a,b)=>(pd(b.date)||0)-(pd(a.date)||0)).slice(0,6),"No entries yet.",logLine);
+}
+function siteCard(s){
+  const L=lvl(s.stage); let lad=""; for(let i=0;i<LADDER.length;i++) lad+=`<i class="${L>=i?"f":""}" title="${LADDER[i]}"></i>`;
+  const pill=s.stage==="Blocked"?"bad":L>=lvl("Live")?"ok":L>=lvl("Pilot agreed")?"info":"";
+  const dd=days(s.due);
+  return `<div class="site ${L>=lvl("Live")?"live":""} ${s.stage==="Blocked"?"blocked":""}" data-edit="sites:${esc(s.id)}" tabindex="0">
+    <div class="row"><span class="code">${esc(s.code)}</span>${canWrite?selectHTML("sites",s,"stage",SITE_STAGES):`<span class="pill ${pill}">${esc(s.stage||"")}</span>`}</div>
+    <div class="small"><b>${esc(s.name||"")}</b></div>
+    ${s.stage!=="Blocked"&&s.stage!=="Paused"?`<div class="ladder" aria-label="Stage ${esc(s.stage)}">${lad}</div>`:""}
+    <dl class="kv">
+      ${s.fleet?`<dt>Volume</dt><dd>${esc(s.fleet)}</dd>`:""}
+      ${s.contact?`<dt>Amazon</dt><dd>${esc(s.contact)}</dd>`:""}
+      ${s.coverage?`<dt>Coverage</dt><dd>${esc(s.coverage)}</dd>`:""}
+      ${s.gate?`<dt>To convert</dt><dd>${esc(s.gate)}</dd>`:""}
+      ${s.next?`<dt>Next</dt><dd>${esc(s.next)}${s.due?` <span class="${dd!==null&&dd<0?"overdue":"muted"}">· ${fmtD(s.due)}</span>`:""}</dd>`:""}
+    </dl></div>`;
+}
+function renderStations(){
+  const mm=sitesOf("Middle Mile"), lm=sitesOf("Last Mile");
+  $("#mm-sites").innerHTML = mm.length?mm.map(siteCard).join(""):`<div class="empty">No middle-mile sites yet.</div>`;
+  $("#lm-sites").innerHTML = lm.length?lm.map(siteCard).join(""):`<div class="empty">No last-mile markets yet.</div>`;
+  $("#mm-sum").textContent = `${mm.filter(s=>lvl(s.stage)>=lvl("Pilot agreed")).length} pilot agreed or later · ${mm.filter(s=>lvl(s.stage)>=lvl("Live")).length} live`;
+  $("#lm-sum").textContent = `${lm.filter(s=>s.stage==="Blocked").length} blocked at Amazon level`;
+  $("#mm-tasks").innerHTML = listOr(openTasks("MM"),"No open middle-mile actions.");
+  $("#lm-tasks").innerHTML = listOr(openTasks("LM"),"No open last-mile actions.");
+}
+function rdStats(){
+  const g=S.readiness.filter(r=>r.gate!=="Nice to have");
+  return {n:g.length,ready:g.filter(r=>r.status==="Ready").length,blocked:g.filter(r=>r.status==="Blocked").length,
+    waiting:g.filter(r=>r.status==="Waiting").length,all:S.readiness.length};
+}
+function renderReadiness(){
+  const st=rdStats(); const d=days(GO_LIVE);
+  const pct=st.n?Math.round(st.ready/st.n*100):0;
+  const overdue=S.readiness.filter(r=>r.status!=="Ready"&&days(r.due)!==null&&days(r.due)<0).length;
+  $("#rd-summary").innerHTML=`
+    <div class="panel"><h3>Go-live target</h3><div class="big num" style="font-family:var(--f-head);font-size:30px;font-weight:700">${fmtD(GO_LIVE)}</div>
+      <div class="small muted">${d>=0?d+" days away":"passed "+(-d)+" days ago"}. Reach's estimate, not an agreed Amazon start date. Mike's Nov 13 debrief mentioned Jan 1; confirm with Evan.</div></div>
+    <div class="panel"><h3>Gates ready</h3><div class="num" style="font-family:var(--f-head);font-size:30px;font-weight:700">${st.ready}/${st.n} <span class="small muted">(${pct}%)</span></div>
+      <div class="bar" style="background:var(--panel-2);margin-top:6px"><i style="width:${pct}%;background:var(--ok)"></i></div></div>
+    <div class="panel"><h3>Attention</h3><div class="small">${st.blocked} blocked · ${st.waiting} waiting on others · ${overdue} past due</div>
+      <div class="small muted" style="margin-top:6px">Go-live needs every gate Ready.</div></div>`;
+  const areas=SCHEMA.readiness.fields[1][4];
+  const keep=r=>rdFilter==="all"?true:rdFilter==="gate"?r.gate!=="Nice to have":r.status!=="Ready";
+  const pc={"Ready":"ok","In progress":"info","Waiting":"warn","Blocked":"bad"};
+  $("#rd-areas").innerHTML=areas.map(a=>{
+    const all=S.readiness.filter(r=>(r.area||"")===a); if(!all.length) return "";
+    const list=all.filter(keep).sort((x,y)=>(+x.order||99)-(+y.order||99));
+    const rd=all.filter(r=>r.status==="Ready").length;
+    return `<div class="panel"><div class="track-h"><h3>${esc(a)}</h3><span class="small muted">${rd}/${all.length} ready</span></div>${list.length?`<div class="list">${list.map(r=>{const dd=days(r.due);return `<div class="li" style="grid-template-columns:120px 1fr auto">
+      <div><span class="pill ${pc[r.status]||""}">${esc(r.status||"")}</span></div>
+      <div style="min-width:0"><div style="font-weight:600">${esc(r.item)} ${r.gate!=="Nice to have"?'<span class="chip o3">Gate</span>':""}</div>
+        <div class="small muted">${esc(r.site||"")}${r.owner?" · "+esc(r.owner):" · owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${fmtD(r.due)}</span>`:""}</div>
+        ${r.evidence?`<div class="small" style="margin-top:2px">${esc(r.evidence)}</div>`:""}</div>
+      <div class="small muted">${esc(r.ref||"")}</div></div>`;}).join("")}</div>`:`<div class="muted small">All ready in this area.</div>`}</div>`;
+  }).join("") || `<div class="empty">No readiness items yet.</div>`;
+}
+function renderBoard(){
+  const cols=["Next","Doing","Waiting","Done"];
+  const ts=S.tasks.filter(t=>objFilter==="all"||t.obj===objFilter);
+  $("#board").innerHTML = cols.map(c=>{
+    const list=ts.filter(t=>(t.status||"Next")===c).sort((a,b)=>(pd(a.due)||9e15)-(pd(b.due)||9e15));
+    const shown=c==="Done"?list.slice(-12):list;
+    return `<div class="col"><h3>${c}<span class="muted num">${list.length}</span></h3>${shown.map(t=>{const dd=days(t.due);return `<div class="card" data-edit="tasks:${esc(t.id)}" tabindex="0">
+      <div class="t">${esc(t.title)}</div>
+      <div class="m"><span class="chip ${chipCls(t.obj)}">${esc(OBJS[t.obj]||"")}</span>${t.phase?`<span>${esc(t.phase)}</span>`:""}${t.owner?`<span>${esc(t.owner)}</span>`:""}${t.due?`<span class="${dd<0&&c!=="Done"?"overdue":""}">${fmtD(t.due)}</span>`:""}</div>
+      ${canWrite?`<div>${selectHTML("tasks",t,"status",cols)}</div>`:""}</div>`;}).join("")||`<div class="muted small" style="padding:6px">Empty</div>`}</div>`;
+  }).join("");
+}
+function renderLog(){
+  $("#log-list").innerHTML = listOr(S.log.slice().sort((a,b)=>(pd(b.date)||0)-(pd(a.date)||0)),"No entries yet. Log decisions, meetings and proof as they happen.",logLine);
+}
+function renderSources(){
+  const groups=[["VA","Vendor Approval"],["MM","Station Conversions · Middle Mile"],["LM","Station Conversions · Last Mile"]];
+  const keep=s=> srcFilter==="all"?true: srcFilter==="Retire"?s.role==="Retire": s.role!=="Retire";
+  const rank={Core:0,Supporting:1,Retire:2};
+  $("#src-cols").innerHTML = groups.map(([o,l])=>{
+    const list=S.sources.filter(s=>(s.obj===o||(s.obj==="ALL"&&o==="VA"))&&keep(s)).sort((a,b)=>(rank[a.role]??3)-(rank[b.role]??3)||(pd(b.updated)||0)-(pd(a.updated)||0));
+    return `<div class="panel"><h3>${l}</h3>${list.length?list.map(s=>{const u=safeUrl(s.url);return `<div class="src">
+      <div style="min-width:0">${u?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(s.title)}</a>`:`<b>${esc(s.title)}</b>`}
+        <p>${esc(s.what||"")}</p><p>${esc(s.kind||"")}${s.updated?" · "+fmtD(s.updated):""}</p></div>
+      <div style="display:grid;gap:4px;justify-items:end"><span class="pill ${s.role==="Core"?"ok":s.role==="Retire"?"bad":"info"}">${esc(s.role||"")}</span>${canWrite?`<button class="btn sm" data-edit="sources:${esc(s.id)}">Edit</button>`:""}</div></div>`;}).join(""):`<div class="empty">None in this view.</div>`}</div>`;
+  }).join("");
+}
+const DOC_TYPES={pdf:"application/pdf",png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",webp:"image/webp",svg:"image/svg+xml",
+  csv:"text/csv",md:"text/markdown",markdown:"text/markdown",json:"application/json",txt:"text/plain",mp4:"video/mp4",webm:"video/webm"};
+const fmtSize = b => !b?"":b<1024?b+" B":b<1048576?(b/1024).toFixed(0)+" KB":b<1073741824?(b/1048576).toFixed(1)+" MB":+(b/1073741824).toFixed(1)+" GB";
+const docTy = r => { const t=r.contentType||""; return t==="application/pdf"?"PDF":t.startsWith("image/")?"IMG":t.startsWith("video/")?"VID":(String(r.name||"").split(".").pop()||"FILE").toUpperCase().slice(0,4); };
+function renderDocs(){
+  const drop=$("#doc-drop"); drop.hidden=!(assets&&canWrite);
+  const cat=$("#doc-cat"); if(!cat.options.length) cat.innerHTML=DOC_CATS.map(c=>`<option>${esc(c)}</option>`).join("");
+  const groups=[["VA","Vendor Approval"],["MM","Station Conversions · Middle Mile"],["LM","Station Conversions · Last Mile"],["ALL","General"]];
+  const list=S.docs.filter(d=>docFilter==="all"||d.obj===docFilter||d.obj==="ALL");
+  const meter=docUsage?`<div class="sub small" style="margin-bottom:8px">${docUsage.files} file${docUsage.files===1?"":"s"} · ${fmtSize(docUsage.bytes)} of ${fmtSize(docUsage.maxBytes)} used</div>`:"";
+  if(!list.length){ $("#doc-list").innerHTML=meter+`<div class="empty">${S.docs.length?"None in this view.":(assets&&canWrite?"No documents yet. Upload the first one above.":"No documents yet.")}</div>`; return; }
+  $("#doc-list").innerHTML = meter+groups.map(([o,l])=>{
+    const g=list.filter(d=>(d.obj||"ALL")===o).sort((a,b)=>String(b.uploadedAt||"").localeCompare(String(a.uploadedAt||"")));
+    if(!g.length) return "";
+    return `<h3 style="margin:12px 0 4px">${l}</h3>`+g.map(d=>`<div class="src">
+      <div style="min-width:0"><span class="doc-ty">${esc(docTy(d))}</span>${d.assetId?`<a href="/_blob/${encodeURIComponent(d.assetId)}" target="_blank" rel="noopener">${esc(d.name)}</a>`:`<b>${esc(d.name)}</b>`}
+        ${d.note?`<p>${esc(d.note)}</p>`:""}<p>${[d.category,d.docDate?fmtD(d.docDate):"",fmtSize(d.sizeBytes),d.uploadedAt?"added "+fmtD(String(d.uploadedAt).slice(0,10)):"",d.by?"by "+d.by:""].filter(Boolean).map(esc).join(" · ")}</p></div>
+      <div style="display:grid;gap:4px;justify-items:end">${canWrite?`<button class="btn sm" data-edit="docs:${esc(d.id)}">Edit</button>`:""}</div></div>`).join("");
+  }).join("");
+}
+function docStatus(m){ $("#doc-status").textContent=m||""; }
+function refreshUsage(){ if(!assets) return; assets.list().then(r=>{ docUsage=r&&r.usage; renderDocs(); }).catch(()=>{}); }
+const DOC_ERR={too_large:"is over the size limit (20 MB, or 2 MB for SVG). Compress or split it.",
+  unsupported_type:"isn't a supported file type. Save Word, Excel or PowerPoint files as PDF first.",
+  invalid_request:"couldn't be read. Text files must be UTF-8; empty files can't be uploaded.",
+  quota_or_state:"couldn't be stored: the hub's file storage is full or unavailable right now.",
+  rate_limited:"wasn't uploaded: too many uploads at once. Wait a moment and try again.",
+  upstream_auth:"wasn't uploaded: your session expired. Reload the page and sign in again.",
+  not_granted:"wasn't uploaded: you need edit access to add files.",
+  capability_disabled:"wasn't uploaded: file uploads aren't available in this view."};
+async function uploadFiles(files){
+  if(!assets||!canWrite||!db) return;
+  const obj=$("#doc-obj").value, category=$("#doc-cat").value; let ok=0;
+  for(const f of files){
+    const ext=String(f.name.split(".").pop()||"").toLowerCase(); const type=DOC_TYPES[ext];
+    if(!type){ toast(`${f.name} ${DOC_ERR.unsupported_type}`); continue; }
+    if(f.size>(type==="image/svg+xml"?2:20)*1048576){ toast(`${f.name} ${DOC_ERR.too_large}`); continue; }
+    docStatus(`Uploading ${f.name}…`);
+    try{
+      let r;
+      try{ r=await assets.upload(f,{type}); }
+      catch(e){ if(e&&e.code==="store_unavailable"){ await new Promise(z=>setTimeout(z,1500)); r=await assets.upload(f,{type}); } else throw e; }
+      await db.collection("docs").doc().set({assetId:r.id,name:f.name,contentType:r.contentType,sizeBytes:r.sizeBytes,obj,category,
+        docDate:"",note:"",uploadedAt:new Date().toISOString(),by:viewerName||""});
+      ok++;
+    }catch(e){
+      const code=e&&e.code;
+      if(code==="capability_disabled"||code==="capability_removed"){ assets=null; renderDocs(); }
+      if(code==="invalid_argument"){ handleWriteErr(e); break; }
+      toast(`${f.name} ${DOC_ERR[code]||"couldn't be uploaded. Try again."}`);
+    }
+  }
+  docStatus(ok?`${ok} file${ok===1?"":"s"} uploaded. Use Edit to add a note.`:"");
+  $("#doc-file").value=""; refreshUsage();
+}
+function renderSchedules(){
+  const all=S.schedules.slice().sort((a,b)=>(tied(b)-tied(a))||((b.enabled==="on")-(a.enabled==="on"))||String(a.name).localeCompare(String(b.name)));
+  const t=all.filter(tied), on=all.filter(r=>r.enabled==="on");
+  $("#sch-banner").innerHTML = all.length?`<b>${all.length}</b> scheduled tasks (${on.length} on). <b>${t.length}</b> tied to Vendor Approval or Station Conversions; <b>${all.length-t.length}</b> not tied. Tasks created only in the Cowork desktop app aren't visible from here.`:`No scheduled tasks loaded yet.`;
+  const list=all.filter(r=>schFilter==="all"?true:schFilter==="tied"?tied(r):!tied(r));
+  $("#sch-rows").innerHTML = list.length?list.map(r=>`<tr data-edit="schedules:${esc(r.id)}" style="cursor:pointer">
+    <td style="min-width:180px"><b>${esc(r.name)}</b>${r.notes?`<div class="sub">${esc(r.notes)}</div>`:""}</td>
+    <td style="min-width:120px">${esc(r.schedule||"")}${r.lastRun?`<div class="sub">Last: ${esc(r.lastRun)}</div>`:""}</td>
+    <td><span class="onoff ${r.enabled==="on"?"on":"off"}">${r.enabled==="on"?"On":"Off"}</span></td>
+    <td class="tags">${tagsOf(r).map(g=>`<span class="tag ${esc(g)}">${esc(g)}</span>`).join("")}</td>
+    <td style="min-width:150px">${esc(r.recommendation||"")}</td>
+    <td style="min-width:240px">${esc(r.does||"")}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">None in this view.</div></td></tr>`;
+}
+function renderMethod(){
+  const ph=[["Initiate","Two initiatives scoped. Exhibit A #3 trigger and term gate set."],
+    ["Plan","Approval steps mapped. Middle Mile sites and Last Mile gates listed with owners."],
+    ["Execute","Daily lane actions: approval asks, pilot onboarding, site visits."],
+    ["Monitor","Friday waiting-list sweep, monthly update to Michael, scheduled-task hygiene."],
+    ["Close","Written confirmation forwarded within 24h, evidence logged, verified, paid within 30 days."]];
+  const c=k=>S.tasks.filter(t=>t.phase===k&&t.status!=="Done").length;
+  $("#phases").innerHTML = ph.map(([k,v])=>`<div><b>${k}</b><small>${v}</small><small class="num" style="color:var(--ink)">${c(k)} open action${c(k)===1?"":"s"}</small></div>`).join("");
+}
+function renderAll(){ renderClock(); renderLanes(); renderToday(); renderApproval(); renderStations(); renderReadiness(); renderBoard(); renderLog(); renderSources(); renderDocs(); renderSchedules(); renderMethod(); if((location.hash||"").slice(1)==="report") renderReport();
+  document.querySelectorAll("[data-add]").forEach(b=>b.hidden=!canWrite); }
+
+const VIEWS=["today","approval","stations","readiness","board","log","docs","sources","schedules","method","report"];
+function route(){
+  const h=(location.hash||"").slice(1); const v=VIEWS.includes(h)?h:"today";
+  document.querySelectorAll("section[data-view]").forEach(s=>s.hidden=s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.setAttribute("aria-current",a.getAttribute("href")==="#"+v?"page":"false"));
+  const cur=document.querySelector(`#tabs a[href="#${v}"]`); const vt=document.getElementById("view-title"); if(cur&&vt) vt.textContent=cur.textContent.slice(1);
+  if(v==="report") renderReport();
+}
+addEventListener("hashchange",route);
+
+function openDrawer(col,id){
+  const sc=SCHEMA[col]; const rec=id?S[col].find(r=>r.id===id):null;
+  if(id&&!rec) return;
+  const base=rec||defaults(col); const ro=!canWrite;
+  const field=([k,l,type,req,opts])=>{
+    let v=base[k]??""; if(Array.isArray(v)) v=v.join(", ");
+    const idA=`f-${col}-${k}`;
+    if(type==="select") return `<label for="${idA}">${l}<select id="${idA}" name="${k}" ${ro?"disabled":""}>${opts.map(o=>`<option value="${esc(o)}"${o===v?" selected":""}>${esc(OBJS[o]&&k==="obj"?OBJS[o]:o)}</option>`).join("")}</select></label>`;
+    if(type==="textarea") return `<label for="${idA}">${l}<textarea id="${idA}" name="${k}" ${ro?"readonly":""}>${esc(v)}</textarea></label>`;
+    return `<label for="${idA}">${l}<input id="${idA}" name="${k}" type="${type}" value="${esc(v)}" ${req?"required":""} ${ro?"readonly":""}></label>`;
+  };
+  $("#drawer-root").innerHTML=`<div class="scrim" data-close></div>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h">
+    <header><h3 id="dr-h" style="font-size:19px">${rec?(ro?"":"Edit ")+sc.label:"New "+sc.label.toLowerCase()}</h3><button class="btn sm" data-close>Close</button></header>
+    <form id="dr-form" novalidate>${sc.fields.map(field).join("")}${rec&&safeUrl(rec.source)?`<a href="${esc(rec.source)}" target="_blank" rel="noopener">Open source</a>`:""}${ro?'<p class="ro-note">You can view this record. Editing needs Contributor access or higher.</p>':""}</form>
+    <footer>${rec&&!ro?`<button class="btn danger" id="dr-del" type="button">Delete</button>`:"<span></span>"}${ro?"":`<button class="btn primary" form="dr-form" type="submit">${rec?"Save":"Add"}</button>`}</footer>
+  </aside>`;
+  const f=$("#dr-form"); setTimeout(()=>f.querySelector("input,select,textarea")?.focus(),0);
+  f.addEventListener("submit",async e=>{
+    e.preventDefault(); if(ro) return;
+    const fd=new FormData(f); const body={};
+    sc.fields.forEach(([k,,type])=>{let v=(fd.get(k)??"").toString().trim(); if(type==="number"&&v!=="") v=+v; body[k]=v;});
+    if(col==="schedules") body.tags=String(body.tags||"").split(",").map(t=>t.trim()).filter(Boolean);
+    const miss=sc.fields.find(([k,,,req])=>req&&(body[k]===""||body[k]===undefined));
+    if(miss){ toast(`${miss[1]} is required`); return; }
+    body.updatedAt=new Date().toISOString();
+    try{ const ref=rec?db.doc(`${col}/${rec.id}`):db.collection(col).doc(); const {id:_omit,...rest}=rec||{}; await ref.set({...rest,...body}); closeDrawer(); toast(rec?"Saved":"Added"); }
+    catch(err){ handleWriteErr(err); }
+  });
+  const del=$("#dr-del");
+  if(del) del.addEventListener("click",async()=>{
+    if(del.dataset.armed!=="1"){ del.dataset.armed="1"; del.textContent="Confirm delete"; return; }
+    try{
+      if(col==="docs"&&rec.assetId){
+        if(!assets){ toast("Deleting files needs edit access in the full hub view"); return; }
+        await assets.delete(rec.assetId);
+      }
+      await db.doc(`${col}/${rec.id}`).delete(); closeDrawer(); toast("Deleted"); refreshUsage();
+    }catch(err){ if(err&&err.code&&DOC_ERR[err.code]) toast("Couldn't delete: "+err.message); else handleWriteErr(err); }
+  });
+}
+function defaults(col){
+  const h=(location.hash||"").slice(1); const d=new Date().toISOString().slice(0,10);
+  const o=h==="stations"?"MM":objFilter!=="all"?objFilter:"VA";
+  if(col==="tasks") return {obj:o,status:"Next",phase:"Execute",owner:"Brooke"};
+  if(col==="regsteps") return {order:(S.regsteps.reduce((m,s)=>Math.max(m,+s.order||0),0)+1),status:"Not started",owner:"Brooke"};
+  if(col==="sites") return {track:"Middle Mile",stage:"Identified",lastTouch:d};
+  if(col==="log") return {date:d,obj:o,kind:"Evidence"};
+  if(col==="sources") return {role:"Supporting",kind:"Artifact",obj:"VA"};
+  if(col==="schedules") return {enabled:"on"};
+  if(col==="readiness") return {status:"Not started",gate:"Gate",site:"ONT42 + ONT43",area:"Reach & Relay Garage",order:99};
+  return {};
+}
+function closeDrawer(){ $("#drawer-root").innerHTML=""; }
+function handleWriteErr(err){
+  if(err&&err.code==="invalid_argument"){ canWrite=false; renderAll(); toast("You can view this hub but not change it"); }
+  else if(err&&err.code==="unavailable") toast("Connection hiccup. Try again in a moment.");
+  else toast("Couldn't save: "+((err&&err.message)||"unknown error"));
+}
+
+document.addEventListener("click",e=>{
+  const go=e.target.closest("[data-go]"); if(go){ location.hash=go.dataset.go; return; }
+  if(e.target.closest("[data-close]")){ closeDrawer(); return; }
+  if(e.target.closest("#doc-pick")){ $("#doc-file").click(); return; }
+  const add=e.target.closest("[data-add]"); if(add){ if(db) openDrawer(add.dataset.add); return; }
+  if(e.target.closest("select.inline-sel")) return;
+  const ed=e.target.closest("[data-edit]"); if(ed){ e.preventDefault(); const [c,id]=ed.dataset.edit.split(":"); openDrawer(c,id); return; }
+  const seg=e.target.closest(".seg button"); if(seg){
+    const g=seg.parentElement; g.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b===seg?"true":"false"));
+    if(g.id==="obj-filter"){objFilter=seg.dataset.f;renderBoard();}
+    if(g.id==="src-filter"){srcFilter=seg.dataset.f;renderSources();}
+    if(g.id==="sch-filter"){schFilter=seg.dataset.f;renderSchedules();}
+    if(g.id==="rd-filter"){rdFilter=seg.dataset.f;renderReadiness();}
+    if(g.id==="doc-filter"){docFilter=seg.dataset.f;renderDocs();}
+  }
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") closeDrawer();
+  if(e.key==="Enter"&&e.target.matches("[data-edit][tabindex]")){ const [c,id]=e.target.dataset.edit.split(":"); openDrawer(c,id); }
+});
+document.addEventListener("change",e=>{ if(e.target.id==="doc-file"&&e.target.files.length) uploadFiles([...e.target.files]); });
+(()=>{ const d=$("#doc-drop");
+  ["dragenter","dragover"].forEach(t=>d.addEventListener(t,e=>{ e.preventDefault(); d.classList.add("over"); }));
+  ["dragleave","drop"].forEach(t=>d.addEventListener(t,e=>{ e.preventDefault(); d.classList.remove("over"); }));
+  d.addEventListener("drop",e=>{ const fs=[...(e.dataTransfer&&e.dataTransfer.files||[])]; if(fs.length) uploadFiles(fs); });
+})();
+document.addEventListener("change",async e=>{
+  const s=e.target.closest("select.inline-sel"); if(!s||!db) return;
+  const [c,id,f]=s.dataset.inline.split(":");
+  const patch={[f]:s.value,updatedAt:new Date().toISOString()};
+  if(c==="sites") patch.lastTouch=new Date().toISOString().slice(0,10);
+  if(c==="regsteps"&&s.value==="Done") patch.date=new Date().toISOString().slice(0,10);
+  try{ await db.doc(`${c}/${id}`).update(patch); toast("Updated"); }catch(err){ handleWriteErr(err); }
+});
+
+const RST={task:{Done:"done",Doing:"prog",Waiting:"wait",Next:"todo"},reg:{Done:"done","In progress":"prog",Blocked:"blocked","Not started":"todo"},rd:{Ready:"done","In progress":"prog",Waiting:"wait",Blocked:"blocked","Not started":"todo"}};
+const siteSt=st=>["Live","Converted"].includes(st)?"done":st==="Blocked"?"blocked":st==="Paused"?"wait":st==="Identified"?"todo":"prog";
+function renderReport(){
+  const el=document.getElementById("rp-stage"); if(!el||!window.SVTReport) return; const R=SVTReport;
+  const tasks=S.tasks.map(t=>({id:"t:"+t.id,title:t.title,st:RST.task[t.status]||"todo",label:t.status,gate:false,due:t.due,owner:t.owner,grp:"tasks-"+t.obj}));
+  const regs=S.regsteps.slice().sort((a,b)=>(+a.order||0)-(+b.order||0)).map(r=>({id:"r:"+r.id,title:r.title,st:RST.reg[r.status]||"todo",label:r.status,gate:true,due:"",owner:r.owner,grp:"reg"}));
+  const rd=S.readiness.filter(r=>r.gate!=="Nice to have").map(r=>({id:"rd:"+r.id,title:r.item,st:RST.rd[r.status]||"todo",label:r.status,gate:true,due:r.due,owner:r.owner,grp:"rd"}));
+  const sites=S.sites.map(x=>({id:"s:"+x.id,title:x.code+" · "+(x.name||x.track),st:siteSt(x.stage),label:x.stage,gate:false,due:x.due,owner:"",grp:x.track==="Last Mile"?"lm-sites":"mm-sites"}));
+  const items=[...regs,...rd,...tasks,...sites];
+  const rp=regProgress(), rs=rdStats(), left=Math.ceil((TERM_END-today())/864e5), openT=S.tasks.filter(t=>t.status!=="Done");
+  const extra=[];
+  const last=regs[regs.length-1];
+  if(last&&last.st!=="done") extra.push({lv:left<45?"high":"med",t:`No written Amazon confirmation naming SVT FLEET LLC yet. ${left} days left in the Initial Term to earn the $5,000 vendor-approval incentive.`});
+  const t02=S.tasks.find(t=>t.id==="t02"); if(t02&&t02.status!=="Done") extra.push({lv:t02.due&&days(t02.due)<=0?"high":"med",t:`Evan hasn't confirmed whether Relay Garage setup means approved vendor status.${t02.due?` Follow-up due ${fmtD(t02.due)}; Phil Hines is the fallback.`:""}`});
+  if(rs.n&&rs.ready<rs.n) extra.push({lv:days(GO_LIVE)<=7?"high":"med",t:`Pilot launch: ${rs.ready}/${rs.n} gates ready with ${Math.max(0,days(GO_LIVE))} days to the proposed ${fmtD(GO_LIVE)} go-live.`});
+  const t20=S.tasks.find(t=>t.id==="t20"); if(t20&&t20.status!=="Done") extra.push({lv:"med",t:"Exhibit A incentive for middle-mile pilot work isn't agreed with Mike. Agree it before more ONT42 work."});
+  const ids=(g)=>items.filter(i=>i.grp===g).map(i=>i.id);
+  const rdIds=k=>S.readiness.filter(r=>k.includes(r.id)).map(r=>"rd:"+r.id);
+  R.render(el,{id:"rp-hub",logo:"data:image/png;base64,__LOGO__",eyebrow:"Brooke Benkert · Internal only",title:"Amazon BD · Progress Report",subtitle:"Vendor Approval (Exhibit A #3) and Station Conversions, Middle Mile and Last Mile",
+    items,goLive:GO_LIVE,goLiveConfirmed:false,range:["2026-11-01","2027-03-31"],maxRisks:6,maxNext:8,
+    kpis:[{label:"Vendor approval steps",v:`${rp.done}/${rp.n}`,sub:rp.cur?("Now: "+rp.cur.title).slice(0,40):"",tone:"green"},{label:"Pilot gates ready",v:`${rs.ready}/${rs.n}`,sub:`Go-live proposed ${fmtD(GO_LIVE)}`},{label:"Days left in Initial Term",v:left,sub:"Ends Jan 31, 2027"},{label:"Open actions",v:openT.length,sub:`${S.tasks.filter(t=>t.status==="Doing").length} doing now`},{label:"Waiting on others",v:S.tasks.filter(t=>t.status==="Waiting").length,sub:"Chase on day 3",tone:"red"}],
+    summary:`Vendor approval: ${rp.done} of ${rp.n} steps done${rp.cur?`, current step “${rp.cur.title}”`:""}. ONT pilot: ${rs.ready} of ${rs.n} launch gates ready. ${openT.length} open actions, ${S.tasks.filter(t=>t.status==="Waiting").length} waiting on others.`,
+    phases:[{label:"Vendor Approval (Exhibit A #3)",start:"2026-10-13",end:"2027-01-31",ids:ids("reg")},
+      {label:"ONT42 / ONT43 pilot launch",start:"2026-11-10",end:GO_LIVE,ids:ids("rd")},
+      {label:"Pilot go-live",milestone:true,date:GO_LIVE,note:`Proposed ${fmtD(GO_LIVE)}`},
+      {label:"ONT43 add-on",start:"2026-11-30",end:"2026-12-11",ids:rdIds(["rd31","rd32","rd33"])},
+      {label:"EWR40 expansion case",start:"2026-12-01",end:"2027-01-15",ids:["s:ewr40","t:t22"]},
+      {label:"PHL corridor and BOS42",start:"2027-01-04",end:"2027-03-15",ids:["s:ewr-phl","s:bos42"]},
+      {label:"Last Mile: Amazon-level access",start:"2027-01-04",end:"2027-03-31",ids:[...ids("lm-sites"),...ids("tasks-LM")]},
+      {label:"Initial Term ends",milestone:true,date:"2027-01-31",note:"Jan 31, 2027 · incentive deadline",risk:last&&last.st!=="done"}],
+    lines:[{date:GO_LIVE,label:"GO-LIVE"},{date:"2027-01-31",label:"TERM END",color:"#e01e2e"}],
+    progress:[{label:"Vendor Approval path",match:i=>i.grp==="reg"},{label:"Pilot launch gates",match:i=>i.grp==="rd"},{label:"Actions · Vendor Approval",match:i=>i.grp==="tasks-VA"},{label:"Actions · Middle Mile",match:i=>i.grp==="tasks-MM"},{label:"Actions · Last Mile",match:i=>i.grp==="tasks-LM"},{label:"Middle Mile sites live",match:i=>i.grp==="mm-sites"},{label:"Last Mile markets open",match:i=>i.grp==="lm-sites"}],
+    nextItems:tasks,nextTitle:"Next actions",extraRisks:extra,timelineNote:"Planned windows. Bars fill as linked steps, gates and actions complete.",
+    confidential:"Confidential · Brooke only",footNote:"Includes Exhibit A incentive details. Do not forward.",source:"Source: Amazon BD hub, live records"});
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest("#rp-dl")){SVTReport.download(document.getElementById("rp-stage"),`SVT-Amazon-BD-Progress-Brooke-${new Date().toISOString().slice(0,10)}.pdf`,toast);}
+  if(e.target.closest("#rp-print")){window.print();}
+});
+route(); renderAll();
+(async()=>{
+  try{
+    const user=await window.claude?.use?.("user");
+    db=await window.claude?.use?.("db");
+    if(!db){ $("#lanes").insertAdjacentHTML("afterend",`<div class="sub small">Live data isn't available in this view. Sign in to claude.ai to see and update the hub.</div>`); return; }
+    const w=user?await user.can("data.write"):null; canWrite = w!==false;
+    try{ assets=await window.claude.use("assets"); }catch(_){ assets=null; }
+    try{ const me=user&&user.me?await user.me():null; viewerName=(me&&me.name)||""; }catch(_){}
+    refreshUsage();
+    Object.keys(S).forEach(col=>{
+      db.collection(col).onSnapshot(snap=>{ S[col]=snap.docs.map(d=>({id:d.id,...d.data()})); renderAll(); },
+        err=>{ console.warn(col,err&&err.code); });
+    });
+    renderAll();
+  }catch(err){ console.warn(err); }
+})();
+})();
+</script>

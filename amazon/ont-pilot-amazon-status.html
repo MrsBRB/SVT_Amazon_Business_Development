@@ -3,7 +3,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: matches the SVT x Amazon Middle Mile Pilot site. Fixed navy sidebar (logo, project, five views), navy breadcrumb bar with a red rule, then the selected view: Overview, Action board, Sites & readiness, Weekly standup, Updates. Actions open in a right-hand drawer. */
 :root{
   --navy:#1c365e;--red:#e01e2e;--red-hover:#be1927;--steel:#5b6b7f;--gray:#e6e9ed;
   --bg:#ffffff;--surface:#ffffff;--ink:#1c365e;--muted:#5b6b7f;--line:#e0e6ec;--line-2:#e9edf2;
@@ -94,6 +93,76 @@ td button{border:0;padding:0;text-align:left;color:var(--ink);background:none;fo
   .hero{padding:24px;display:block}.hero h2{font-size:26px}.ring{margin-top:25px;width:110px;height:110px;min-width:110px}.ring strong{font-size:30px}
   .twocol{grid-template-columns:1fr}.toolbar select{width:100%}.stats article{padding:16px}.stats strong{font-size:32px}.stats small{font-size:11px}
   footer{display:block}footer span{display:block;text-align:left;margin-top:10px}.modal{padding:24px}.modal .twocol{grid-template-columns:1fr 1fr}.compact summary span{float:none;display:block}.compact{padding:12px}}
+
+/* Sidebar links (pages that route with anchors) */
+nav a{display:flex;align-items:center;gap:13px;color:#e1e6ed;text-decoration:none;margin:6px 0;padding:13px;font-size:13px;border-radius:4px}
+nav a span{font-size:20px;width:20px;text-align:center}nav a[aria-current="page"]{background:#ffffff1a;color:#fff;box-shadow:inset 2px 0 #fff}nav a:hover{background:#ffffff12}
+nav .navsep{border-top:1px solid #5b6b7f;margin:14px 10px}
+.side-links{font-size:12px;margin:0 0 14px}.side-links a{color:var(--side-muted);display:block;margin:4px 0}
+@media(max-width:700px){nav a{white-space:nowrap}nav a span{display:none}nav .navsep{display:none}}
+
+/* One-page progress report (US Letter). Fixed light palette so the PDF and print look the same in any theme. */
+.rp-tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.rp-tools .note{font-size:13px;color:var(--muted)}
+.rp-stage{overflow:auto;background:var(--gray);border-radius:8px;padding:24px;display:flex;justify-content:center}
+.rp{width:816px;height:1056px;flex:none;background:#fff;color:#1c365e;font-family:'Source Sans 3',Arial,sans-serif;font-size:10.5px;line-height:1.4;box-shadow:0 4px 24px #0b1c3226;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.rp *{box-sizing:border-box}
+.rp h2,.rp h3,.rp .rp-num{font-family:'Barlow Semi Condensed','Arial Narrow',Arial,sans-serif;color:#1c365e;margin:0}
+.rp-head{background:#1c365e;color:#fff;padding:18px 32px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;border-bottom:3px solid #e01e2e}
+.rp-logo{background:#fff;border-radius:3px;padding:6px 10px;display:flex;align-items:center}.rp-logo img{height:34px;width:auto;display:block}
+.rp-head .eb{font-size:8.5px;letter-spacing:1.4px;font-weight:700;text-transform:uppercase;color:#d6dee8}
+.rp-head h2{color:#fff;font-size:22px;font-weight:600;line-height:1.1;margin:3px 0 2px}
+.rp-head .sub{font-size:10px;color:#e0e6ee}
+.rp-rag{text-align:right;display:grid;gap:4px;justify-items:end}
+.rp-rag b{display:inline-block;font-family:'Barlow Semi Condensed',Arial,sans-serif;font-size:13px;letter-spacing:.5px;padding:4px 10px;border-radius:3px;color:#fff}
+.rp-rag .g{background:#1f7a4d}.rp-rag .a{background:#c27a00}.rp-rag .r{background:#e01e2e}
+.rp-rag small{font-size:9px;color:#d6dee8}
+.rp-body{padding:14px 32px 0;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0;overflow:hidden}
+.rp-sec h3{font-size:13px;font-weight:700;letter-spacing:.2px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:baseline}
+.rp-sec h3 small{font-family:'Source Sans 3',Arial,sans-serif;font-weight:400;font-size:8.5px;color:#5b6b7f;letter-spacing:0}
+.rp-gantt{border:1px solid #e0e6ec;border-radius:6px;padding:8px 10px 6px}
+.rp-gantt svg{display:block}
+.rp-legend{display:flex;gap:14px;font-size:8.5px;color:#5b6b7f;margin-top:4px;flex-wrap:wrap}
+.rp-legend i{display:inline-block;width:10px;height:7px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.rp-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.rp-kpi{background:#e6e9ed;border-radius:6px;padding:8px 10px}
+.rp-kpi span{font-size:8.5px;color:#5b6b7f;display:block}
+.rp-kpi .rp-num{font-size:24px;font-weight:700;line-height:1.05;display:block;margin:2px 0}
+.rp-kpi.red .rp-num{color:#e01e2e}.rp-kpi.green .rp-num{color:#1f7a4d}
+.rp-kpi small{font-size:8px;color:#5b6b7f}
+.rp-summary{font-size:10.5px;color:#1c365e;background:#f4f6f9;border-left:3px solid #1c365e;padding:7px 10px;border-radius:3px}
+.rp-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rp-prog{display:grid;gap:5px}
+.rp-prog div{display:grid;grid-template-columns:130px 1fr 44px;gap:8px;align-items:center;font-size:9.5px}
+.rp-prog .tr{height:8px;background:#e6e9ed;border-radius:4px;overflow:hidden;display:flex}
+.rp-prog .tr i{display:block;height:100%}
+.rp-prog b{text-align:right;font-weight:600}
+.rp-risks{display:grid;gap:5px;margin:0;padding:0;list-style:none}
+.rp-risks li{display:grid;grid-template-columns:52px 1fr;gap:7px;font-size:9.5px;align-items:start}
+.rp-risks li span{font-size:7.5px;font-weight:700;letter-spacing:.6px;text-align:center;border-radius:3px;padding:2px 0;color:#fff}
+.rp-risks .high span{background:#e01e2e}.rp-risks .med span{background:#c27a00}.rp-risks .low span{background:#5b6b7f}
+.rp .rp-tbl{width:100%;border-collapse:collapse;font-size:9px;table-layout:fixed}.rp .rp-tbl col.a{width:56%}.rp .rp-tbl col.o{width:22%}.rp .rp-tbl col.s{width:13%}.rp .rp-tbl col.d{width:9%}
+.rp .rp-tbl td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp .rp-tbl th{background:#e6e9ed;text-align:left;font-weight:600;padding:4px 6px;font-size:8.5px;color:#1c365e}
+.rp .rp-tbl td{padding:3px 6px;border-bottom:1px solid #e6e9ed;vertical-align:top}
+.rp .rp-tbl td:last-child,.rp .rp-tbl th:last-child{white-space:nowrap}
+.rp-st{display:inline-block;border-radius:3px;padding:0 5px;font-size:8px;font-weight:600;background:#edf1f6;color:#5c7086;white-space:nowrap}
+.rp-st.done{background:#e3f1e8;color:#1f6b45}.rp-st.prog{background:#e3eaf4;color:#1c365e}.rp-st.wait{background:#fdf0d9;color:#8a5200}.rp-st.blocked{background:#fbe3e5;color:#a0121c}
+.rp-foot{margin-top:auto;padding:8px 32px 12px;display:flex;justify-content:space-between;gap:12px;font-size:8px;color:#5b6b7f;border-top:1px solid #e0e6ec}
+.rp-foot b{color:#e01e2e;font-weight:700}
+@media print{
+  @page{size:letter portrait;margin:0}
+  html,body{background:#fff!important}
+  body *{visibility:hidden}
+  .rp,.rp *{visibility:visible}
+  .rp{position:fixed;left:0;top:0;box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media(max-width:900px){.rp-stage{justify-content:flex-start}}
+
+.rp table{min-width:0;border:0}.rp th,.rp td{position:static;text-transform:none;letter-spacing:0;font-family:'Source Sans 3',Arial,sans-serif;line-height:1.35}
+.rp .rp-tbl th{font-size:8.5px;padding:4px 6px}.rp .rp-tbl td{font-size:9px;padding:3px 6px}
+.rp p{margin:0;color:inherit;line-height:1.4}
+
 </style>
 
 <div class="shell">
@@ -115,13 +184,194 @@ td button{border:0;padding:0;text-align:left;color:var(--ink);background:none;fo
 </div>
 <div id="drawer-root"></div><div id="toast-root"></div>
 
+<script>/* SVT one-page progress report: timeline/Gantt, KPIs, progress, risks and next steps.
+   Each dashboard builds a cfg from its own data and calls SVTReport.render(el, cfg).
+   Statuses are normalized to: done | prog | wait | blocked | todo. */
+window.SVTReport = (() => {
+  const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const D = s => { if (s instanceof Date) return new Date(s.getFullYear(), s.getMonth(), s.getDate()); const d = new Date(String(s).slice(0,10) + "T00:00:00"); return isNaN(d) ? null : d; };
+  const today = () => D(new Date());
+  const fmt = (d, o) => { d = D(d); return d ? d.toLocaleDateString("en-US", o || {month:"short", day:"numeric"}) : ""; };
+  const days = (a, b) => Math.round((D(b) - D(a)) / 864e5);
+  const addBiz = (d, n) => { d = D(d); const s = Math.sign(n); let k = Math.abs(n); while (k) { d.setDate(d.getDate() + s); const w = d.getDay(); if (w && w < 6) k--; } return d; };
+  const LABEL = {done:"Complete", prog:"In progress", wait:"Waiting", blocked:"Blocked", todo:"Not started"};
+  const COLOR = {done:"#1f7a4d", prog:"#1c365e", wait:"#c27a00", blocked:"#e01e2e", todo:"#9aa6b5", risk:"#e01e2e"};
+
+  // A phase is done when every linked item is done, in progress when any has moved, else not started.
+  function phaseStatus(items) {
+    if (!items.length) return {st:"todo", pct:0};
+    const done = items.filter(i => i.st === "done").length;
+    const pct = Math.round(done / items.length * 100);
+    if (done === items.length) return {st:"done", pct};
+    if (items.some(i => i.st === "blocked")) return {st:"blocked", pct};
+    if (items.some(i => i.st !== "todo")) return {st:"prog", pct};
+    return {st:"todo", pct};
+  }
+
+  function gantt(cfg) {
+    const W = 730, L = 172, R = 32, top = 30, rowH = 19, t0 = D(cfg.range[0]), t1 = D(cfg.range[1]);
+    const span = days(t0, t1), x = d => L + Math.max(0, Math.min(span, days(t0, d))) / span * (W - L - R);
+    const rows = cfg.phases, H = top + rows.length * rowH + 8, now = today();
+    let s = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3, Arial, sans-serif" role="img" aria-label="Timeline">`;
+    // week grid (Mondays)
+    const d = D(t0); while (d.getDay() !== 1) d.setDate(d.getDate() + 1);
+    const stepDays = span > 120 ? 14 : 7;
+    for (; d <= t1; d.setDate(d.getDate() + stepDays)) {
+      const xx = x(d).toFixed(1);
+      s += `<line x1="${xx}" y1="${top - 6}" x2="${xx}" y2="${H - 6}" stroke="#e6e9ed"/>`;
+      s += `<text x="${xx}" y="${top - 10}" font-size="8" fill="#5b6b7f" text-anchor="middle">${esc(fmt(d))}</text>`;
+    }
+    // month labels
+    const m = new Date(t0.getFullYear(), t0.getMonth(), 1);
+    for (; m <= t1; m.setMonth(m.getMonth() + 1)) {
+      const mx = Math.max(L, x(m));
+      s += `<text x="${(mx + 2).toFixed(1)}" y="9" font-size="8.5" font-weight="700" fill="#1c365e">${esc(m.toLocaleDateString("en-US", {month:"long", year:"numeric"}))}</text>`;
+    }
+    rows.forEach((p, i) => {
+      const y = top + i * rowH, yb = y + 4, bh = rowH - 8;
+      if (i % 2 === 0) s += `<rect x="0" y="${y}" width="${W}" height="${rowH}" fill="#f7f9fb"/>`;
+      s += `<text x="4" y="${y + rowH / 2 + 3.2}" font-size="9" fill="#1c365e" font-weight="${p.milestone ? 700 : 600}">${esc(p.label)}</text>`;
+      if (p.milestone) {
+        const mx = x(p.date), c = p.st === "done" ? COLOR.done : p.risk ? COLOR.risk : "#1c365e";
+        s += `<path d="M${mx} ${yb - 1} l6 ${bh / 2 + 1} l-6 ${bh / 2 + 1} l-6 -${bh / 2 + 1} z" fill="${c}"/>`;
+        s += `<text x="${mx + 10}" y="${y + rowH / 2 + 3}" font-size="8" fill="#5b6b7f">${esc(p.note || fmt(p.date))}</text>`;
+        return;
+      }
+      const xs = x(p.start), xe = Math.max(xs + 4, x(p.end)), w = xe - xs, late = p.end && D(p.end) < now && p.st !== "done";
+      const c = p.st === "done" ? COLOR.done : (late || p.st === "blocked") ? COLOR.risk : p.st === "prog" ? COLOR.prog : COLOR.todo;
+      s += `<rect x="${xs.toFixed(1)}" y="${yb}" width="${w.toFixed(1)}" height="${bh}" rx="2.5" fill="${c}" fill-opacity="0.22" ${late ? `stroke="${COLOR.risk}" stroke-width="1"` : ""}/>`;
+      if (p.pct > 0) s += `<rect x="${xs.toFixed(1)}" y="${yb}" width="${(w * p.pct / 100).toFixed(1)}" height="${bh}" rx="2.5" fill="${c}"/>`;
+      if (D(p.end) > t1) s += `<path d="M${W - R + 2} ${yb + bh / 2} l-5 -4 v8 z" fill="${c}"/>`;
+      s += `<text x="${Math.min(xe + 4, W - R + 6).toFixed(1)}" y="${y + rowH / 2 + 3}" font-size="8" fill="#5b6b7f">${p.pct}%</text>`;
+    });
+    (cfg.lines || []).forEach(l => {
+      if (D(l.date) < t0 || D(l.date) > t1) return;
+      const lx = x(l.date).toFixed(1);
+      s += `<line x1="${lx}" y1="${top - 4}" x2="${lx}" y2="${H - 4}" stroke="${l.color || "#1c365e"}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+      s += `<rect x="${(+lx - 26).toFixed(1)}" y="${H - 12}" width="52" height="10" rx="2" fill="${l.color || "#1c365e"}"/><text x="${lx}" y="${H - 4.4}" font-size="7" fill="#fff" text-anchor="middle" font-weight="700">${esc(l.label)}</text>`;
+    });
+    if (now >= t0 && now <= t1) {
+      const tx = x(now).toFixed(1);
+      s += `<line x1="${tx}" y1="${top - 4}" x2="${tx}" y2="${H - 14}" stroke="#e01e2e" stroke-width="1.4"/><text x="${tx}" y="${top - 1}" font-size="7.5" fill="#e01e2e" text-anchor="middle" font-weight="700">TODAY</text>`;
+    }
+    return s + `</svg>`;
+  }
+
+  // Deterministic insights from items: [{title, st, gate, due, owner}]
+  function insights(items, cfg) {
+    const out = [], now = today(), open = items.filter(i => i.st !== "done");
+    const short = t => { t = String(t || ""); const c = t.indexOf(" ("); if (c > 20) t = t.slice(0, c); return t.length > 58 ? t.slice(0, 55).trimEnd() + "…" : t; };
+    const name = i => `“${short(i.title)}”`;
+    const blocked = open.filter(i => i.st === "blocked");
+    if (blocked.length) out.push({lv:"high", t:`${blocked.length} blocked: ${blocked.slice(0, 2).map(name).join(", ")}. Resolve before go-live.`});
+    const over = open.filter(i => i.due && D(i.due) < now);
+    if (over.length) out.push({lv:"high", t:`${over.length} past due, including ${over.slice(0, 2).map(i => `${name(i)} (${fmt(i.due)})`).join(", ")}.`});
+    (cfg.extraRisks || []).forEach(r => out.push(r));
+    if (cfg.goLive) {
+      const left = days(now, cfg.goLive), notStarted = open.filter(i => i.gate && i.st === "todo");
+      if (notStarted.length && left >= 0) out.push({lv: left <= 7 ? "high" : "med", t:`${notStarted.length} launch gates not started with ${left} days to the proposed ${fmt(cfg.goLive)} go-live${notStarted.length ? `, including ${notStarted.slice(0, 2).map(name).join(" and ")}` : ""}.`});
+    }
+    const wait = open.filter(i => i.st === "wait");
+    if (wait.length) out.push({lv:"med", t:`${wait.length} waiting on others: ${wait.slice(0, 2).map(i => `${name(i)}${i.owner ? " · " + i.owner : ""}`).join(", ")}.`});
+    const noOwner = open.filter(i => i.gate && (!i.owner || /^unassigned$/i.test(i.owner)));
+    if (noOwner.length) out.push({lv:"med", t:`${noOwner.length} open gates have no named owner. Assign one person to each.`});
+    const noDate = open.filter(i => i.gate && !i.due).length;
+    if (noDate && open.length) out.push({lv:"low", t:`${noDate} of ${open.filter(i => i.gate).length} open gates have no committed date. Agree dates at the weekly standup.`});
+    const rank = {high:0, med:1, low:2};
+    return out.sort((a, b) => rank[a.lv] - rank[b.lv]).slice(0, cfg.maxRisks || 6);
+  }
+
+  function rag(items, risks) {
+    if (risks.some(r => r.lv === "high")) return {k:"r", t:"AT RISK"};
+    if (risks.some(r => r.lv === "med") || items.some(i => i.st === "wait")) return {k:"a", t:"WATCH"};
+    return {k:"g", t:"ON TRACK"};
+  }
+
+  function render(el, cfg) {
+    const items = cfg.items, gates = items.filter(i => i.gate), gDone = gates.filter(i => i.st === "done").length;
+    cfg.phases.forEach(p => { if (!p.milestone) Object.assign(p, phaseStatus(items.filter(i => (p.ids || []).includes(i.id)))); });
+    const risks = insights(items, cfg), r = cfg.rag || rag(items, risks), now = today();
+    const pct = gates.length ? Math.round(gDone / gates.length * 100) : 0;
+    const k = cfg.kpis || [
+      {label:"Launch gates complete", v:`${gDone}/${gates.length}`, sub:`${pct}% of gates`, tone:"green"},
+      {label:"Days to proposed go-live", v: cfg.goLive ? Math.max(0, days(now, cfg.goLive)) : "—", sub: cfg.goLive ? `${fmt(cfg.goLive, {month:"short", day:"numeric", year:"numeric"})} · ${cfg.goLiveConfirmed ? "confirmed" : "unconfirmed"}` : "", tone:""},
+      {label:"In progress", v: items.filter(i => i.st === "prog").length, sub:"Active now", tone:""},
+      {label:"Waiting on input", v: items.filter(i => i.st === "wait").length, sub:"Team and partners", tone:""},
+      {label:"Blocked / past due", v: items.filter(i => i.st !== "done" && (i.st === "blocked" || (i.due && D(i.due) < now))).length, sub:"Need a decision", tone:"red"}];
+    const groups = cfg.progress || [];
+    const prog = groups.map(g => { const l = items.filter(g.match), d = l.filter(i => i.st === "done").length, p = l.filter(i => i.st === "prog" || i.st === "wait").length, pc = l.length ? Math.round(d / l.length * 100) : 0;
+      return `<div><span>${esc(g.label)}</span><span class="tr"><i style="width:${l.length ? d / l.length * 100 : 0}%;background:#1f7a4d"></i><i style="width:${l.length ? p / l.length * 100 : 0}%;background:#9fb3cc"></i></span><b>${d}/${l.length}</b></div>`; }).join("");
+    const next = (cfg.nextItems || items).filter(i => i.st !== "done").sort((a, b) => (a.due ? 0 : 1) - (b.due ? 0 : 1) || String(a.due).localeCompare(String(b.due)) || (b.gate - a.gate) || (({prog:0, wait:1, blocked:0, todo:2})[a.st] - ({prog:0, wait:1, blocked:0, todo:2})[b.st])).slice(0, cfg.maxNext || 8);
+    const stc = s => ({done:"done", prog:"prog", wait:"wait", blocked:"blocked"})[s] || "";
+    const summary = cfg.summary || `${gDone} of ${gates.length} launch gates are complete (${pct}%). ${items.filter(i => i.st === "prog").length} items are in progress and ${items.filter(i => i.st === "wait").length} are waiting on input.`;
+    el.innerHTML = `<div class="rp" id="${esc(cfg.id || "rp")}">
+      <div class="rp-head"><div class="rp-logo"><img src="${cfg.logo}" alt="SVT Fleet Solutions"></div>
+        <div><div class="eb">${esc(cfg.eyebrow)}</div><h2>${esc(cfg.title)}</h2><div class="sub">${esc(cfg.subtitle || "")}</div></div>
+        <div class="rp-rag"><b class="${r.k}">${r.t}</b><small>Report date ${esc(fmt(now, {month:"long", day:"numeric", year:"numeric"}))}</small></div></div>
+      <div class="rp-body">
+        <div class="rp-sec"><h3>Timeline<small>${esc(cfg.timelineNote || "Planned windows. Bars fill as linked items complete.")}</small></h3>
+          <div class="rp-gantt">${gantt(cfg)}<div class="rp-legend"><span><i style="background:#1f7a4d"></i>Complete</span><span><i style="background:#1c365e"></i>In progress</span><span><i style="background:#9aa6b5"></i>Not started</span><span><i style="background:#e01e2e"></i>Late or blocked</span><span>◆ Milestone</span></div></div></div>
+        <div class="rp-kpis">${k.map(x => `<div class="rp-kpi ${x.tone || ""}"><span>${esc(x.label)}</span><b class="rp-num">${esc(x.v)}</b><small>${esc(x.sub || "")}</small></div>`).join("")}</div>
+        <div class="rp-summary"><b>Summary.</b> ${esc(summary)}</div>
+        <div class="rp-cols">
+          <div class="rp-sec"><h3>Progress by area<small>Complete · In progress or waiting</small></h3><div class="rp-prog">${prog || "<p>No items.</p>"}</div></div>
+          <div class="rp-sec"><h3>Risks &amp; blockers<small>Generated from current status</small></h3><ul class="rp-risks">${risks.map(x => `<li class="${x.lv}"><span>${x.lv === "high" ? "HIGH" : x.lv === "med" ? "MEDIUM" : "NOTE"}</span><div>${esc(x.t)}</div></li>`).join("") || `<li class="low"><span>NOTE</span><div>No open risks recorded.</div></li>`}</ul></div>
+        </div>
+        <div class="rp-sec"><h3>${esc(cfg.nextTitle || "Next actions")}<small>Dated items first, then open launch gates</small></h3>
+          <table class="rp-tbl"><colgroup><col class="a"><col class="o"><col class="s"><col class="d"></colgroup><thead><tr><th>Action</th><th>${esc(cfg.ownerLabel || "Owner")}</th><th>Status</th><th>Due</th></tr></thead><tbody>${next.map(i => `<tr><td>${i.gate ? "<b>Gate</b> · " : ""}${esc(i.title)}</td><td>${esc(i.owner || "—")}</td><td><span class="rp-st ${stc(i.st)}">${esc(i.label || LABEL[i.st])}</span></td><td>${i.due ? esc(fmt(i.due)) : "To confirm"}</td></tr>`).join("")}</tbody></table></div>
+      </div>
+      <div class="rp-foot"><span><b>${esc(cfg.confidential)}</b> · ${esc(cfg.footNote || "")}</span><span>${esc(cfg.source || "")}</span></div>
+    </div>`;
+    fit(el);
+  }
+
+  // Keep the report on one page: drop the last table rows, then risks, until the body fits.
+  function fit(el) {
+    const body = el.querySelector(".rp-body"); if (!body) return;
+    const over = () => body.scrollHeight > body.clientHeight + 1;
+    let rows = [...el.querySelectorAll(".rp-tbl tbody tr")];
+    while (over() && rows.length > 3) rows.pop().remove();
+    let rk = [...el.querySelectorAll(".rp-risks li")];
+    while (over() && rk.length > 3) rk.pop().remove();
+  }
+  let lib = null;
+  function loadLib() {
+    if (window.html2pdf) return Promise.resolve();
+    if (lib) return lib;
+    lib = new Promise((ok, no) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"; s.onload = ok; s.onerror = () => { lib = null; no(new Error("PDF library failed to load")); }; document.head.appendChild(s); });
+    return lib;
+  }
+  async function download(el, filename, toast) {
+    const node = el.querySelector(".rp");
+    try {
+      await loadLib();
+      const sx = window.scrollX, sy = window.scrollY; window.scrollTo(0, 0);
+      const host = document.createElement("div");
+      host.style.cssText = "position:absolute;left:0;top:0;width:816px;z-index:-1;pointer-events:none";
+      const copy = node.cloneNode(true); copy.style.boxShadow = "none"; host.appendChild(copy); document.body.appendChild(host);
+      let blob;
+      try {
+        blob = await window.html2pdf().set({margin:0, filename, image:{type:"jpeg", quality:0.96}, html2canvas:{scale:2, useCORS:true, backgroundColor:"#ffffff", scrollX:0, scrollY:0}, jsPDF:{unit:"px", format:[816, 1056], orientation:"portrait", hotfixes:["px_scaling"]}, pagebreak:{mode:[]}}).from(copy).outputPdf("blob");
+      } finally { host.remove(); window.scrollTo(sx, sy); }
+      const dl = await window.claude?.use?.("downloads");
+      if (dl) { await dl.save({filename, data: blob}); toast && toast("Report saved"); return; }
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    } catch (e) {
+      if (e && e.code === "declined") return;
+      toast && toast("Couldn't build the PDF here. Opening print instead.");
+      window.print();
+    }
+  }
+  return {render, download, addBiz, fmt, D, days};
+})();
+</script>
 <script>
 (() => {
 const DEMAND={"ONT42":{"records":108,"units":49,"categories":[["Transmission",37],["Engine",34],["Accessories",11],["Check Engine Light",10],["Brakes",7],["Electrical",6],["HVAC",5],["Fuel",4],["Exhaust",4],["Body",3],["Chassis",2],["Doors",1],["Steering",1],["APU",1]],"components":[["Transmission Assembly",30],["Engine Assembly",18],["Accessories Components",7],["Air Conditioning",5],["Coolant",5],["CEL Overall Issue",5],["Engine Shutdown",4],["Exhaust System",4]],"models":[{"model":"FREIGHTLINER NEW CASCADIA PRL-23K","records":69,"units":21},{"model":"FREIGHTLINER CASCADIA PRL-23K","records":27,"units":17},{"model":"VOLVO VNL64T300","records":5,"units":4},{"model":"FREIGHTLINER Cascadia","records":2,"units":2},{"model":"INTERNATIONAL LT625 6x4","records":1,"units":1},{"model":"VOLVO VNR64T300","records":1,"units":1},{"model":"Inventory match unavailable","records":1,"units":1},{"model":"VOLVO VNL64T760","records":1,"units":1},{"model":"PETERBILT 579","records":1,"units":1}],"dateRange":["2025-09-12","2026-10-26"]},"ONT43":{"records":17,"units":12,"categories":[["Transmission",6],["Electrical",5],["Engine",4],["Suspension",1],["HVAC",1],["Fuel",1],["Body",1]],"components":[["Engine Assembly",3],["Transmission Assembly",3],["Electrical System",2],["Solenoid Assembly",2],["Modules",1],["Cooling System",1],["Suspension Assembly",1],["Air Conditioning",1]],"models":[{"model":"FREIGHTLINER NEW CASCADIA PRL-23K","records":11,"units":7},{"model":"FREIGHTLINER Cascadia","records":3,"units":2},{"model":"VOLVO VNL64T300","records":3,"units":3}],"dateRange":["2025-10-03","2026-10-27"]}};
 const STREAMS=["Launch readiness","Pilot performance","Reach onboarding","Service readiness","Site readiness","Technology readiness"];
 const STATUSES=["Not started","In progress","Awaiting response","Awaiting confirmation","Blocked","Done"];
 const SITES=["Project-wide","Both sites","ONT42","ONT43"];
-const TABS=[["Overview","◫","overview"],["Action board","▦","board"],["Sites & readiness","◎","sites"],["Weekly standup","◷","standup"],["Updates","≡","updates"]];
+const TABS=[["Overview","◫","overview"],["Action board","▦","board"],["Sites & readiness","◎","sites"],["Weekly standup","◷","standup"],["Updates","≡","updates"],["Progress report","▤","report"]];
 const S={tasks:[],activity:[],meta:[]};
 let db=null,user=null,canWrite=false,ready=false,viewerName="";
 const F={q:"",stream:"All workstreams",site:"All sites",status:"All statuses",owner:"All owners",view:"Board"};
@@ -184,6 +434,34 @@ function vStandup(){
   <article class="panel"><h3>3 min · Read back commitments</h3><p>Confirm decisions, one accountable owner and date for each next step; identify escalations. Close actions only with evidence.</p><p><b>Standing decisions:</b> Reach activation status; Reach-to-Amazon handoff receipt; training and test completion; ONT42 go/no-go owner and date; ONT43 add-on timing; vehicle/WO baseline and reporting owner.</p></article>`;
 }
 
+const ST={"Done":"done","In progress":"prog","Awaiting response":"wait","Awaiting confirmation":"wait","Blocked":"blocked","Not started":"todo"};
+const LOGO_SRC="data:image/png;base64,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";
+function reportCfg(){
+  const m=meta(), gl=m.goLive||"2026-11-25", R=SVTReport;
+  const items=tasksSorted().map(t=>({id:t.id,title:t.title,st:ST[t.status]||"todo",label:t.status,gate:!!t.gate,due:t.due,owner:t.owner,stream:t.stream}));
+  const by=id=>items.find(i=>i.id===id)||{};
+  const extra=[];
+  const cut=R.addBiz(gl,-3);
+  if(by("handoff").st==="todo") extra.push({lv:R.days(new Date(),cut)<=1?"high":"med",t:`Amazon connection hasn't started. It takes 2–3 business days after Reach sends the setup details, so they need to reach Amazon by ${R.fmt(cut)} to hold ${R.fmt(gl)}.`});
+  if(by("activate").st!=="done") extra.push({lv:"med",t:"Reach service-provider activation isn't complete. Location setup, users and training all follow it."});
+  if(!m.goLiveConfirmed) extra.push({lv:"med",t:`${R.fmt(gl)} is a proposed go-live, not a commitment. Confirm it once onboarding, training and the Amazon connection have dates.`});
+  return {id:"rp-amazon",logo:LOGO_SRC,eyebrow:"SVT Fleet Solutions × Amazon Middle Mile",title:"ONT42 / ONT43 Pilot · Progress Report",subtitle:"ONT42 primary · ONT43 add-on · Reach web and mobile with a native Relay Garage connection",
+    items,goLive:gl,goLiveConfirmed:!!m.goLiveConfirmed,range:["2026-11-02","2026-12-27"],
+    phases:[{label:"Scope & site selection",start:"2026-11-06",end:"2026-11-17",ids:["scope","visitheld"]},
+      {label:"Reach onboarding & activation",start:"2026-11-16",end:"2026-11-24",ids:["intake","session","agreement","activate"]},
+      {label:"Location setup & users",start:"2026-11-18",end:"2026-11-21",ids:["location","hours"]},
+      {label:"Amazon connection (Relay Garage)",start:"2026-11-20",end:gl,ids:["handoff","connection"]},
+      {label:"Training & end-to-end test",start:"2026-11-21",end:gl,ids:["training","test"]},
+      {label:"Site & service readiness",start:"2026-11-17",end:gl,ids:["visit","coi","avetta","access","ont42","techs","units","parts","backlog","invoicing","preauth"]},
+      {label:"ONT42 go-live",milestone:true,date:gl,note:`Proposed ${R.fmt(gl)}${m.goLiveConfirmed?"":" · unconfirmed"}`},
+      {label:"ONT43 add-on",start:"2026-11-30",end:"2026-12-11",ids:["ont43","ont43lot","ont43req"]},
+      {label:"Pilot measurement",start:gl,end:"2026-12-23",ids:["measures"]}],
+    lines:[{date:gl,label:"GO-LIVE",color:"#1c365e"}],
+    progress:STREAMS.map(s=>({label:s,match:i=>i.stream===s})).filter(g=>items.some(g.match)),
+    extraRisks:extra,timelineNote:"Planned windows from the proposed launch plan. Dates are not commitments.",
+    confidential:"Prepared for Amazon Middle Mile",footNote:"Shared pilot status from SVT Fleet Solutions",source:"Source: Amazon pilot view, live records"};
+}
+function vReport(){return `<div class="rp-tools"><button class="primary" id="rp-dl">Download PDF</button><button id="rp-print">Print</button><span class="note">One page, US Letter. Built from the live records in this view.</span></div><div class="rp-stage" id="rp-stage"></div>`}
 function vUpdates(){
   const a=S.activity.slice().sort((x,y)=>String(y.at).localeCompare(String(x.at)));
   return `<div class="alert"><b>Amazon pilot view updates</b><p>Only post information suitable for this audience. Statuses are meeting-reported or team-entered until supporting confirmation is recorded. Do not paste credentials, gate codes, private correspondence or contract terms.</p></div>${a.length?a.map(x=>`<article class="panel activity"><b>${esc(x.title)}${x.status?" · "+esc(x.status):""}</b><p>${esc(x.note)}</p><small>${esc(x.actor||"Project team member")} · ${esc(fmtAt(x.at))}</small></article>`).join(""):`<article class="panel"><p>No updates posted yet.</p></article>`}`;
@@ -193,11 +471,12 @@ let tab="overview";
 function render(){
   $("#nav").innerHTML=TABS.map(([n,i,k])=>`<button data-tab="${k}"${tab===k?' aria-current="page"':""}><span aria-hidden="true">${i}</span>${n}</button>`).join("");
   $("#view-title").textContent=tab==="overview"?"Amazon pilot view":TABS.find(x=>x[2]===tab)[0];
-  $("#add").hidden=!(db&&canWrite);
-  const v={overview:vOverview,board:vBoard,sites:vSites,standup:vStandup,updates:vUpdates}[tab]();
+  $("#add").hidden=!(db&&canWrite)||tab==="report";
+  const v={overview:vOverview,board:vBoard,sites:vSites,standup:vStandup,updates:vUpdates,report:vReport}[tab]();
   const focusQ=document.activeElement&&document.activeElement.id==="q", pos=focusQ?document.activeElement.selectionStart:0;
   $("#view").innerHTML=v;
   if(focusQ){const q=$("#q");if(q){q.focus();q.setSelectionRange(pos,pos)}}
+  if(tab==="report") SVTReport.render($("#rp-stage"),reportCfg());
 }
 function setTab(k){tab=k;try{history.replaceState(null,"","#"+k)}catch(e){}render();scrollTo(0,0)}
 
@@ -262,6 +541,8 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-close]")||e.target.matches("[data-close-scrim]")){closeDrawer();return}
   const o=e.target.closest("[data-open]");if(o){const t=S.tasks.find(x=>x.id===o.dataset.open);if(t)openDrawer(t);return}
   if(e.target.closest("#add")){if(db&&canWrite)openDrawer(null);return}
+  if(e.target.closest("#rp-dl")){SVTReport.download($("#rp-stage"),`SVT-Amazon-ONT-Pilot-Progress-${new Date().toISOString().slice(0,10)}.pdf`,toast);return}
+  if(e.target.closest("#rp-print")){window.print();return}
   if(e.target.closest("#toggle-view")){F.view=F.view==="Board"?"Table":"Board";render()}
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer-root").innerHTML)closeDrawer()});

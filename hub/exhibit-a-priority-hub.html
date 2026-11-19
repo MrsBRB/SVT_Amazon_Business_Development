@@ -213,40 +213,205 @@ td .sub{font-size:12px;color:var(--muted)}
 .onoff{font-weight:700;font-size:12px}
 .onoff.on{color:var(--ok)} .onoff.off{color:var(--muted)}
 .banner{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r-md);padding:10px 12px;font-size:14px}
+
+:root{
+  --navy:#1c365e;--red:#e01e2e;--red-hover:#be1927;--steel:#5b6b7f;--gray:#e6e9ed;
+  --bg:#ffffff;--surface:#ffffff;--ink:#1c365e;--muted:#5b6b7f;--line:#e0e6ec;--line-2:#e9edf2;
+  --chip:#edf1f6;--chip-ink:#5c7086;--field:#ffffff;--field-line:#d9e0e8;--field-ink:#23364b;
+  --side:#1c365e;--side-ink:#e1e6ed;--side-muted:#d6dee8;--scrim:#0b1c32aa;
+  --f-head:'Barlow Semi Condensed','Arial Narrow',Arial,sans-serif;--f-body:'Source Sans 3',Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1a2b;--surface:#16243a;--ink:#e6edf6;--muted:#a3b1c3;--line:#2a3a54;--line-2:#24344d;--gray:#1d2d47;
+  --chip:#22344f;--chip-ink:#c4d0de;--field:#122036;--field-line:#2f4260;--field-ink:#e6edf6;--side:#0f2242;--scrim:#000a;--red:#ff4b58;--red-hover:#e23a47;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1a2b;--surface:#16243a;--ink:#e6edf6;--muted:#a3b1c3;--line:#2a3a54;--line-2:#24344d;--gray:#1d2d47;
+  --chip:#22344f;--chip-ink:#c4d0de;--field:#122036;--field-line:#2f4260;--field-ink:#e6edf6;--side:#0f2242;--scrim:#000a;--red:#ff4b58;--red-hover:#e23a47;color-scheme:dark}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px}
+button,input,select,textarea{font:inherit}button{cursor:pointer;color:inherit;background:var(--surface);border:1px solid var(--field-line);border-radius:7px;padding:10px 14px}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+h1,h2,h3{font-family:var(--f-head);font-weight:600;letter-spacing:0;color:var(--ink)}h1{font-size:32px;margin:10px 0}h2{font-size:22px}h3{font-size:15px}
+p{line-height:1.65;color:var(--muted)}small{color:var(--muted)}
+.shell{display:flex;min-height:100vh}
+aside{width:238px;position:fixed;inset:0 auto 0 0;background:var(--side);color:var(--side-ink);padding:32px 24px;display:flex;flex-direction:column;z-index:3}
+.brand{background:#fff;padding:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;min-height:82px}.brand img{width:100%;max-width:160px;height:58px;object-fit:contain}
+.project{padding:32px 0 24px;border-bottom:1px solid #5b6b7f}.project h3{font-size:24px;line-height:1.4;margin:12px 0;color:#fff}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:1.4px;color:var(--muted);text-transform:uppercase}.project>.eyebrow{color:var(--side-muted)}
+.pill{display:inline-block;line-height:1.6;font-size:10px;letter-spacing:1px;border:1px solid #8090a7;color:#fff;padding:5px 8px;border-radius:4px}
+nav{margin:26px -10px}nav button{display:flex;align-items:center;gap:13px;background:none;border:0;color:#e1e6ed;width:100%;text-align:left;margin:6px 0;padding:13px;font-size:13px;border-radius:4px}
+nav button span{font-size:20px;width:20px}nav button[aria-current="page"]{background:#ffffff1a;color:#fff;box-shadow:inset 2px 0 #fff}nav button:hover{background:#ffffff12}
+.sidebottom{margin-top:auto;font-size:11px}.sidebottom p,.sidebottom small{color:var(--side-muted)}.live{color:#fff}
+main{margin-left:238px;width:calc(100% - 238px)}
+header.top{height:80px;display:flex;align-items:center;padding:0 38px;background:var(--navy);color:#fff;border-bottom:2px solid var(--red);font-size:12px;font-weight:600}header.top span{color:#d6dee8;margin-left:10px;font-weight:400}
+.content{max-width:1550px;margin:auto;padding:32px}
+.between{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.title{margin-bottom:24px}.title p{margin:0}.title .eyebrow:before{content:'';display:block;background:var(--red);height:2px;width:32px;margin-bottom:8px}.red{color:var(--red)}
+.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700;padding:12px 19px;border-radius:4px}.primary:hover{background:var(--red-hover)}.primary:disabled{opacity:.6}
+.hero{background:var(--navy);border-radius:8px;padding:32px;display:flex;justify-content:space-between;color:#fff;gap:25px;align-items:center}
+.hero h2{font-size:32px;margin:13px 0 8px;color:#fff}.hero p{color:#e0e6ee;margin:0}.hero .eyebrow{color:#d6dee8}
+.heroTags{display:flex;gap:18px;font-size:11px;color:#e0e6ee;margin-top:25px;flex-wrap:wrap}
+.ring{width:155px;min-width:155px;height:155px;position:relative;display:grid;place-items:center}.ring svg{position:absolute;inset:0}.ring div{text-align:center;display:grid}.ring strong{font-family:var(--f-head);font-size:40px;font-weight:700;line-height:1}.ring span{font-size:11px;margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0}.stats article{background:var(--gray);border-radius:8px;padding:24px}
+.stats article>span{font-size:13px;color:var(--muted)}.stats strong{display:block;font-family:var(--f-head);font-size:40px;font-weight:700;line-height:1.1;margin:12px 0;color:var(--ink)}.stats article:first-child strong{color:var(--red)}.stats small{font-size:13px;display:block}
+.alert{background:var(--surface);border:1px solid var(--gray);border-left:2px solid var(--red);border-radius:4px;padding:16px 24px;margin:24px 0;font-size:13px}.alert b{color:var(--red)}.alert p{margin:5px 0 0}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:28px 0 14px;gap:12px;flex-wrap:wrap}.sectionhead h2{margin:0}.sectionhead .link{background:none;border:0;color:var(--red);font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.task{text-align:left;display:block;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px}.task:hover{border-color:var(--steel)}
+.task .eyebrow{font-size:10px;letter-spacing:.8px}.gate{color:var(--ink);background:var(--gray);font-size:9px;font-weight:700;padding:4px 6px;border-radius:4px;white-space:nowrap}
+.task h3{font-size:18px;line-height:1.3;margin:16px 0 8px}.task p{font-size:13px;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;gap:7px;align-items:center;font-size:11px;color:var(--muted);margin:18px 0;flex-wrap:wrap}
+.status{display:inline-block;padding:5px 8px;background:var(--chip);color:var(--chip-ink);border-radius:4px;font-size:12px;white-space:nowrap}
+.status.s-done{background:#e3f1e8;color:#1f6b45}.status.s-blocked{background:#fbe3e5;color:#a0121c}.status.s-prog{background:#e3eaf4;color:#1c365e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .status.s-done{background:#163a2b;color:#8fe0b5}:root:not([data-theme="light"]) .status.s-blocked{background:#43191e;color:#ff9aa1}:root:not([data-theme="light"]) .status.s-prog{background:#1d3150;color:#a9c6ef}}
+.taskfoot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line-2);padding-top:13px;gap:5px;font-size:11px}.taskfoot small{font-size:10px}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:22px 0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:24px;min-width:0}.panel h2{margin-top:0}.panel p{font-size:14px}
+.track{padding:18px 0;border-top:1px solid var(--line-2)}.track p{margin:8px 0 12px}
+.activity{padding:15px 0;border-top:1px solid var(--line-2);font-size:14px}.activity small{font-size:12px}.activity p{margin:5px 0}
+article.activity{border-top:1px solid var(--line);padding:20px 24px;margin:12px 0}
+.toolbar{display:flex;gap:16px;margin-bottom:25px;flex-wrap:wrap}
+input,select,textarea{border:1px solid var(--field-line);border-radius:4px;background:var(--field);padding:11px;color:var(--field-ink);width:100%}
+.toolbar input{flex:1;min-width:220px}.toolbar select{width:200px}.toolbar button{white-space:nowrap}
+.board{display:grid;grid-template-columns:repeat(4,minmax(210px,1fr));gap:16px;overflow:auto}
+.column{background:var(--gray);border-radius:8px;padding:16px;min-width:210px}.column>h3{display:flex;justify-content:space-between;font-size:16px;margin:6px 3px 20px}.column>h3 span{color:var(--muted)}
+.column .task{margin-bottom:12px;padding:14px}.column .task .between{gap:4px;flex-wrap:wrap}
+.empty{text-align:center;font-size:11px;padding:25px 0;color:var(--muted)}
+.site h2{font-size:30px;margin:15px 0}
+.checklist{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.checklist button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;border-radius:0;border:0;border-bottom:1px solid var(--line-2);padding:16px 24px;font-size:14px;background:var(--surface)}.checklist button:last-child{border-bottom:0}
+footer{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);margin-top:35px;padding-top:20px;font-size:12px;color:var(--muted)}footer span{text-align:right}
+.overlay{position:fixed;inset:0;background:var(--scrim);display:flex;justify-content:flex-end;z-index:5}
+.modal{width:600px;max-width:100%;background:var(--surface);overflow:auto;padding:32px}.modal h2{margin:0}
+.modal label{display:block;font-size:13px;font-weight:600;margin:13px 0}.modal input,.modal select,.modal textarea{display:block;margin-top:7px}
+.modal .twocol{gap:15px;margin:0}.modal textarea{min-height:80px}.modal .checkbox{display:flex;align-items:center;gap:10px}.checkbox input{width:auto;margin:0}
+.ro-note{font-size:13px;color:var(--muted);background:var(--gray);border-radius:4px;padding:10px 12px}
+.comment{padding:12px;border-left:2px solid var(--red);background:var(--surface);margin:10px 0;font-size:13px;white-space:pre-wrap;border-radius:4px}.comment small{display:block;margin-top:6px}
+.tablewrap{overflow:auto;border:1px solid var(--gray);border-radius:8px}
+table{width:100%;border-collapse:collapse;text-align:left;font-size:14px}th{background:var(--gray);padding:16px;font-weight:600}td{padding:12px 16px;border-bottom:1px solid var(--gray)}
+td button{border:0;padding:0;text-align:left;color:var(--ink);background:none;font-weight:600}
+.compact{margin:12px 0;padding:16px 20px}.compact summary{cursor:pointer;font-weight:700;color:var(--ink);line-height:1.6}.compact summary span{float:right;font-weight:400;font-size:13px;color:var(--muted)}
+.compact[open] summary{border-bottom:1px solid var(--field-line);padding-bottom:10px;margin-bottom:12px}
+.sourceNote{font-size:12px;color:var(--muted)}
+.demandGrid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.demandGrid h3{margin:16px 0 10px}.demandGrid th:nth-child(n+2),.demandGrid td:nth-child(n+2){text-align:right}
+.demandGrid .tags{margin:8px 0}.demandGrid .tags span{background:var(--chip);color:var(--chip-ink);padding:4px 8px;border-radius:4px;font-size:12px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:6px;font-size:14px;z-index:9}
+@media(max-width:1100px){aside{width:205px}main{margin-left:205px;width:calc(100% - 205px)}.content{padding:25px}.stats{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:1fr}.hero h2{font-size:24px}.board{grid-template-columns:repeat(4,250px)}}
+@media(max-width:850px){.demandGrid{grid-template-columns:1fr}}
+@media(max-width:700px){aside{position:static;width:100%;padding:16px}.shell{display:block}.project,.sidebottom{display:none}.brand{width:160px;min-height:64px;padding:8px}.brand img{height:48px}
+  nav{display:flex;overflow:auto;margin:10px 0 0}nav button{white-space:nowrap;width:auto}nav button span{display:none}main{margin:0;width:100%}
+  header.top{padding:15px;height:auto;min-height:56px}.content{padding:24px 16px}.title{align-items:flex-start}h1{font-size:26px}.title .primary{font-size:12px;white-space:nowrap}
+  .hero{padding:24px;display:block}.hero h2{font-size:26px}.ring{margin-top:25px;width:110px;height:110px;min-width:110px}.ring strong{font-size:30px}
+  .twocol{grid-template-columns:1fr}.toolbar select{width:100%}.stats article{padding:16px}.stats strong{font-size:32px}.stats small{font-size:11px}
+  footer{display:block}footer span{display:block;text-align:left;margin-top:10px}.modal{padding:24px}.modal .twocol{grid-template-columns:1fr 1fr}.compact summary span{float:none;display:block}.compact{padding:12px}}
+
+/* Sidebar links (pages that route with anchors) */
+nav a{display:flex;align-items:center;gap:13px;color:#e1e6ed;text-decoration:none;margin:6px 0;padding:13px;font-size:13px;border-radius:4px}
+nav a span{font-size:20px;width:20px;text-align:center}nav a[aria-current="page"]{background:#ffffff1a;color:#fff;box-shadow:inset 2px 0 #fff}nav a:hover{background:#ffffff12}
+nav .navsep{border-top:1px solid #5b6b7f;margin:14px 10px}
+.side-links{font-size:12px;margin:0 0 14px}.side-links a{color:var(--side-muted);display:block;margin:4px 0}
+@media(max-width:700px){nav a{white-space:nowrap}nav a span{display:none}nav .navsep{display:none}}
+
+/* One-page progress report (US Letter). Fixed light palette so the PDF and print look the same in any theme. */
+.rp-tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.rp-tools .note{font-size:13px;color:var(--muted)}
+.rp-stage{overflow:auto;background:var(--gray);border-radius:8px;padding:24px;display:flex;justify-content:center}
+.rp{width:816px;height:1056px;flex:none;background:#fff;color:#1c365e;font-family:'Source Sans 3',Arial,sans-serif;font-size:10.5px;line-height:1.4;box-shadow:0 4px 24px #0b1c3226;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.rp *{box-sizing:border-box}
+.rp h2,.rp h3,.rp .rp-num{font-family:'Barlow Semi Condensed','Arial Narrow',Arial,sans-serif;color:#1c365e;margin:0}
+.rp-head{background:#1c365e;color:#fff;padding:18px 32px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;border-bottom:3px solid #e01e2e}
+.rp-logo{background:#fff;border-radius:3px;padding:6px 10px;display:flex;align-items:center}.rp-logo img{height:34px;width:auto;display:block}
+.rp-head .eb{font-size:8.5px;letter-spacing:1.4px;font-weight:700;text-transform:uppercase;color:#d6dee8}
+.rp-head h2{color:#fff;font-size:22px;font-weight:600;line-height:1.1;margin:3px 0 2px}
+.rp-head .sub{font-size:10px;color:#e0e6ee}
+.rp-rag{text-align:right;display:grid;gap:4px;justify-items:end}
+.rp-rag b{display:inline-block;font-family:'Barlow Semi Condensed',Arial,sans-serif;font-size:13px;letter-spacing:.5px;padding:4px 10px;border-radius:3px;color:#fff}
+.rp-rag .g{background:#1f7a4d}.rp-rag .a{background:#c27a00}.rp-rag .r{background:#e01e2e}
+.rp-rag small{font-size:9px;color:#d6dee8}
+.rp-body{padding:14px 32px 0;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0;overflow:hidden}
+.rp-sec h3{font-size:13px;font-weight:700;letter-spacing:.2px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:baseline}
+.rp-sec h3 small{font-family:'Source Sans 3',Arial,sans-serif;font-weight:400;font-size:8.5px;color:#5b6b7f;letter-spacing:0}
+.rp-gantt{border:1px solid #e0e6ec;border-radius:6px;padding:8px 10px 6px}
+.rp-gantt svg{display:block}
+.rp-legend{display:flex;gap:14px;font-size:8.5px;color:#5b6b7f;margin-top:4px;flex-wrap:wrap}
+.rp-legend i{display:inline-block;width:10px;height:7px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.rp-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.rp-kpi{background:#e6e9ed;border-radius:6px;padding:8px 10px}
+.rp-kpi span{font-size:8.5px;color:#5b6b7f;display:block}
+.rp-kpi .rp-num{font-size:24px;font-weight:700;line-height:1.05;display:block;margin:2px 0}
+.rp-kpi.red .rp-num{color:#e01e2e}.rp-kpi.green .rp-num{color:#1f7a4d}
+.rp-kpi small{font-size:8px;color:#5b6b7f}
+.rp-summary{font-size:10.5px;color:#1c365e;background:#f4f6f9;border-left:3px solid #1c365e;padding:7px 10px;border-radius:3px}
+.rp-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rp-prog{display:grid;gap:5px}
+.rp-prog div{display:grid;grid-template-columns:130px 1fr 44px;gap:8px;align-items:center;font-size:9.5px}
+.rp-prog .tr{height:8px;background:#e6e9ed;border-radius:4px;overflow:hidden;display:flex}
+.rp-prog .tr i{display:block;height:100%}
+.rp-prog b{text-align:right;font-weight:600}
+.rp-risks{display:grid;gap:5px;margin:0;padding:0;list-style:none}
+.rp-risks li{display:grid;grid-template-columns:52px 1fr;gap:7px;font-size:9.5px;align-items:start}
+.rp-risks li span{font-size:7.5px;font-weight:700;letter-spacing:.6px;text-align:center;border-radius:3px;padding:2px 0;color:#fff}
+.rp-risks .high span{background:#e01e2e}.rp-risks .med span{background:#c27a00}.rp-risks .low span{background:#5b6b7f}
+.rp .rp-tbl{width:100%;border-collapse:collapse;font-size:9px;table-layout:fixed}.rp .rp-tbl col.a{width:56%}.rp .rp-tbl col.o{width:22%}.rp .rp-tbl col.s{width:13%}.rp .rp-tbl col.d{width:9%}
+.rp .rp-tbl td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp .rp-tbl th{background:#e6e9ed;text-align:left;font-weight:600;padding:4px 6px;font-size:8.5px;color:#1c365e}
+.rp .rp-tbl td{padding:3px 6px;border-bottom:1px solid #e6e9ed;vertical-align:top}
+.rp .rp-tbl td:last-child,.rp .rp-tbl th:last-child{white-space:nowrap}
+.rp-st{display:inline-block;border-radius:3px;padding:0 5px;font-size:8px;font-weight:600;background:#edf1f6;color:#5c7086;white-space:nowrap}
+.rp-st.done{background:#e3f1e8;color:#1f6b45}.rp-st.prog{background:#e3eaf4;color:#1c365e}.rp-st.wait{background:#fdf0d9;color:#8a5200}.rp-st.blocked{background:#fbe3e5;color:#a0121c}
+.rp-foot{margin-top:auto;padding:8px 32px 12px;display:flex;justify-content:space-between;gap:12px;font-size:8px;color:#5b6b7f;border-top:1px solid #e0e6ec}
+.rp-foot b{color:#e01e2e;font-weight:700}
+@media print{
+  @page{size:letter portrait;margin:0}
+  html,body{background:#fff!important}
+  body *{visibility:hidden}
+  .rp,.rp *{visibility:visible}
+  .rp{position:fixed;left:0;top:0;box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media(max-width:900px){.rp-stage{justify-content:flex-start}}
+
+.rp table{min-width:0;border:0}.rp th,.rp td{position:static;text-transform:none;letter-spacing:0;font-family:'Source Sans 3',Arial,sans-serif;line-height:1.35}
+.rp .rp-tbl th{font-size:8.5px;padding:4px 6px}.rp .rp-tbl td{font-size:9px;padding:3px 6px}
+.rp p{margin:0;color:inherit;line-height:1.4}
+
+/* Hub on the SVT shell: remap the hub's tokens to the template palette */
+:root{--panel:#ffffff;--panel-2:#e6e9ed;--line:#e0e6ec;--bg:#ffffff;--r-md:8px;--r-lg:8px;--accent:#e01e2e;--mast:#1c365e;--mast-ink:#fff;--mast-muted:#d6dee8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--panel:#16243a;--panel-2:#1d2d47;--line:#2a3a54;--bg:#0f1a2b;--accent:#ff4b58}}
+:root[data-theme="dark"]{--panel:#16243a;--panel-2:#1d2d47;--line:#2a3a54;--bg:#0f1a2b;--accent:#ff4b58}
+body::before{display:none}
+.hubwrap{display:grid;gap:22px}
+section[data-view]>.head h2{display:none}
+section[data-view]>.head p{font-size:15px}
+.btn{border-radius:4px;padding:9px 14px}.btn.primary{background:var(--red);border-color:var(--red);color:#fff}.btn.primary:hover{background:var(--red-hover)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{background:var(--red);border-color:var(--red)}}
+:root[data-theme="dark"] .btn.primary{background:var(--red);border-color:var(--red)}
+.hub-hero{background:var(--navy);border-radius:8px;padding:28px 32px;color:#fff;display:grid;gap:22px}
+.hub-hero .eyebrow{color:#d6dee8}.hub-hero h2{color:#fff;font-size:28px;margin:8px 0 0}
+.hub-hero .clock{display:flex;gap:28px;flex-wrap:wrap}.hub-hero .clock b{font-family:var(--f-head);font-size:34px;font-weight:700;line-height:1;color:#fff}.hub-hero .clock span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#d6dee8}
+.lane h2{color:#fff}
+.panel h3{font-size:18px}
+.seg{border-radius:4px}.seg button{padding:9px 12px}
+.col{background:var(--gray);border-radius:8px;padding:14px}.card{border-radius:8px;padding:14px}
+.st,.site{border-radius:8px}
+.project .pill{background:none;color:#fff;border:1px solid #8090a7;border-radius:4px;font-weight:400;font-size:10px;letter-spacing:1px;padding:5px 8px}
 </style>
 
-<header class="mast">
-  <div class="wrap">
-    <div class="eyebrow"><span class="rule"></span>Internal only · Brooke Benkert · Do not share outside SVT leadership</div>
-    <div style="display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:end">
-      <div style="display:grid;gap:6px;min-width:0">
-        <h1>Amazon Business Development Hub</h1>
-        <div class="sub">Two initiatives only: Amazon Vendor Approval, and Amazon Station Conversions (Middle Mile and Last Mile). DSP outreach, lead lists and routing workflows are deliberately left out.</div>
-      </div>
-      <div class="clock num" id="clock"></div>
-    </div>
-    <div class="lanes" id="lanes"></div>
-  </div>
-</header>
-
-<nav class="tabs" aria-label="Hub sections">
-  <div class="wrap" id="tabs">
-    <a href="#today">Today</a>
-    <a href="#approval">Vendor Approval</a>
-    <a href="#stations">Station Conversions</a>
-    <a href="#readiness">Pilot Readiness</a>
-    <a href="#board">Action Board</a>
-    <a href="#log">Decisions &amp; Evidence</a>
-    <a href="#docs">Documents</a>
-    <a href="#sources">Sources</a>
-    <a href="#schedules">Scheduled Tasks</a>
-    <a href="#method">Method</a>
-  </div>
-</nav>
-
-<main><div class="wrap">
+<div class="shell">
+<aside>
+  <div class="brand"><img src="data:image/png;base64,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" alt="SVT Fleet Solutions"></div>
+  <div class="project"><span class="eyebrow">Brooke only</span><h3>Amazon BD<br>Hub</h3><span class="pill">INTERNAL · EXHIBIT A</span></div>
+  <nav id="tabs" aria-label="Hub sections"><a href="#today"><span aria-hidden="true">◷</span>Today</a><a href="#approval"><span aria-hidden="true">◆</span>Vendor Approval</a><a href="#stations"><span aria-hidden="true">◎</span>Station Conversions</a><a href="#readiness"><span aria-hidden="true">☑</span>Pilot Readiness</a><a href="#board"><span aria-hidden="true">▦</span>Action Board</a><a href="#log"><span aria-hidden="true">≡</span>Decisions &amp; Evidence</a><a href="#docs"><span aria-hidden="true">▤</span>Documents</a><a href="#sources"><span aria-hidden="true">◫</span>Sources</a><a href="#schedules"><span aria-hidden="true">◴</span>Scheduled Tasks</a><a href="#method"><span aria-hidden="true">◇</span>Method</a><a href="#report"><span aria-hidden="true">▣</span>Progress report</a></nav>
+  <div class="side-links"><a href="https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H" target="_blank" rel="noopener">↗ ONT Pilot · SVT Team</a><a href="https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668" target="_blank" rel="noopener">↗ ONT Pilot · Amazon View</a></div>
+  <div class="sidebottom"><div class="live">● Brooke only</div><p>Shared records · live updates</p><small>Do not share outside SVT leadership.</small></div>
+</aside>
+<main>
+  <header class="top"><div>SVT Fleet Solutions <span>/ Amazon BD hub · internal only</span></div></header>
+  <section class="content">
+    <div class="between title"><div><div class="eyebrow red">Vendor approval &amp; station conversions / Brooke only</div><h1 id="view-title">Today</h1><p>Two initiatives only: Amazon Vendor Approval (Exhibit A #3) and Station Conversions, Middle Mile and Last Mile.</p></div></div>
+    <div class="hubwrap">
 
 <section data-view="today">
+  <div class="hub-hero"><div><span class="eyebrow">Exhibit A priorities · Initial Term ends Jan 31, 2027</span><h2>Vendor approval first. Stations next.</h2></div><div class="clock num" id="clock"></div><div class="lanes" id="lanes"></div></div>
   <div class="head"><div><h2>Today</h2><p>The next move on each initiative, what's due this week, and who you're waiting on.</p></div>
     <div class="tools"><button class="btn primary" data-add="tasks">Add action</button></div></div>
   <div class="grid3" id="today-next"></div>
@@ -343,6 +508,11 @@ td .sub{font-size:12px;color:var(--muted)}
     <tbody id="sch-rows"></tbody></table></div>
 </section>
 
+<section data-view="report">
+  <div class="rp-tools"><button class="btn primary" id="rp-dl">Download PDF</button><button class="btn" id="rp-print">Print</button><span class="note">One page, US Letter. Built from the hub's live records. Includes Exhibit A details: keep it to yourself.</span></div>
+  <div class="rp-stage" id="rp-stage"></div>
+</section>
+
 <section data-view="method">
   <div class="head"><div><h2>Method</h2><p>How this hub runs the full project cycle, and the rules it applies.</p></div></div>
   <div class="phase" id="phases"></div>
@@ -367,11 +537,196 @@ td .sub{font-size:12px;color:var(--muted)}
   </div>
 </section>
 
-</div></main>
+</div>
+    <footer>SVT Fleet Solutions · Amazon BD hub<span>Internal only · Brooke Benkert · Includes Exhibit A details</span></footer>
+  </section>
+</main>
+</div>
 
 <div id="drawer-root"></div>
 <div id="toast-root"></div>
 
+<script>/* SVT one-page progress report: timeline/Gantt, KPIs, progress, risks and next steps.
+   Each dashboard builds a cfg from its own data and calls SVTReport.render(el, cfg).
+   Statuses are normalized to: done | prog | wait | blocked | todo. */
+window.SVTReport = (() => {
+  const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const D = s => { if (s instanceof Date) return new Date(s.getFullYear(), s.getMonth(), s.getDate()); const d = new Date(String(s).slice(0,10) + "T00:00:00"); return isNaN(d) ? null : d; };
+  const today = () => D(new Date());
+  const fmt = (d, o) => { d = D(d); return d ? d.toLocaleDateString("en-US", o || {month:"short", day:"numeric"}) : ""; };
+  const days = (a, b) => Math.round((D(b) - D(a)) / 864e5);
+  const addBiz = (d, n) => { d = D(d); const s = Math.sign(n); let k = Math.abs(n); while (k) { d.setDate(d.getDate() + s); const w = d.getDay(); if (w && w < 6) k--; } return d; };
+  const LABEL = {done:"Complete", prog:"In progress", wait:"Waiting", blocked:"Blocked", todo:"Not started"};
+  const COLOR = {done:"#1f7a4d", prog:"#1c365e", wait:"#c27a00", blocked:"#e01e2e", todo:"#9aa6b5", risk:"#e01e2e"};
+
+  // A phase is done when every linked item is done, in progress when any has moved, else not started.
+  function phaseStatus(items) {
+    if (!items.length) return {st:"todo", pct:0};
+    const done = items.filter(i => i.st === "done").length;
+    const pct = Math.round(done / items.length * 100);
+    if (done === items.length) return {st:"done", pct};
+    if (items.some(i => i.st === "blocked")) return {st:"blocked", pct};
+    if (items.some(i => i.st !== "todo")) return {st:"prog", pct};
+    return {st:"todo", pct};
+  }
+
+  function gantt(cfg) {
+    const W = 730, L = 172, R = 32, top = 30, rowH = 19, t0 = D(cfg.range[0]), t1 = D(cfg.range[1]);
+    const span = days(t0, t1), x = d => L + Math.max(0, Math.min(span, days(t0, d))) / span * (W - L - R);
+    const rows = cfg.phases, H = top + rows.length * rowH + 8, now = today();
+    let s = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3, Arial, sans-serif" role="img" aria-label="Timeline">`;
+    // week grid (Mondays)
+    const d = D(t0); while (d.getDay() !== 1) d.setDate(d.getDate() + 1);
+    const stepDays = span > 120 ? 14 : 7;
+    for (; d <= t1; d.setDate(d.getDate() + stepDays)) {
+      const xx = x(d).toFixed(1);
+      s += `<line x1="${xx}" y1="${top - 6}" x2="${xx}" y2="${H - 6}" stroke="#e6e9ed"/>`;
+      s += `<text x="${xx}" y="${top - 10}" font-size="8" fill="#5b6b7f" text-anchor="middle">${esc(fmt(d))}</text>`;
+    }
+    // month labels
+    const m = new Date(t0.getFullYear(), t0.getMonth(), 1);
+    for (; m <= t1; m.setMonth(m.getMonth() + 1)) {
+      const mx = Math.max(L, x(m));
+      s += `<text x="${(mx + 2).toFixed(1)}" y="9" font-size="8.5" font-weight="700" fill="#1c365e">${esc(m.toLocaleDateString("en-US", {month:"long", year:"numeric"}))}</text>`;
+    }
+    rows.forEach((p, i) => {
+      const y = top + i * rowH, yb = y + 4, bh = rowH - 8;
+      if (i % 2 === 0) s += `<rect x="0" y="${y}" width="${W}" height="${rowH}" fill="#f7f9fb"/>`;
+      s += `<text x="4" y="${y + rowH / 2 + 3.2}" font-size="9" fill="#1c365e" font-weight="${p.milestone ? 700 : 600}">${esc(p.label)}</text>`;
+      if (p.milestone) {
+        const mx = x(p.date), c = p.st === "done" ? COLOR.done : p.risk ? COLOR.risk : "#1c365e";
+        s += `<path d="M${mx} ${yb - 1} l6 ${bh / 2 + 1} l-6 ${bh / 2 + 1} l-6 -${bh / 2 + 1} z" fill="${c}"/>`;
+        s += `<text x="${mx + 10}" y="${y + rowH / 2 + 3}" font-size="8" fill="#5b6b7f">${esc(p.note || fmt(p.date))}</text>`;
+        return;
+      }
+      const xs = x(p.start), xe = Math.max(xs + 4, x(p.end)), w = xe - xs, late = p.end && D(p.end) < now && p.st !== "done";
+      const c = p.st === "done" ? COLOR.done : (late || p.st === "blocked") ? COLOR.risk : p.st === "prog" ? COLOR.prog : COLOR.todo;
+      s += `<rect x="${xs.toFixed(1)}" y="${yb}" width="${w.toFixed(1)}" height="${bh}" rx="2.5" fill="${c}" fill-opacity="0.22" ${late ? `stroke="${COLOR.risk}" stroke-width="1"` : ""}/>`;
+      if (p.pct > 0) s += `<rect x="${xs.toFixed(1)}" y="${yb}" width="${(w * p.pct / 100).toFixed(1)}" height="${bh}" rx="2.5" fill="${c}"/>`;
+      if (D(p.end) > t1) s += `<path d="M${W - R + 2} ${yb + bh / 2} l-5 -4 v8 z" fill="${c}"/>`;
+      s += `<text x="${Math.min(xe + 4, W - R + 6).toFixed(1)}" y="${y + rowH / 2 + 3}" font-size="8" fill="#5b6b7f">${p.pct}%</text>`;
+    });
+    (cfg.lines || []).forEach(l => {
+      if (D(l.date) < t0 || D(l.date) > t1) return;
+      const lx = x(l.date).toFixed(1);
+      s += `<line x1="${lx}" y1="${top - 4}" x2="${lx}" y2="${H - 4}" stroke="${l.color || "#1c365e"}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+      s += `<rect x="${(+lx - 26).toFixed(1)}" y="${H - 12}" width="52" height="10" rx="2" fill="${l.color || "#1c365e"}"/><text x="${lx}" y="${H - 4.4}" font-size="7" fill="#fff" text-anchor="middle" font-weight="700">${esc(l.label)}</text>`;
+    });
+    if (now >= t0 && now <= t1) {
+      const tx = x(now).toFixed(1);
+      s += `<line x1="${tx}" y1="${top - 4}" x2="${tx}" y2="${H - 14}" stroke="#e01e2e" stroke-width="1.4"/><text x="${tx}" y="${top - 1}" font-size="7.5" fill="#e01e2e" text-anchor="middle" font-weight="700">TODAY</text>`;
+    }
+    return s + `</svg>`;
+  }
+
+  // Deterministic insights from items: [{title, st, gate, due, owner}]
+  function insights(items, cfg) {
+    const out = [], now = today(), open = items.filter(i => i.st !== "done");
+    const short = t => { t = String(t || ""); const c = t.indexOf(" ("); if (c > 20) t = t.slice(0, c); return t.length > 58 ? t.slice(0, 55).trimEnd() + "…" : t; };
+    const name = i => `“${short(i.title)}”`;
+    const blocked = open.filter(i => i.st === "blocked");
+    if (blocked.length) out.push({lv:"high", t:`${blocked.length} blocked: ${blocked.slice(0, 2).map(name).join(", ")}. Resolve before go-live.`});
+    const over = open.filter(i => i.due && D(i.due) < now);
+    if (over.length) out.push({lv:"high", t:`${over.length} past due, including ${over.slice(0, 2).map(i => `${name(i)} (${fmt(i.due)})`).join(", ")}.`});
+    (cfg.extraRisks || []).forEach(r => out.push(r));
+    if (cfg.goLive) {
+      const left = days(now, cfg.goLive), notStarted = open.filter(i => i.gate && i.st === "todo");
+      if (notStarted.length && left >= 0) out.push({lv: left <= 7 ? "high" : "med", t:`${notStarted.length} launch gates not started with ${left} days to the proposed ${fmt(cfg.goLive)} go-live${notStarted.length ? `, including ${notStarted.slice(0, 2).map(name).join(" and ")}` : ""}.`});
+    }
+    const wait = open.filter(i => i.st === "wait");
+    if (wait.length) out.push({lv:"med", t:`${wait.length} waiting on others: ${wait.slice(0, 2).map(i => `${name(i)}${i.owner ? " · " + i.owner : ""}`).join(", ")}.`});
+    const noOwner = open.filter(i => i.gate && (!i.owner || /^unassigned$/i.test(i.owner)));
+    if (noOwner.length) out.push({lv:"med", t:`${noOwner.length} open gates have no named owner. Assign one person to each.`});
+    const noDate = open.filter(i => i.gate && !i.due).length;
+    if (noDate && open.length) out.push({lv:"low", t:`${noDate} of ${open.filter(i => i.gate).length} open gates have no committed date. Agree dates at the weekly standup.`});
+    const rank = {high:0, med:1, low:2};
+    return out.sort((a, b) => rank[a.lv] - rank[b.lv]).slice(0, cfg.maxRisks || 6);
+  }
+
+  function rag(items, risks) {
+    if (risks.some(r => r.lv === "high")) return {k:"r", t:"AT RISK"};
+    if (risks.some(r => r.lv === "med") || items.some(i => i.st === "wait")) return {k:"a", t:"WATCH"};
+    return {k:"g", t:"ON TRACK"};
+  }
+
+  function render(el, cfg) {
+    const items = cfg.items, gates = items.filter(i => i.gate), gDone = gates.filter(i => i.st === "done").length;
+    cfg.phases.forEach(p => { if (!p.milestone) Object.assign(p, phaseStatus(items.filter(i => (p.ids || []).includes(i.id)))); });
+    const risks = insights(items, cfg), r = cfg.rag || rag(items, risks), now = today();
+    const pct = gates.length ? Math.round(gDone / gates.length * 100) : 0;
+    const k = cfg.kpis || [
+      {label:"Launch gates complete", v:`${gDone}/${gates.length}`, sub:`${pct}% of gates`, tone:"green"},
+      {label:"Days to proposed go-live", v: cfg.goLive ? Math.max(0, days(now, cfg.goLive)) : "—", sub: cfg.goLive ? `${fmt(cfg.goLive, {month:"short", day:"numeric", year:"numeric"})} · ${cfg.goLiveConfirmed ? "confirmed" : "unconfirmed"}` : "", tone:""},
+      {label:"In progress", v: items.filter(i => i.st === "prog").length, sub:"Active now", tone:""},
+      {label:"Waiting on input", v: items.filter(i => i.st === "wait").length, sub:"Team and partners", tone:""},
+      {label:"Blocked / past due", v: items.filter(i => i.st !== "done" && (i.st === "blocked" || (i.due && D(i.due) < now))).length, sub:"Need a decision", tone:"red"}];
+    const groups = cfg.progress || [];
+    const prog = groups.map(g => { const l = items.filter(g.match), d = l.filter(i => i.st === "done").length, p = l.filter(i => i.st === "prog" || i.st === "wait").length, pc = l.length ? Math.round(d / l.length * 100) : 0;
+      return `<div><span>${esc(g.label)}</span><span class="tr"><i style="width:${l.length ? d / l.length * 100 : 0}%;background:#1f7a4d"></i><i style="width:${l.length ? p / l.length * 100 : 0}%;background:#9fb3cc"></i></span><b>${d}/${l.length}</b></div>`; }).join("");
+    const next = (cfg.nextItems || items).filter(i => i.st !== "done").sort((a, b) => (a.due ? 0 : 1) - (b.due ? 0 : 1) || String(a.due).localeCompare(String(b.due)) || (b.gate - a.gate) || (({prog:0, wait:1, blocked:0, todo:2})[a.st] - ({prog:0, wait:1, blocked:0, todo:2})[b.st])).slice(0, cfg.maxNext || 8);
+    const stc = s => ({done:"done", prog:"prog", wait:"wait", blocked:"blocked"})[s] || "";
+    const summary = cfg.summary || `${gDone} of ${gates.length} launch gates are complete (${pct}%). ${items.filter(i => i.st === "prog").length} items are in progress and ${items.filter(i => i.st === "wait").length} are waiting on input.`;
+    el.innerHTML = `<div class="rp" id="${esc(cfg.id || "rp")}">
+      <div class="rp-head"><div class="rp-logo"><img src="${cfg.logo}" alt="SVT Fleet Solutions"></div>
+        <div><div class="eb">${esc(cfg.eyebrow)}</div><h2>${esc(cfg.title)}</h2><div class="sub">${esc(cfg.subtitle || "")}</div></div>
+        <div class="rp-rag"><b class="${r.k}">${r.t}</b><small>Report date ${esc(fmt(now, {month:"long", day:"numeric", year:"numeric"}))}</small></div></div>
+      <div class="rp-body">
+        <div class="rp-sec"><h3>Timeline<small>${esc(cfg.timelineNote || "Planned windows. Bars fill as linked items complete.")}</small></h3>
+          <div class="rp-gantt">${gantt(cfg)}<div class="rp-legend"><span><i style="background:#1f7a4d"></i>Complete</span><span><i style="background:#1c365e"></i>In progress</span><span><i style="background:#9aa6b5"></i>Not started</span><span><i style="background:#e01e2e"></i>Late or blocked</span><span>◆ Milestone</span></div></div></div>
+        <div class="rp-kpis">${k.map(x => `<div class="rp-kpi ${x.tone || ""}"><span>${esc(x.label)}</span><b class="rp-num">${esc(x.v)}</b><small>${esc(x.sub || "")}</small></div>`).join("")}</div>
+        <div class="rp-summary"><b>Summary.</b> ${esc(summary)}</div>
+        <div class="rp-cols">
+          <div class="rp-sec"><h3>Progress by area<small>Complete · In progress or waiting</small></h3><div class="rp-prog">${prog || "<p>No items.</p>"}</div></div>
+          <div class="rp-sec"><h3>Risks &amp; blockers<small>Generated from current status</small></h3><ul class="rp-risks">${risks.map(x => `<li class="${x.lv}"><span>${x.lv === "high" ? "HIGH" : x.lv === "med" ? "MEDIUM" : "NOTE"}</span><div>${esc(x.t)}</div></li>`).join("") || `<li class="low"><span>NOTE</span><div>No open risks recorded.</div></li>`}</ul></div>
+        </div>
+        <div class="rp-sec"><h3>${esc(cfg.nextTitle || "Next actions")}<small>Dated items first, then open launch gates</small></h3>
+          <table class="rp-tbl"><colgroup><col class="a"><col class="o"><col class="s"><col class="d"></colgroup><thead><tr><th>Action</th><th>${esc(cfg.ownerLabel || "Owner")}</th><th>Status</th><th>Due</th></tr></thead><tbody>${next.map(i => `<tr><td>${i.gate ? "<b>Gate</b> · " : ""}${esc(i.title)}</td><td>${esc(i.owner || "—")}</td><td><span class="rp-st ${stc(i.st)}">${esc(i.label || LABEL[i.st])}</span></td><td>${i.due ? esc(fmt(i.due)) : "To confirm"}</td></tr>`).join("")}</tbody></table></div>
+      </div>
+      <div class="rp-foot"><span><b>${esc(cfg.confidential)}</b> · ${esc(cfg.footNote || "")}</span><span>${esc(cfg.source || "")}</span></div>
+    </div>`;
+    fit(el);
+  }
+
+  // Keep the report on one page: drop the last table rows, then risks, until the body fits.
+  function fit(el) {
+    const body = el.querySelector(".rp-body"); if (!body) return;
+    const over = () => body.scrollHeight > body.clientHeight + 1;
+    let rows = [...el.querySelectorAll(".rp-tbl tbody tr")];
+    while (over() && rows.length > 3) rows.pop().remove();
+    let rk = [...el.querySelectorAll(".rp-risks li")];
+    while (over() && rk.length > 3) rk.pop().remove();
+  }
+  let lib = null;
+  function loadLib() {
+    if (window.html2pdf) return Promise.resolve();
+    if (lib) return lib;
+    lib = new Promise((ok, no) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"; s.onload = ok; s.onerror = () => { lib = null; no(new Error("PDF library failed to load")); }; document.head.appendChild(s); });
+    return lib;
+  }
+  async function download(el, filename, toast) {
+    const node = el.querySelector(".rp");
+    try {
+      await loadLib();
+      const sx = window.scrollX, sy = window.scrollY; window.scrollTo(0, 0);
+      const host = document.createElement("div");
+      host.style.cssText = "position:absolute;left:0;top:0;width:816px;z-index:-1;pointer-events:none";
+      const copy = node.cloneNode(true); copy.style.boxShadow = "none"; host.appendChild(copy); document.body.appendChild(host);
+      let blob;
+      try {
+        blob = await window.html2pdf().set({margin:0, filename, image:{type:"jpeg", quality:0.96}, html2canvas:{scale:2, useCORS:true, backgroundColor:"#ffffff", scrollX:0, scrollY:0}, jsPDF:{unit:"px", format:[816, 1056], orientation:"portrait", hotfixes:["px_scaling"]}, pagebreak:{mode:[]}}).from(copy).outputPdf("blob");
+      } finally { host.remove(); window.scrollTo(sx, sy); }
+      const dl = await window.claude?.use?.("downloads");
+      if (dl) { await dl.save({filename, data: blob}); toast && toast("Report saved"); return; }
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    } catch (e) {
+      if (e && e.code === "declined") return;
+      toast && toast("Couldn't build the PDF here. Opening print instead.");
+      window.print();
+    }
+  }
+  return {render, download, addBiz, fmt, D, days};
+})();
+</script>
 <script>
 (() => {
 const TERM_END = new Date("2027-01-31T23:59:59");
@@ -682,14 +1037,16 @@ function renderMethod(){
   const c=k=>S.tasks.filter(t=>t.phase===k&&t.status!=="Done").length;
   $("#phases").innerHTML = ph.map(([k,v])=>`<div><b>${k}</b><small>${v}</small><small class="num" style="color:var(--ink)">${c(k)} open action${c(k)===1?"":"s"}</small></div>`).join("");
 }
-function renderAll(){ renderClock(); renderLanes(); renderToday(); renderApproval(); renderStations(); renderReadiness(); renderBoard(); renderLog(); renderSources(); renderDocs(); renderSchedules(); renderMethod();
+function renderAll(){ renderClock(); renderLanes(); renderToday(); renderApproval(); renderStations(); renderReadiness(); renderBoard(); renderLog(); renderSources(); renderDocs(); renderSchedules(); renderMethod(); if((location.hash||"").slice(1)==="report") renderReport();
   document.querySelectorAll("[data-add]").forEach(b=>b.hidden=!canWrite); }
 
-const VIEWS=["today","approval","stations","readiness","board","log","docs","sources","schedules","method"];
+const VIEWS=["today","approval","stations","readiness","board","log","docs","sources","schedules","method","report"];
 function route(){
   const h=(location.hash||"").slice(1); const v=VIEWS.includes(h)?h:"today";
   document.querySelectorAll("section[data-view]").forEach(s=>s.hidden=s.dataset.view!==v);
   document.querySelectorAll("#tabs a").forEach(a=>a.setAttribute("aria-current",a.getAttribute("href")==="#"+v?"page":"false"));
+  const cur=document.querySelector(`#tabs a[href="#${v}"]`); const vt=document.getElementById("view-title"); if(cur&&vt) vt.textContent=cur.textContent.slice(1);
+  if(v==="report") renderReport();
 }
 addEventListener("hashchange",route);
 
@@ -788,6 +1145,45 @@ document.addEventListener("change",async e=>{
   try{ await db.doc(`${c}/${id}`).update(patch); toast("Updated"); }catch(err){ handleWriteErr(err); }
 });
 
+const RST={task:{Done:"done",Doing:"prog",Waiting:"wait",Next:"todo"},reg:{Done:"done","In progress":"prog",Blocked:"blocked","Not started":"todo"},rd:{Ready:"done","In progress":"prog",Waiting:"wait",Blocked:"blocked","Not started":"todo"}};
+const siteSt=st=>["Live","Converted"].includes(st)?"done":st==="Blocked"?"blocked":st==="Paused"?"wait":st==="Identified"?"todo":"prog";
+function renderReport(){
+  const el=document.getElementById("rp-stage"); if(!el||!window.SVTReport) return; const R=SVTReport;
+  const tasks=S.tasks.map(t=>({id:"t:"+t.id,title:t.title,st:RST.task[t.status]||"todo",label:t.status,gate:false,due:t.due,owner:t.owner,grp:"tasks-"+t.obj}));
+  const regs=S.regsteps.slice().sort((a,b)=>(+a.order||0)-(+b.order||0)).map(r=>({id:"r:"+r.id,title:r.title,st:RST.reg[r.status]||"todo",label:r.status,gate:true,due:"",owner:r.owner,grp:"reg"}));
+  const rd=S.readiness.filter(r=>r.gate!=="Nice to have").map(r=>({id:"rd:"+r.id,title:r.item,st:RST.rd[r.status]||"todo",label:r.status,gate:true,due:r.due,owner:r.owner,grp:"rd"}));
+  const sites=S.sites.map(x=>({id:"s:"+x.id,title:x.code+" · "+(x.name||x.track),st:siteSt(x.stage),label:x.stage,gate:false,due:x.due,owner:"",grp:x.track==="Last Mile"?"lm-sites":"mm-sites"}));
+  const items=[...regs,...rd,...tasks,...sites];
+  const rp=regProgress(), rs=rdStats(), left=Math.ceil((TERM_END-today())/864e5), openT=S.tasks.filter(t=>t.status!=="Done");
+  const extra=[];
+  const last=regs[regs.length-1];
+  if(last&&last.st!=="done") extra.push({lv:left<45?"high":"med",t:`No written Amazon confirmation naming SVT FLEET LLC yet. ${left} days left in the Initial Term to earn the $5,000 vendor-approval incentive.`});
+  const t02=S.tasks.find(t=>t.id==="t02"); if(t02&&t02.status!=="Done") extra.push({lv:t02.due&&days(t02.due)<=0?"high":"med",t:`Evan hasn't confirmed whether Relay Garage setup means approved vendor status.${t02.due?` Follow-up due ${fmtD(t02.due)}; Phil Hines is the fallback.`:""}`});
+  if(rs.n&&rs.ready<rs.n) extra.push({lv:days(GO_LIVE)<=7?"high":"med",t:`Pilot launch: ${rs.ready}/${rs.n} gates ready with ${Math.max(0,days(GO_LIVE))} days to the proposed ${fmtD(GO_LIVE)} go-live.`});
+  const t20=S.tasks.find(t=>t.id==="t20"); if(t20&&t20.status!=="Done") extra.push({lv:"med",t:"Exhibit A incentive for middle-mile pilot work isn't agreed with Mike. Agree it before more ONT42 work."});
+  const ids=(g)=>items.filter(i=>i.grp===g).map(i=>i.id);
+  const rdIds=k=>S.readiness.filter(r=>k.includes(r.id)).map(r=>"rd:"+r.id);
+  R.render(el,{id:"rp-hub",logo:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAABkCAYAAADg3S7eAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAABYsSURBVHgB7V1NdhNJEo7Mknu6ZxajXoNBHGBAvDfgfrPBnADYD7Y4gc0JLJ/A5gTI7gNgToB6MwPuBaLnABbYrNu9gKYbVcZEpEpCkqukzKw/SeT3rGdbKtVvRsb/lwBzgpNavd69euMF/a6Ch8eSQcAcgISrJpR6QX/W6JQ6KMXda93OOXh4LAlKF7RxIRvAC5vHckFCyRCIezAmZAysC4XejPRYGpSq0d5eub6DAM3kLbxm8ygGl39orINS67O2Q4Hn71/9uA+WqEBJYJMRlWpO34o1G7Bm88LmkS/6QrYzazOJoku/rAWtNNMx8ssM4M1Ij8VHKYJ2svqPBlzwy6bBC5vHYqMUQRNCzFTRF+GFzWNxUbig2WuzUWAdUB2Bh8eCoXBBc9NmozuQTfDwWDAUKmjptBnpM4DHFH1sg4fHgqFQQRNSboIjBIjWtXe/WIdVPTzmAYUJGufNAHEdXCBEV0mxCx4eC4riNFoYroMjUIhdMhm74OGxoChM0JzNRtJmJGQt8PBYYBToo1Fo3uVbwpuMHouPQgSNmzopZOiaaPZ5M4+FR0EabXZVdBwonP/cFxN7LAOKETTlmDuT0mszj6VAIYImhLgBbuiAh8cSoBiNhujkn5HZ6AXNYylQVOOnvaAJ4YVsArX1RrX3CeqyF9YxkDewf1+riF9McyGgq3+TNSBC9VZVgk7lW+h02y3v65aIogStBvbwAwMi4fqotkiC1un3Or+npGArYbjNGB9FJHT06TrydkpB7yPA5bXNtlDqIAiCdvdlqwseTuDJ7dKtRsPmOyKAbmlUBh7ToTksEHcGwjUqWE5AXEcWVhK81bXNVkD5SS9wTqgKoZ5afQNF20jQOA/GbFX0oB4UFW5HxN8gY5RxHbZgDRb+TueoVANyAt3bRo9e0wQuIqsxpJugfVbkzff/aZVu7td+aNRoMjkx2ZaCdN3TVwfXoADMDIZEvIvPeEYsssOZbsLfIUNoIeOBw9eB+AzmEDy4w4/qNQsCFAA+Tkj3RAvVBM5ettr0ENpgCNFT92EO0AvVtvHGBVYdTRW0i+SmznQCXbAFYg0ywlDIBkEZEra3V67vwRzhytrGFmsQTNGv5wJ9PBa22xsXGnIFiidgji3WxlAyKBh0z3TbAKANBWGqoJVMbprJ/i8IWQQaYNsnV66bz345goVMoT2FWcZoXlp7OHY/To9bR8I8KFUNP/bWoUSs3v73fdOJiiymVpE+aqKgMbkpzfwJ5oClsLmF6qu6hy0FkoRseFoAO7oOs0TUbjXqcyBkGqTB9ibNSBq4xloNRbAFZUIExh0i5KcfQIGIFTRNbjqVQZhhLmzkC7wFFyh3u3+WkEWo0jXYRZAyBDvuoVDz5S+SPz5qAlb+lOaTAJnkZZmPfC8xUTFMQnS0D1ogYgUtc3JTRKdoFKl3Y3t7FIZCFgHrZEI2oQSEIW65+mQCxDkPGDaB6B/WOuzY7/b/F+3+506ohh9w6K91O5TotgiKUDqiFHM8tGgsFtLK98wEF7j3mUCHHpblLD+dIz8a+K/BHuco5TWbULydkI0d52aRXdw2YegxCHFErycm1R5sBtK9aJAwWzfdVui+D3wYy1D/+dnx4fdQMFZvb5yYTFpJIX0KBjXBgBLcCTRRyZgTyZzcVNcsCqdKjypY5JMchUwfRyrM5yYnoGebJyM/lwf/2auDB2z2mJRU8Xanx4cN/h5puCOwwOj5WYb6q3HpgjzBx7OwDNqQAqSZunw/rV5CPBpLWKcnN0V+mOsJp0jmoz05D10YO9gz/QQWckch00DABu2jMG4Suq5N01oP2u7g/auDBjgi0kwPLt/a2KcDmwYseLvm4B8J6rkCsW70TdSTVhsKAkXHje9lkEHuzCVaOabR8iQ3RYHPwQ01kzA8m5c2EbJYqGL8C+24m4ehuyt/lZmc19nPh9s2monPc/CP/CNoGYf6CwyKREGQhtHGdO1llZ0NBS1/clPZAkdEYfiZD+7au1+a2odxP85mEZUvoeqZpxS4RCrLynuLGX00wMBBEUQwDokXFRSxCoJg8UGQAYaClje5qQ5oWESvJkA+lDLStpQfecTMWeAGK5/QFQjSWNBOX7ZakCHY3zLVTHQva2NvBFYd78Xk1AytMB0EoQQ8lAQtaEWRm6ZhtDKt5NAmJAubI1xTClbHMDUbXUrXDICCNBNPejNeNPl2R783b0ERqyBIyWxq/WAIq1/htsquDbkpm5bdq9fPXRmx6Az3aFLozOLf7x/nRttp8qDvsPm4zKRAZ68O3c06HrCm9zXnoIhVEKTA4EwctEYrktyU7PxUdrJANDUh3WewAsxHE3CT4TwU6o7CxvTMMyhiEwQpuq4xDpGPViC5qZT7jjk1nUviXjKTTbXWc/QJJTiTCWWN6uffwwbMGWyiu3kFRWyCIEXXNcZBkpm0XiS5ad+Hko/BFn0hs1o03lWrITj6q4YQwrwkjSJlO5f+1XCaCPOCVf0jQC4+Lz1bw2BL8XWNcSCNpty0WQpyU21u2mgbByGL4FqRUsszzK9EYFP7WRU99Zr7xUbzWmXCsv6xnnVQpNafeIzGbRl1jXGQZZGbkuCYaTV3IeunFMCZTSs3LVL5BB1hTz7U5NrIy2ubL6788+E2D95S/TcLa4GDFpAhuBjbZDsd0s84PeKKiiY3dSN+cR3AGlz/SFrjsVAqudM5hZANwBUpApPKwqYgDGuQE1gjkMB0XKOilE5ZH7Bbrd7aOEcpWHC73I4kQHZQwnneFHNsjjGzlsk1cPsKTQqPszifWr1RDdG4faoNc4JKmeSmtI99CsPfi31YGQiZRohdp9TFZLI2a9iEyaeAcmJVzXA1+J9MFP6ZEMIhx2OW/opF/eMgqGPj28UiXAnvIwijMRuUnDsbBUcdSyU31VHEyUqOrISMEQRO50qRx6uQI/SAT5nqmIWhECJukxbc41YXEr5fSRM9W731sJHW57OpfyRNm0lQBE1TUQKezxOdHgtaDeyRmUkSVXLcHQpblkLWx9wmniufZVO4l4s5IRK++3SPn7LPt7q2+dQ1WGFV/0gCnzYooicGQytAoHttbR4odLH4JHBlSaTZ2hkLGcxzhQcPVDJv7hYtbKPQSV/WdCRwThrOpv4R01HShYbFCmXXNcbBSdDyIDf9WsHmjRY2MK+MzwOaVFWp15NMWLNgVf+IsJkqUmrq087hKrFOgrZI5KZFEb6mAQsbd0ILKR+Vqd2Ac3bMhBXD8TgV5gPbudKFfUrTAuKy6xrjwILWBVssFrlpDRYEnPNhPgsWONfysYzQvPLDI+Pcl039o2tQxDQIMg91jXFw9dEWidzU6VwVOFLkZQAWuLNXB3c110ckdClYrZygVLhv47MZ1z86BEVsgiAqmI9KkEnI5Sc3dSsxowfbhZKhTcpI6E6PD76voLxJGuGBppfTGi/XNeSqpsEHhh3/o11QxPw8RGceFtqIQ6VfTeCAPrmpUwLSktz0JqQA+Rz39HxriyDowpyh+7MeRPwai6gx23EvgCqGUBNC1Uj73ej7M5hqouIAiWlFR1TtYlQpEgVFmsaVIqYh/Tmpa4xDRZObOlRORJ3I1oLmQm6quUCc4TzY5nJmjEMkgLFgM00i1JWuN7S/F1YVHebVLsaVIqZBkHmqa4yDdK2coBtat43oufAuMt2ca+RQEw6hU+VLd1k6rDlQ8e5Va//s+OAmSGmds5MgjXvzbEL9pkERNG9KbsMcQy4IualTFNK1c5xMpjewhNCEqszSaxHRRLTrYuD6R6MNSfPN6rOzCYLMU11jHKKoo5tTLQyZjjIiN63ZfCcV4VDKFqB5R+UP8cC8TcculWNV/zhj8UJjNucM6hqlQDNmMMcxrAVtGclNU1J8t2GJoRs3AUyfudXAsuR/nLp4oTBcMyCLusZQma8D51KqFlGC84kqN/OsH4ZvzfJpOKDRvXrjjquWichNmya+E/tmrAXBBWRW5UkLbvyQvoXzPPvJMCcqO0ZlRbZ6PWVi7VR7n7Rp2p78QFPJKVWbtYP+ohXp6xpXVoIOnbPRtiSUfM5dsIDWaAWSm15sibE4jolPqJcDTkFtnjeRC+WE9rhqfubrI5qu3pIrXLglu5zLMq5/jLc8jLuys/LNPppfJwq1DpaQX768HOSm8csBW6ENecK4IBtruVIVCHHHZDN0nRhNx1MMJZ0NlVxWdY3a5DWdVByKo4eC1qdnc+/dishN12dtl4YGbkBumvTx9OWAZ0NTm+e8mowFA1ZuVHNWfV2OJqZN/eMkJZ0plVzWdY0kDD8Zblq1pdEbq3VcZHJTvRywAKuLv7BrmX+I2IYBi6nm8mC+Cm3SJUKYDr4LsAiAbU0c02gcZV3XSEn9tsXmWzY0gONFxQtMbtpvHpV3Xc+/CG3GsGL65ZlT4bMshe3S2uZTChQZa/00pplF/eOQp9+cTz/7usaVz8GRzbORPWX8bMYErWByU6fZaBq5KSffnYRNiPMitNkAdqkOrIea6+NhA1KAB/Dl2xuvBVpEY1OuJ8Z+jzBdRiuyhkyDIHnUNVqmPfg58vLIr02eTWyRI4XhX1h0szpxfOgkNqoTlxIplPL7acfTVSjIjaRm+6YbtpuuntIOTJnW+0b9CtYQHbquJ0EQGAkAO+yfP8B9IWnwuqRVpLybljXLZv1r7k7oidlrnSetQ50FLNfrHkL7soi7Sc8mVtCMF3dPSaRjJdAjIEG7O2tFGWNho4dWe/sml4c2DekXJxe6dG7A5zh8V4irXL3ApVMCUjTokibi9bIhAzDpq+FzZlNwpt/DQRASNOfo9Sys3t5ooWGyPA4CQdP8Df9X0KnEbbgM5KbRNdwVMF3YNANXCWD/JfwLbqJztzqvGX6xAQgjMlwB7uAm08CUSdoAFvyPRsGFvOsagz/ldviNuudabjWg+Rv+L0VyhzWTmyYGLLIkN3WBIbnpLJ8tWg64CyVAM2Apm5rD4qCE2s00bG6z/vUsFMDX2PfVZKYacyqVwTKQmyYJGwckZi0HnDe4jyxAeXfOhG33/asfM70vtutfT0NRfI0RXV1mmnOqoC0LuekFYeN6xne/pMq5ZYWhsJXLfqVBpvzjs+PDJuQArn+ElCiarzG6F5kI20xynmUhN/0ibPo6MnHys4IWthKJVPVxKcCUtSYbhVX9YxJK6DljYZMuKa8JpPGZM0H3ynW0/Q4nl6++e5Nb1KlMrP7QaHBOCTOk9JsKAU8q38lmnp0CA7iGzgdgVrCyqOQ4MR0ivnB6LjTBlEoJvgjkpkWDeS+0dsuRTFVT17GA0cDlheOLEDKGZVXMGMrma9SMZBHnpstzqUC5qIHHBUQDqsUv1gKC6zuFuJNGy0W8kG2F4nnlb3DUbR+UEoCJqmKs84fzwtcYEQBZP5eyBc1Jo5VJblo0osoMfvXNFwV1BFWPEtM1zhFO5nuEgK5OZAP+hkp2VigRPI0pq0hw/vDzN3YrgNL1zB1f49hzudWohwJq3KcmkJ6L0AUDtcG2rMVL9dFOate3KWtu3dlNM8ija6f/a4GHx4KgVB+tT27qgDkkN/XwmIZy10dzX1p2rswID49ZKE3QNLmpC5aI3NTj60FpgubJTT2+JpQiaJ7c1ONrQymC5slNPb42FC5o80xu6uGRFwoVtHknN/XwyAuFClpKclNdQgQeHguIwkqwmNwU05GbHtWWxGzULLefEsrPIs59LrdKKqKd+n0Y1kpO5fnnbWZRpU07PpP+8N9SwHlSj9iQHEivQio7gYTO5D5NrjPuc33u30YFylPuxej9jFvPQC/U2Avr/LeqBJ1JMqJZ5zD5vqbLC/vKZCWAIVFPIRptUchNiwKz3CZx7ocfwvv8APnvJEH4TNskfj9qQxnsI+ml90PbTtsm7virt/99P/ygToTALc2uJXBv9fbGhW0v397Yoev8lT7f0fTjor/mAL8/2GZwjkmLxw+uM/YzOne+V9Puhb4fv/fJYnuITwd/D46tSYNoP4pSTSqQ94TCZ3wto8Sog2cVkSmNP8eJc+f98T74vvBr9HoL0WgcwDAhykkC958tizYbgIt+T48PY9m3TEk5z44PZ9aqTuvhej9yfM38JMRVXph++h7lHk2aT86OD5qDd3iA8UCmP/V3o8HVpMH26OzlYWuw3ZW1xrZCtXdp7eFvWTWZvv/5xxb0Ox0gOjaSi/LotP9+InhCongBBCP3Jyra3hM99YL+vjl4nzsfKIC3Re8ltupE3I61QIrh9wb9d/T7p8J8tEUhN/VIhl58gn5hZTyXKVA8YYq14f8ADfq1e/pyfLDzEr800T5hqnMoEYN1sbnvb1Rw+O/gT/GIZ68efuHWp4mFu8M70WQSD6FZvsY4HaOlho9InquFBkNchI38uic+pD8f4EGkWz5C3Bk1mdhHOz3uc0AOKL0nhXGIQL9fteGtzxxS3ktiYR6yFeP4ajsVXgUJcX31diM2zsCLl3AMgoV41CJhbszT/7aOCu9HM+Vb1OC6xrdvmrCE4MHIZs7Ym/TwZ5tuX3Dh+6Aju2NmU+QnTBzGnYCUiYR6QDM7kknE+2UeEMQ2magHPHAxDDmFA0n9YzTguj3QpKL87MtqPq1OWyWHl28SgGOCxtdG17vLC3ZSgKQ9GVR5R6bw5VsbNRCSfdEqmeLMtdMh7X3AE1EplSGmmq0sctOCcM6EOKOvirIjLWX/a/IV/C0Y1yS838ltvnMnR+UGUvLPbvJ+KJL4gAT7LQlWI5zgAklcP0y6NfsWCt1MKy6MTb1oB00i4Yf4yqaznw+3SbN/z/dcCMkd4bQf9Yy1XGkd1rM0W5nkpkWATbDTlLz2JhwarEGy4trQZiGGdQ5kRPvk15E2IxFfsDnI3dy8RG3SkrnhZwql02CtfEt+zyd3oZOQQmAVvqEHkNwLKeAOd3VPvs1mJV3rI1LHfK0HMLIUL0cl2VxmTT7Sfb3PgSLy8e6X2o82z+SmHhehzUJes21CW1Vk//mxOTiklYtZK09/T4gdTbRjQAi0EgRt/j0Z/q+RQLP5p1bcCHjZT2TTPc7fit6rJ1UhaSHigE44vsYcc/VTtPLC/vpkROLvZXOGXNRsXM/49k2qnNuygCNfNFOODcjKX+U+5Y7033G5HYptn4+GzuP2MdiPLfsVrx8W/gV3er/jMxr8u5G/VSMNtqfJTSMNzSZwSLM+zebP2EdBEkQWQspJ7eiQ+gQ/Iy/VROe4HnN+XdpHWyj1lMyvXQyCLieDw57i3FzblUeEhYX9LW3WrW3uk1D1l2pS6g5wtFHA7rRVdCqfZTP8Rp2MOsgBmYqUutih1MU50ASxouCcfDVeW+E+M2eV22EdYZ7JTfMA3fjuTDJR/bm40U/2jryAqzGCc/355Gf0kiBvzNxHzPrVfE5iRue6Xi+AqfDYL6PELAdaUFFgRMBP5PfdHG7HhLBS3hR6vW76nJPCoDXAc95uzJTlZ85leQnnV/lDPECE5zQ+tjQnJCXAafuDyncJ44T2F8RSXeAbyocNexmZGJUFAHmRFd6v3jeF6AM5xtYcd1/6677JXX3ukTbn1AVt+1igZM32OlT4Wu+P/DVmzvo/UV+USGhUSCAAAAAASUVORK5CYII=",eyebrow:"Brooke Benkert · Internal only",title:"Amazon BD · Progress Report",subtitle:"Vendor Approval (Exhibit A #3) and Station Conversions, Middle Mile and Last Mile",
+    items,goLive:GO_LIVE,goLiveConfirmed:false,range:["2026-11-01","2027-03-31"],maxRisks:6,maxNext:8,
+    kpis:[{label:"Vendor approval steps",v:`${rp.done}/${rp.n}`,sub:rp.cur?("Now: "+rp.cur.title).slice(0,40):"",tone:"green"},{label:"Pilot gates ready",v:`${rs.ready}/${rs.n}`,sub:`Go-live proposed ${fmtD(GO_LIVE)}`},{label:"Days left in Initial Term",v:left,sub:"Ends Jan 31, 2027"},{label:"Open actions",v:openT.length,sub:`${S.tasks.filter(t=>t.status==="Doing").length} doing now`},{label:"Waiting on others",v:S.tasks.filter(t=>t.status==="Waiting").length,sub:"Chase on day 3",tone:"red"}],
+    summary:`Vendor approval: ${rp.done} of ${rp.n} steps done${rp.cur?`, current step “${rp.cur.title}”`:""}. ONT pilot: ${rs.ready} of ${rs.n} launch gates ready. ${openT.length} open actions, ${S.tasks.filter(t=>t.status==="Waiting").length} waiting on others.`,
+    phases:[{label:"Vendor Approval (Exhibit A #3)",start:"2026-10-13",end:"2027-01-31",ids:ids("reg")},
+      {label:"ONT42 / ONT43 pilot launch",start:"2026-11-10",end:GO_LIVE,ids:ids("rd")},
+      {label:"Pilot go-live",milestone:true,date:GO_LIVE,note:`Proposed ${fmtD(GO_LIVE)}`},
+      {label:"ONT43 add-on",start:"2026-11-30",end:"2026-12-11",ids:rdIds(["rd31","rd32","rd33"])},
+      {label:"EWR40 expansion case",start:"2026-12-01",end:"2027-01-15",ids:["s:ewr40","t:t22"]},
+      {label:"PHL corridor and BOS42",start:"2027-01-04",end:"2027-03-15",ids:["s:ewr-phl","s:bos42"]},
+      {label:"Last Mile: Amazon-level access",start:"2027-01-04",end:"2027-03-31",ids:[...ids("lm-sites"),...ids("tasks-LM")]},
+      {label:"Initial Term ends",milestone:true,date:"2027-01-31",note:"Jan 31, 2027 · incentive deadline",risk:last&&last.st!=="done"}],
+    lines:[{date:GO_LIVE,label:"GO-LIVE"},{date:"2027-01-31",label:"TERM END",color:"#e01e2e"}],
+    progress:[{label:"Vendor Approval path",match:i=>i.grp==="reg"},{label:"Pilot launch gates",match:i=>i.grp==="rd"},{label:"Actions · Vendor Approval",match:i=>i.grp==="tasks-VA"},{label:"Actions · Middle Mile",match:i=>i.grp==="tasks-MM"},{label:"Actions · Last Mile",match:i=>i.grp==="tasks-LM"},{label:"Middle Mile sites live",match:i=>i.grp==="mm-sites"},{label:"Last Mile markets open",match:i=>i.grp==="lm-sites"}],
+    nextItems:tasks,nextTitle:"Next actions",extraRisks:extra,timelineNote:"Planned windows. Bars fill as linked steps, gates and actions complete.",
+    confidential:"Confidential · Brooke only",footNote:"Includes Exhibit A incentive details. Do not forward.",source:"Source: Amazon BD hub, live records"});
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest("#rp-dl")){SVTReport.download(document.getElementById("rp-stage"),`SVT-Amazon-BD-Progress-Brooke-${new Date().toISOString().slice(0,10)}.pdf`,toast);}
+  if(e.target.closest("#rp-print")){window.print();}
+});
 route(); renderAll();
 (async()=>{
   try{

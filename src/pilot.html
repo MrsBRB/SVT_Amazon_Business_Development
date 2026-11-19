@@ -1,0 +1,236 @@
+<title>ONT Pilot · SVT Team</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: same SVT shell as the Amazon pilot view (fixed navy sidebar, breadcrumb bar, view title). Views: Overview, Launch checklist, Action board, Sites & readiness, Weekly standup, Updates, Team, Progress report. Items open in a right-hand drawer. */
+/*@SHELL_CSS*/
+/*@REPORT_CSS*/
+.area{margin-bottom:16px}.area .between{margin-bottom:6px}
+.rdrow{display:grid;grid-template-columns:150px 1fr auto;gap:14px;align-items:start;padding:12px 0;border-top:1px solid var(--line-2)}
+.rdrow:first-of-type{border-top:0}.rdrow .t{font-weight:600;color:var(--ink);background:none;border:0;padding:0;text-align:left;font-size:15px}
+.rdrow .m{font-size:12px;color:var(--muted);margin-top:2px}.rdrow .e{font-size:13px;color:var(--muted);margin-top:4px}
+.inline-sel{padding:6px 8px;font-size:13px;width:100%}
+.overdue{color:var(--red);font-weight:700}
+.seg{display:inline-flex;border:1px solid var(--field-line);border-radius:4px;overflow:hidden}.seg button{border:0;border-radius:0;padding:9px 14px;font-size:13px;background:var(--surface);color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--gray);color:var(--ink);font-weight:600}
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px}
+.person{border:1px solid var(--line);border-radius:8px;padding:12px}.person b{display:block;color:var(--ink)}.person span{font-size:13px;color:var(--muted)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:8px 14px;font-size:14px;margin:12px 0 0}.kv dt{color:var(--muted);font-weight:600}.kv dd{margin:0;min-width:0}
+.upform{display:grid;gap:10px}.upform .row{display:flex;gap:12px;justify-content:flex-end}
+@media(max-width:700px){.rdrow{grid-template-columns:1fr}.kv{grid-template-columns:1fr}}
+</style>
+
+<div class="shell">
+<aside>
+  <div class="brand"><img src="data:image/png;base64,__LOGO__" alt="SVT Fleet Solutions"></div>
+  <div class="project"><span class="eyebrow">SVT team view</span><h3>ONT42 / ONT43<br>Pilot Launch</h3><span class="pill">INTERNAL · NOT FOR AMAZON</span></div>
+  <nav id="nav" aria-label="Pilot views"></nav>
+  <div class="sidebottom"><div class="live">● SVT team view</div><p>Shared records · live updates</p><small>For the SVT and VVG team. Amazon has its own view.</small></div>
+</aside>
+<main>
+  <header class="top"><div>SVT Fleet Solutions <span>/ ONT pilot · SVT team</span></div></header>
+  <section class="content">
+    <div class="between title"><div><div class="eyebrow red">Middle mile pilot / Ontario, CA</div><h1 id="view-title">SVT team view</h1><p>Launch checklist, owners, blockers and team updates for the ONT42 / ONT43 pilot.</p></div><button class="primary" id="add" hidden>＋ Add item</button></div>
+    <div id="view"></div>
+    <footer>SVT Fleet Solutions · ONT pilot · SVT team view<span>Internal to SVT and VVG · Never share Exhibit A, incentive or compensation details here</span></footer>
+  </section>
+</main>
+</div>
+<div id="drawer-root"></div><div id="toast-root"></div>
+
+<script>/*@REPORT_JS*/</script>
+<script>
+(() => {
+const DEMAND=/*@DEMAND*/null;
+const GO_LIVE="2026-11-25";
+const AREAS=["Contract & terms","Reach & Relay Garage","Site access & safety","People, parts & equipment","Billing","Scope & success measures","Communication","ONT43 site"];
+const STAT=["Not started","In progress","Waiting","Blocked","Ready"];
+const SITES=["ONT42 + ONT43","ONT42","ONT43"];
+const FIELDS=[["item","Item","text",true],["area","Area","select",false,AREAS],["status","Status","select",false,STAT],["gate","Blocks go-live?","select",false,["Gate","Nice to have"]],
+  ["site","Site","select",false,SITES],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands","textarea"],["order","Order","number"]];
+const TABS=[["Overview","◫","overview"],["Launch checklist","☑","checklist"],["Action board","▦","board"],["Sites & readiness","◎","sites"],["Weekly standup","◷","standup"],["Updates","≡","updates"],["Team","◉","team"],["Progress report","▤","report"]];
+const LOGO_SRC="data:image/png;base64,__LOGO__";
+const S={readiness:[],updates:[]};
+let db=null,user=null,canWrite=false,ready=false,viewerName="",tab="overview",rdFilter="open";
+const F={q:"",area:"All areas",site:"All sites",status:"All statuses",owner:"All owners",view:"Board"};
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pd=s=>{if(!s)return null;const d=new Date(String(s).slice(0,10)+"T00:00:00");return isNaN(d)?null:d};
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const days=s=>{const d=pd(s);return d?Math.round((d-today())/864e5):null};
+const fmtD=s=>{const d=pd(s);return d?d.toLocaleDateString(undefined,{month:"short",day:"numeric"}):""};
+const fmtAt=a=>{const x=new Date(a);return isNaN(x)?"":x.toLocaleString()};
+const stCls=s=>s==="Ready"?"s-done":s==="Blocked"?"s-blocked":s==="In progress"?"s-prog":"";
+const isGate=r=>r.gate!=="Nice to have";
+function toast(m){$("#toast-root").innerHTML=`<div class="toast" role="status">${esc(m)}</div>`;clearTimeout(toast.t);toast.t=setTimeout(()=>$("#toast-root").innerHTML="",2400)}
+const items=()=>S.readiness.slice().sort((a,b)=>(+a.order||99)-(+b.order||99));
+const gates=()=>S.readiness.filter(isGate);
+
+function card(r){const dd=days(r.due);return `<button class="task" data-open="${esc(r.id)}"><div class="between"><span class="eyebrow">${esc(r.area)}</span>${isGate(r)?'<span class="gate">LAUNCH GATE</span>':""}</div><h3>${esc(r.item)}</h3><p>${esc(r.evidence||"No evidence recorded yet.")}</p><div class="tags"><span class="status ${stCls(r.status)}">${esc(r.status)}</span><span>${esc(r.site)}</span></div><div class="taskfoot"><span>${esc(r.owner||"Owner not set")}</span><small class="${dd!==null&&dd<0&&r.status!=="Ready"?"overdue":""}">${r.due?"Due "+esc(fmtD(r.due)):"Date unconfirmed"}</small></div></button>`}
+function sel(r){return `<select class="inline-sel" aria-label="Status for ${esc(r.item)}" data-inline="${esc(r.id)}">${STAT.map(o=>`<option${o===r.status?" selected":""}>${o}</option>`).join("")}</select>`}
+
+function siteDemand(){return `<section aria-label="Site work demand"><div class="sectionhead"><h2>Site work demand · Amazon-provided snapshot</h2><small>Work types &amp; makes / models</small></div><p class="sourceNote">Historical work-request mix for support planning. Counts describe supplied records, not today’s open backlog or unique work orders. The 10.9 / 11.0 day medians cover Freightliner dealer work only.</p>${["ONT42","ONT43"].map(site=>{const d=DEMAND[site];return `<details class="panel compact"><summary>${site} · ${site==="ONT42"?"Primary":"Add-on"}<span>${d.records} work-request records · ${d.units} vehicles</span></summary><div class="demandGrid"><div><h3>Type of work</h3><div class="tags">${d.categories.map(([n,c])=>`<span>${esc(n)} <b>${c}</b></span>`).join("")}</div><p><b>Common components:</b> ${d.components.map(([n,c])=>`${esc(n)} (${c})`).join(" · ")}</p></div><div><h3>Makes &amp; models needing support</h3><div class="tablewrap"><table><thead><tr><th>Make / model</th><th>Vehicles</th><th>WR records</th></tr></thead><tbody>${d.models.map(m=>`<tr><td>${esc(m.model)}</td><td>${m.units}</td><td>${m.records}</td></tr>`).join("")}</tbody></table></div></div></div><p class="sourceNote"><b>Sources:</b> Amazon’s DTNA WR Data.xlsx (Services sheet, by Asset Domicile Site), matched to ATS Asset Inventory 2026-10-30.xlsx. Modified dates ${d.dateRange[0]}–${d.dateRange[1]}.</p><p><b>Planning implication:</b> ${site==="ONT42"?"Prioritize Cascadia transmission / clutch and engine diagnostics; keep support pathways for Volvo, International and Peterbilt.":"Plan Cascadia transmission and electrical diagnostics, with Volvo support and cooling / engine capability."}</p></details>`}).join("")}</section>`}
+
+function ring(done,total){const r=70,c=2*Math.PI*r,p=total?done/total:0;return `<div class="ring" role="img" aria-label="${done} of ${total} gates ready"><svg viewBox="0 0 155 155" width="100%" height="100%"><circle cx="77.5" cy="77.5" r="${r}" fill="none" stroke="#5b6b7f" stroke-width="7"/><circle cx="77.5" cy="77.5" r="${r}" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(c*p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 77.5 77.5)"/></svg><div><strong>${ready?done+"/"+total:"—"}</strong><span>gates ready</span></div></div>`}
+
+function vOverview(){
+  const g=gates(),done=g.filter(r=>r.status==="Ready").length,all=S.readiness;
+  const cut=SVTReport.addBiz(GO_LIVE,-3);
+  const next=items().filter(r=>r.status!=="Ready"&&isGate(r)).sort((a,b)=>(a.due?0:1)-(b.due?0:1)||String(a.due).localeCompare(String(b.due))).slice(0,3);
+  const latest=S.updates.slice().sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,5);
+  return `<div class="hero"><div><span class="eyebrow">Launch readiness · SVT team</span><h2>ONT42 first. ONT43 to follow.</h2><p>Reach web and mobile for the pilot. Native connection to Relay Garage.</p><div class="heroTags"><span>Proposed: ${esc(fmtD(GO_LIVE))} · unconfirmed</span><span>Primary: ONT42</span><span>Add-on: ONT43</span><span>${days(GO_LIVE)>=0?days(GO_LIVE)+" days to go":"Target passed"}</span></div></div>${ring(done,g.length)}</div>
+  <div class="stats"><article><span>Open launch gates</span><strong>${ready?g.length-done:"—"}</strong><small>Must be Ready before go-live</small></article><article><span>Waiting on others</span><strong>${ready?all.filter(r=>r.status==="Waiting").length:"—"}</strong><small>Team and partner dependencies</small></article><article><span>In progress</span><strong>${ready?all.filter(r=>r.status==="In progress").length:"—"}</strong><small>Active items</small></article><article><span>Blocked</span><strong>${ready?all.filter(r=>r.status==="Blocked").length:"—"}</strong><small>Resolve before proceeding</small></article></div>
+  <div class="alert"><b>Hold the ${esc(fmtD(GO_LIVE))} target</b><p>Amazon needs 2–3 business days after Reach sends the setup details. The Reach signature, then location details (hours, users, roles), have to reach Amazon by ${esc(SVTReport.fmt(cut))}.</p></div>
+  ${siteDemand()}
+  <div class="sectionhead"><h2>Next team actions</h2><button class="link" data-tab="board">View all →</button></div>
+  <div class="cards">${next.map(card).join("")||'<div class="empty">No open launch gates.</div>'}</div>
+  <div class="twocol"><article class="panel"><h2>Launch path</h2><div class="track"><b>Reach onboarding</b><p>Sign the agreement, activate the service-provider account, set up locations and users, complete web and mobile training.</p></div><div class="track"><b>Amazon connection</b><p>Reach sends setup details to Edmund Park. Amazon connects Relay Garage (2–3 business days); the team validates the service-event flow.</p></div><div class="track"><b>Site and service readiness</b><p>Work area, Avetta coverage, technicians, hours, mobile units, parts, invoicing and pre-authorization.</p></div></article>
+  <article class="panel"><h2>Latest updates</h2>${latest.length?latest.map(u=>`<div class="activity"><p style="color:var(--ink)">${esc(u.text)}</p><small>${esc(u.byName||"Team member")} · ${esc(u.date||fmtAt(u.at))}</small></div>`).join(""):"<p>No updates yet.</p>"}</article></div>`;
+}
+
+function vChecklist(){
+  const keep=r=>rdFilter==="all"?true:rdFilter==="gate"?isGate(r):r.status!=="Ready";
+  return `<div class="toolbar" style="align-items:center"><div class="seg" role="group" aria-label="Filter checklist">${[["open","Not ready"],["gate","Gates"],["all","All"]].map(([k,l])=>`<button data-rd="${k}" aria-pressed="${rdFilter===k}">${l}</button>`).join("")}</div><span class="sourceNote">Change a status as soon as it moves, and add the evidence (who confirmed, when) by opening the item.</span></div>
+  ${AREAS.map(a=>{const all=S.readiness.filter(r=>r.area===a);if(!all.length)return"";const list=items().filter(r=>r.area===a&&keep(r));const rd=all.filter(r=>r.status==="Ready").length;
+  return `<article class="panel area"><div class="between"><h2 style="margin:0">${esc(a)}</h2><span class="status">${rd}/${all.length} ready</span></div>${list.length?list.map(r=>{const dd=days(r.due);return `<div class="rdrow"><div>${canWrite?sel(r):`<span class="status ${stCls(r.status)}">${esc(r.status)}</span>`}</div><div style="min-width:0"><button class="t" data-open="${esc(r.id)}">${esc(r.item)}</button>${isGate(r)?' <span class="gate">GATE</span>':""}<div class="m">${esc(r.site)} · ${r.owner?esc(r.owner):"owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${esc(fmtD(r.due))}</span>`:""}</div>${r.evidence?`<div class="e">${esc(r.evidence)}</div>`:""}</div><div></div></div>`}).join(""):'<p class="sourceNote">All ready in this area.</p>'}</article>`}).join("")||'<div class="empty">The checklist is loading.</div>'}`;
+}
+
+function vBoard(){
+  const owners=[...new Set(S.readiness.map(r=>r.owner).filter(Boolean))].sort(),q=F.q.toLowerCase();
+  const list=items().filter(r=>(F.area==="All areas"||r.area===F.area)&&(F.site==="All sites"||r.site===F.site)&&(F.status==="All statuses"||r.status===F.status)&&(F.owner==="All owners"||r.owner===F.owner)&&(r.item+" "+(r.owner||"")+" "+(r.evidence||"")).toLowerCase().includes(q));
+  const s=(k,l,o)=>`<select aria-label="${l}" data-f="${k}">${o.map(x=>`<option${x===F[k]?" selected":""}>${esc(x)}</option>`).join("")}</select>`;
+  const body=F.view==="Table"?`<div class="tablewrap"><table><thead><tr><th>Item</th><th>Owner</th><th>Site</th><th>Status</th><th>Due</th></tr></thead><tbody>${list.map(r=>`<tr><td><button data-open="${esc(r.id)}">${esc(r.item)}</button></td><td>${esc(r.owner||"")}</td><td>${esc(r.site)}</td><td>${esc(r.status)}</td><td>${r.due?esc(fmtD(r.due)):"Unconfirmed"}</td></tr>`).join("")}</tbody></table></div>`
+   :`<div class="board">${["To do","In progress","Waiting / blocked","Complete"].map((c,i)=>{const l=list.filter(r=>i===0?r.status==="Not started":i===1?r.status==="In progress":i===2?["Waiting","Blocked"].includes(r.status):r.status==="Ready");return `<div class="column"><h3>${c}<span>${l.length}</span></h3>${l.map(card).join("")}${l.length?"":'<p class="empty">No items</p>'}</div>`}).join("")}</div>`;
+  return `<div class="toolbar"><input type="search" id="q" aria-label="Search items" placeholder="Search items, owners or evidence…" value="${esc(F.q)}">${s("area","Filter area",["All areas",...AREAS])}${s("site","Filter site",["All sites",...SITES])}</div><div class="toolbar">${s("status","Filter status",["All statuses",...STAT])}${s("owner","Filter owner",["All owners",...owners])}<button id="toggle-view">${F.view==="Board"?"Table view":"Board view"}</button></div>${body}`;
+}
+
+function vSites(){
+  return `${siteDemand()}<div class="twocol"><article class="panel site"><span class="eyebrow">Ontario · Middle Mile</span><h2>ONT42</h2><span class="status">Confirmed primary site</span><dl class="kv"><dt>Fleet</dt><dd>226 tractors: 133 CNG; Volvo 111, Freightliner 61</dd><dt>Repair time</dt><dd>10.9-day median (Freightliner dealer work)</dd><dt>Space</dt><dd>Very little room on site. Complex work goes off site nearby.</dd><dt>Coverage</dt><dd>SVT Corona / Inland Empire</dd></dl></article>
+  <article class="panel site"><span class="eyebrow">Ontario · Middle Mile</span><h2>ONT43</h2><span class="status">Add-on site</span><dl class="kv"><dt>Fleet</dt><dd>147 tractors: 106 CNG; Volvo 86</dd><dt>Repair time</dt><dd>11.0-day median (Freightliner dealer work)</dd><dt>Space</dt><dd>More room, but a dirt lot with no pavement. Option: move ONT42 units here.</dd><dt>Coverage</dt><dd>SVT Corona / Inland Empire</dd></dl></article></div>
+  <article class="panel"><h2>How the pilot works</h2><dl class="kv"><dt>Customer</dt><dd>Amazon Middle Mile, AFP/APP tractor yards (owner: Evan Christodoulides)</dd><dt>Work requests</dt><dd>Through the Reach portal and mobile app, connected to Relay Garage. No repair-order system integration at launch; the Reach API/MCP link is built separately.</dd><dt>Scope</dt><dd>Two sites. Middle-mile tractors, Class 7 and 8 first; SVT services Class 1 to 8.</dd><dt>Who uses what</dt><dd>Technicians on the Reach mobile app (works offline). Dispatchers on the Reach web portal. Unlimited training at no charge.</dd><dt>Reach account</dt><dd>New SVT service-provider account. $3 per service event, paid by SVT. $30 setup fee, credited after 10 events.</dd><dt>Site access</dt><dd>Under DTNA's Avetta clearance. Safety vest, no badge or orientation, gate code by email.</dd><dt>Approvals</dt><dd>Pre-authorization about $1,000 per OEM (to confirm for Reach).</dd><dt>Invoicing</dt><dd>Through DTNA / Corcentric (process and SVT owner to confirm).</dd></dl></article>
+  <h2>Launch readiness gates</h2><p>Primary go-live requires every gate Ready. Track add-on readiness by site.</p>
+  <div class="checklist">${items().filter(isGate).map(r=>`<button data-open="${esc(r.id)}"><span>${r.status==="Ready"?"☑":"□"} ${esc(r.item)} <small>· ${esc(r.site)}</small></span><span class="status ${stCls(r.status)}">${esc(r.status)}</span></button>`).join("")}</div>`;
+}
+
+const GROUPS=[["Launch decisions & blockers",5,r=>r.status==="Blocked"||["Scope & success measures","Contract & terms"].includes(r.area)],["Reach onboarding & training",8,r=>r.area==="Reach & Relay Garage"],["Site readiness & vehicle / WO review",8,r=>["Site access & safety","ONT43 site"].includes(r.area)],["People, parts, billing",5,r=>["People, parts & equipment","Billing"].includes(r.area)],["Other open items",6,()=>true]];
+function vStandup(){
+  const open=items().filter(r=>r.status!=="Ready"),used=new Set();
+  return `<article class="panel"><div class="between"><h2>Weekly pilot standup · 35 minutes</h2><span class="status">${ready?open.length:"—"} open items</span></div><p>ONT42 primary · ONT43 add-on. Proposed ${esc(fmtD(GO_LIVE))} launch remains unconfirmed.</p><p><b>Attendees:</b> Brooke, Mike, Lon, Mark; VVG IT as needed. Meeting time: to be agreed.</p><p><b>For every open item:</b> owner update → blocker or decision → next step → committed date → completion evidence.</p></article>
+  ${GROUPS.map(([t,min,fn],i)=>{const l=open.filter(r=>!used.has(r.id)&&fn(r));l.forEach(r=>used.add(r.id));return `<details class="panel compact"${i===0?" open":""}><summary>${min} min · ${t}<span>${l.length} items</span></summary>${l.length?`<div class="tablewrap"><table><thead><tr><th>Open item</th><th>Owner</th><th>Status</th><th>Committed date</th></tr></thead><tbody>${l.map(r=>`<tr><td><button data-open="${esc(r.id)}">${isGate(r)?"Gate · ":""}${esc(r.item)}</button></td><td>${esc(r.owner||"Assign at standup")}</td><td>${esc(r.status)}</td><td>${r.due?esc(fmtD(r.due)):"Agree at standup"}</td></tr>`).join("")}</tbody></table></div>`:"<p>No open items in this group.</p>"}</details>`}).join("")}
+  <article class="panel"><h3>3 min · Read back commitments</h3><p>One owner and one date per next step. Close items only with evidence. Keep the future Excede integration separate from launch prerequisites.</p></article>`;
+}
+
+function vUpdates(){
+  const ups=S.updates.slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  return `${canWrite?`<article class="panel"><form class="upform" id="up-form"><label for="up-text" style="font-weight:600;font-size:13px">Post an update for the team</label><textarea id="up-text" placeholder="e.g. Site visit done. ONT42 work area agreed by the fence line."></textarea><div class="row"><button class="primary" type="submit">Post update</button></div></form></article>`:""}
+  ${ups.length?ups.map(u=>`<article class="panel activity"><p style="color:var(--ink);margin-top:0">${esc(u.text)}</p><small>${esc(u.byName||"Team member")} · ${esc(u.date||"")} ${u.at?"· "+esc(fmtAt(u.at)):""}</small></article>`).join(""):'<article class="panel"><p>No updates yet.</p></article>'}`;
+}
+
+function vTeam(){
+  const P=(t,l)=>`<article class="panel"><h2 style="margin:0">${t}</h2><div class="people">${l.map(([n,r])=>`<div class="person"><b>${esc(n)}</b><span>${esc(r)}</span></div>`).join("")}</div></article>`;
+  return P("SVT and VVG",[["Mike Thompson","President, SVT · sponsor, site visit, approvals"],["Brooke Benkert","Director of Business Development, SVT · launch readiness, Reach onboarding"],["Lon Samford","Director of Operations, SVT · technicians, hours, service levels"],["Mark Gallison","Director of Business Development, SVT · site visit"],["Richard Barron","VP Global IT, VVG · agreement review, IT"],["Shane Matthews","VVG IT · future Reach integration"]])
+   +P("Amazon",[["Evan Christodoulides","Pilot owner, Middle Mile"],["Steven Olivo","SoCal AFP Fleet Asset Specialist · site contact"],["Aaliyah Rosas","FAS · ONT42 APP yard"],["Scotty Gathright","ONT42 uptime"],["David Galanti","West Region FAS"],["Edmund Park","Relay Garage connection"]])
+   +P("Reach",[["Sidhant Mishra","Onboarding"],["Kuldeep Rana","Agreement and account setup"]]);
+}
+
+const ST={"Ready":"done","In progress":"prog","Waiting":"wait","Blocked":"blocked","Not started":"todo"};
+function reportCfg(){
+  const R=SVTReport, it=items().map(r=>({id:r.id,title:r.item,st:ST[r.status]||"todo",label:r.status,gate:isGate(r),due:r.due,owner:r.owner,area:r.area}));
+  const by=id=>it.find(i=>i.id===id)||{}, cut=R.addBiz(GO_LIVE,-3), extra=[];
+  if(by("rd01").st!=="done") extra.push({lv:"high",t:`Reach agreement isn't signed. Activation, location setup and training all wait on it, and setup details must reach Amazon by ${R.fmt(cut)} to hold ${R.fmt(GO_LIVE)}.`});
+  if(by("rd07").st!=="done") extra.push({lv:"high",t:`Location details for Reach (hours, users, roles) are still outstanding${by("rd07").owner?" with "+by("rd07").owner:""}. They gate the Amazon connection.`});
+  if(by("rd24").st==="todo") extra.push({lv:"med",t:"Operating model (off site nearby, ONT43, or mobile plus off site) isn't decided after the Nov 17 visit. Amazon is waiting on SVT's recommendation."});
+  return {id:"rp-team",logo:LOGO_SRC,eyebrow:"SVT Fleet Solutions · Internal team report",title:"ONT42 / ONT43 Pilot Launch · Progress Report",subtitle:"Launch checklist status, owners and blockers for the SVT and VVG team",
+    items:it,goLive:GO_LIVE,goLiveConfirmed:false,range:["2026-11-02","2026-12-27"],
+    phases:[{label:"Scope & site visit",start:"2026-11-06",end:"2026-11-17",ids:["rd13","rd14"]},
+      {label:"Reach agreement & onboarding",start:"2026-11-16",end:"2026-11-24",ids:["rd01","rd02","rd04","rd05","rd06"]},
+      {label:"Location setup & service hours",start:"2026-11-18",end:"2026-11-21",ids:["rd07","rd18"]},
+      {label:"Amazon connection",start:"2026-11-20",end:GO_LIVE,ids:["rd08","rd09"]},
+      {label:"Training & mobile app",start:"2026-11-21",end:GO_LIVE,ids:["rd10","rd11"]},
+      {label:"Site & service readiness",start:"2026-11-17",end:GO_LIVE,ids:["rd15","rd16","rd17","rd19","rd20","rd21","rd22","rd23","rd24"]},
+      {label:"Launch date & measures",start:"2026-11-18",end:GO_LIVE,ids:["rd25","rd26","rd27","rd28"]},
+      {label:"ONT42 go-live",milestone:true,date:GO_LIVE,note:`Proposed ${R.fmt(GO_LIVE)} · unconfirmed`},
+      {label:"ONT43 add-on",start:"2026-11-30",end:"2026-12-11",ids:["rd31","rd32","rd33"]},
+      {label:"IT integration (background)",start:"2026-11-17",end:"2027-01-15",ids:["rd12"]}],
+    lines:[{date:GO_LIVE,label:"GO-LIVE"}],
+    progress:AREAS.map(a=>({label:a,match:i=>i.area===a})).filter(g=>it.some(g.match)),
+    extraRisks:extra,maxNext:9,timelineNote:"Planned windows from the proposed launch plan. Dates are not commitments.",
+    confidential:"Internal · SVT and VVG team",footNote:"Do not forward to Amazon. Amazon has its own report.",source:"Source: SVT team launch checklist, live records"};
+}
+function vReport(){return `<div class="rp-tools"><button class="primary" id="rp-dl">Download PDF</button><button id="rp-print">Print</button><span class="note">One page, US Letter. Built from the live checklist.</span></div><div class="rp-stage" id="rp-stage"></div>`}
+
+function render(){
+  $("#nav").innerHTML=TABS.map(([n,i,k])=>`<button data-tab="${k}"${tab===k?' aria-current="page"':""}><span aria-hidden="true">${i}</span>${n}</button>`).join("");
+  $("#view-title").textContent=tab==="overview"?"SVT team view":TABS.find(x=>x[2]===tab)[0];
+  $("#add").hidden=!(db&&canWrite)||!["overview","checklist","board"].includes(tab);
+  const focusQ=document.activeElement&&document.activeElement.id==="q",pos=focusQ?document.activeElement.selectionStart:0;
+  const draft=$("#up-text")?$("#up-text").value:"";
+  $("#view").innerHTML={overview:vOverview,checklist:vChecklist,board:vBoard,sites:vSites,standup:vStandup,updates:vUpdates,team:vTeam,report:vReport}[tab]();
+  if(draft&&$("#up-text"))$("#up-text").value=draft;
+  if(focusQ){const q=$("#q");if(q){q.focus();q.setSelectionRange(pos,pos)}}
+  if(tab==="report")SVTReport.render($("#rp-stage"),reportCfg());
+}
+function setTab(k){tab=k;try{history.replaceState(null,"","#"+k)}catch(e){}render();scrollTo(0,0)}
+
+function openDrawer(id){
+  const rec=id?S.readiness.find(r=>r.id===id):null;if(id&&!rec)return;
+  const base=rec||{status:"Not started",gate:"Gate",site:"ONT42 + ONT43",area:AREAS[1],order:99},ro=!canWrite||!db,dis=ro?" disabled":"";
+  const fld=([k,l,t,req,opts])=>{const v=base[k]??"";
+    if(t==="select")return `<label>${l}<select name="${k}"${dis}>${opts.map(o=>`<option${o===v?" selected":""}>${esc(o)}</option>`).join("")}</select></label>`;
+    if(t==="textarea")return `<label>${l}<textarea name="${k}"${dis}>${esc(v)}</textarea></label>`;
+    return `<label>${l}<input name="${k}" type="${t}" value="${esc(v)}"${req?" required":""}${dis}></label>`};
+  $("#drawer-root").innerHTML=`<div class="overlay" data-close-scrim><form class="modal" role="dialog" aria-modal="true" aria-labelledby="dr-h" id="dr" novalidate><div class="between"><h2 id="dr-h">${rec?"Checklist item":"New checklist item"}</h2><button type="button" data-close aria-label="Close">✕</button></div>
+  <p>Visible to the SVT and VVG team. Never add Exhibit A, incentive or compensation details.</p>${ro?'<p class="ro-note">You can view this item. Ask Brooke for edit access to change it.</p>':""}
+  ${fld(FIELDS[0])}<div class="twocol">${FIELDS.slice(1,7).map(fld).join("")}</div>${fld(FIELDS[7])}${fld(FIELDS[8])}
+  ${ro?"":`<label>Team update (optional)<textarea name="note" placeholder="Posts to Updates with your name"></textarea></label>`}
+  <div id="dr-err" role="alert" class="alert" hidden></div>${ro?"":`<button class="primary" id="dr-save">${rec?"Save":"Add item"}</button>`}</form></div>`;
+  const f=$("#dr");setTimeout(()=>(f.querySelector("input:not([disabled])")||f.querySelector("[data-close]")).focus(),0);
+  f.addEventListener("submit",async e=>{e.preventDefault();if(ro)return;const fd=new FormData(f),err=$("#dr-err"),btn=$("#dr-save"),body={};
+    FIELDS.forEach(([k,,t])=>{let v=(fd.get(k)??"").toString().trim();if(t==="number"&&v!=="")v=+v;body[k]=v});
+    if(!body.item){err.hidden=false;err.innerHTML="<b>Missing information</b><p>Item is required.</p>";return}
+    btn.disabled=true;
+    try{
+      if(rec){const cur=await db.doc("readiness/"+rec.id).get();const c=cur.exists?cur.data():null;if(c&&c.updatedAt!==rec.updatedAt){err.hidden=false;err.innerHTML="<b>Someone else just changed this item</b><p>Close and reopen it to see their changes, then save again.</p>";btn.disabled=false;return}}
+      const now=new Date().toISOString();body.updatedAt=now;
+      const {id:_x,...rest}=rec||{};const ref=rec?db.doc("readiness/"+rec.id):db.collection("readiness").doc();await ref.set({...rest,...body});
+      const note=(fd.get("note")||"").toString().trim();
+      if(note){const uid=user?await user.id():null;await db.collection("updates").doc().set({text:`${body.item}: ${note}`,at:now,date:now.slice(0,10),by:uid||"",byName:viewerName||""})}
+      closeDrawer();toast(rec?"Saved":"Added");
+    }catch(x){btn.disabled=false;err.hidden=false;if(x&&x.code==="invalid_argument"){canWrite=false;render();err.innerHTML="<b>View only</b><p>You can view this page but not change it.</p>"}else err.innerHTML=`<b>Couldn't save</b><p>${esc((x&&x.message)||"Try again in a moment.")}</p>`}
+  });
+}
+function closeDrawer(){$("#drawer-root").innerHTML=""}
+
+document.addEventListener("click",e=>{
+  const tb=e.target.closest("[data-tab]");if(tb){setTab(tb.dataset.tab);return}
+  if(e.target.closest("[data-close]")||e.target.matches("[data-close-scrim]")){closeDrawer();return}
+  if(e.target.closest("select.inline-sel"))return;
+  const o=e.target.closest("[data-open]");if(o){openDrawer(o.dataset.open);return}
+  if(e.target.closest("#add")){if(db&&canWrite)openDrawer(null);return}
+  const rd=e.target.closest("[data-rd]");if(rd){rdFilter=rd.dataset.rd;render();return}
+  if(e.target.closest("#toggle-view")){F.view=F.view==="Board"?"Table":"Board";render();return}
+  if(e.target.closest("#rp-dl")){SVTReport.download($("#rp-stage"),`SVT-ONT-Pilot-Team-Progress-${new Date().toISOString().slice(0,10)}.pdf`,toast);return}
+  if(e.target.closest("#rp-print")){window.print();return}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer-root").innerHTML)closeDrawer()});
+document.addEventListener("input",e=>{if(e.target.id==="q"){F.q=e.target.value;render()}});
+document.addEventListener("change",async e=>{
+  const s=e.target.closest("select[data-f]");if(s){F[s.dataset.f]=s.value;render();return}
+  const i=e.target.closest("select.inline-sel");if(i&&db){try{await db.doc("readiness/"+i.dataset.inline).update({status:i.value,updatedAt:new Date().toISOString()});toast("Updated")}catch(x){toast(x&&x.code==="invalid_argument"?"You can view this page but not change it":"Couldn't save. Try again.")}}
+});
+document.addEventListener("submit",async e=>{if(e.target.id!=="up-form")return;e.preventDefault();const t=$("#up-text").value.trim();if(!t||!db)return;
+  try{const uid=user?await user.id():null,now=new Date().toISOString();await db.collection("updates").doc().set({text:t,at:now,date:now.slice(0,10),by:uid||"",byName:viewerName||""});$("#up-text").value="";toast("Posted")}catch(x){toast("Couldn't post. Try again.")}});
+
+const h=(location.hash||"").slice(1);if(TABS.some(x=>x[2]===h))tab=h;
+render();
+(async()=>{try{
+  user=await window.claude?.use?.("user");db=await window.claude?.use?.("db");
+  if(!db){$("#view").insertAdjacentHTML("afterbegin",'<div class="alert"><b>Live data isn\'t available here</b><p>Sign in to claude.ai to see the live checklist.</p></div>');return}
+  const w=user?await user.can("data.write"):null;canWrite=w!==false;
+  try{const me=user&&user.me?await user.me():null;viewerName=(me&&me.name)||""}catch(_){}
+  const pending=new Set(Object.keys(S));
+  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));pending.delete(c);if(!pending.size)ready=true;render()},err=>{console.warn(c,err&&err.code);pending.delete(c);if(!pending.size)ready=true;render()}));
+}catch(x){console.warn(x)}})();
+})();
+</script>

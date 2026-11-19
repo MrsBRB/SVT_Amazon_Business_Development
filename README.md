@@ -39,8 +39,21 @@ Hub (readiness mirror)     ONT Pilot · Amazon View  ── shared actions, comm
 
 ## Working in this repo
 
-- **Page changes** (layout, new fields, wording): edit the HTML under `hub/`, `pilot/` or `amazon/` on a branch and open a pull request. A merged change goes live once the page is republished to the same link.
-- **Data changes** (status, tasks, notes): make them on the live page, not in `data/` or `status/`. Those folders are read-only snapshots, there so the team can review changes and history on GitHub.
+All three dashboards share one design system (the SVT sidebar layout from the ChatGPT pilot template) and one report engine.
+
+- **Edit the sources, not the built pages.**
+  - Page code lives in `src/amazon.html`, `src/pilot.html` and `src/hub.html`.
+  - Shared pieces live in `shared/`: `shell.css` for the layout and palette, `report.css` and `report.js` for the one-page report, plus `work-demand.json` and `svt-logo.png`.
+  - Run `python3 tools/build_pages.py` to regenerate `amazon/`, `pilot/` and `hub/`. Then republish each page to its existing link.
+- **Progress report.** Each dashboard has a *Progress report* item in its sidebar. It renders a one-page US Letter report from the live records:
+  - Timeline / Gantt at the top
+  - Key numbers and a summary
+  - Progress by area
+  - Risks & blockers (generated from status, due dates and owners)
+  - Next actions
+  - *Download PDF* saves it. *Print* uses the browser's print dialog.
+  - Each report carries its own audience label: Prepared for Amazon / Internal SVT and VVG / Confidential, Brooke only.
+- **Data changes** (status, tasks, notes): make them on the live page, not in `data/` or `status/`. Those folders are read-only snapshots for review and history.
 - **Refreshing snapshots**: export the databases with ArtifactData `list` + `out_dir` into `<dir>/hub`, `<dir>/pilot` and `<dir>/amazon`, then run:
 
 ```bash
@@ -54,10 +67,12 @@ This repo is private. `data/hub/` and `status/hub.md` contain Exhibit A and inte
 ## Layout
 
 ```
-hub/       Amazon Business Development Hub (internal)
-pilot/     ONT42 / ONT43 Pilot Launch (SVT and VVG team)
-amazon/    Pilot status page for Amazon
+src/       Page sources (edit these)
+shared/    Shared layout, report engine, logo and Amazon work-demand data
+hub/       Built: Amazon BD Hub · Internal Only (Brooke)
+pilot/     Built: ONT Pilot · SVT Team
+amazon/    Built: ONT Pilot · Amazon View
 data/      JSON snapshots of each dashboard's database
 status/    Readable Markdown snapshots generated from data/
-tools/     snapshot.py: builds data/ and status/ from an export
+tools/     build_pages.py (src + shared -> built pages), snapshot.py (data/ and status/)
 ```
