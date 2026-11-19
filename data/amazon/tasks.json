@@ -296,16 +296,16 @@
     "order": 6,
     "owner": "Brooke Benkert / Reach",
     "priority": "High",
-    "rev": 1,
+    "rev": 2,
     "site": "Project-wide",
     "src": [
       "rd07"
     ],
-    "status": "Awaiting confirmation",
+    "status": "Blocked",
     "stream": "Reach onboarding",
     "title": "Confirm pilot location setup details",
-    "updatedAt": "2026-11-19T19:30:00Z",
-    "updatedBy": "SVT project team"
+    "updatedAt": "2026-11-19T22:26:00Z",
+    "updatedBy": "Automatic status sync"
   },
   {
     "blockedBy": "",

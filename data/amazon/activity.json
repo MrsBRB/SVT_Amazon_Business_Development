@@ -52,5 +52,14 @@
     "status": "Awaiting confirmation",
     "taskId": "date",
     "title": "Go-live moved to after Thanksgiving"
+  },
+  {
+    "actor": "Automatic status sync",
+    "at": "2026-11-19T22:26:00Z",
+    "id": "a-20261119-location",
+    "note": "Status updated from SVT's launch checklist.",
+    "status": "Blocked",
+    "taskId": "location",
+    "title": "Confirm pilot location setup details"
   }
 ]

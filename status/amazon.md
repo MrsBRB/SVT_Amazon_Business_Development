@@ -3,7 +3,7 @@
 _Snapshot 2026-11-19. Live version: https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668. Edit the live page, not this file._
 
 **Go-live target:** 2026-12-07 (unconfirmed)  
-**Last synced:** 2026-11-19T20:04:28Z
+**Last synced:** 2026-11-19T22:26:00Z
 
 **Launch gates complete:** 5 of 25
 
@@ -16,7 +16,7 @@ _Snapshot 2026-11-19. Live version: https://claude.ai/artifact/FVQgNvfAAnkuC6uZi
 | 3 | Reach onboarding session held | Done | Gate | SVT / Reach | Reach onboarding | Project-wide |  | rd04 |
 | 4 | Reach service agreement signed | In progress | Gate | SVT | Reach onboarding | Project-wide |  | rd01 |
 | 5 | Complete Reach service-provider activation | In progress | Gate | SVT / Reach | Reach onboarding | Project-wide |  | rd06 |
-| 6 | Confirm pilot location setup details | Awaiting confirmation | Gate | Brooke Benkert / Reach | Reach onboarding | Project-wide |  | rd07 |
+| 6 | Confirm pilot location setup details | Blocked | Gate | Brooke Benkert / Reach | Reach onboarding | Project-wide |  | rd07 |
 | 7 | Complete dispatcher and technician training | Not started | Gate | SVT / Reach | Service readiness | Project-wide |  | rd11 |
 | 8 | Confirm Reach → Amazon setup handoff | Not started | Gate | Reach / Edmund Park | Technology readiness | Project-wide |  | rd08 |
 | 9 | Validate native Relay Garage event flow | Not started | Gate | Reach / Amazon | Technology readiness | Project-wide |  | rd09 |
@@ -45,6 +45,7 @@ _Snapshot 2026-11-19. Live version: https://claude.ai/artifact/FVQgNvfAAnkuC6uZi
 
 | When | Action | Status | Update | By |
 |---|---|---|---|---|
+| 2026-11-19T22:26:00Z | Confirm pilot location setup details | Blocked | Status updated from SVT's launch checklist. | Automatic status sync |
 | 2026-11-19T20:30:00Z | Go-live moved to after Thanksgiving | Awaiting confirmation | SVT proposes moving the ONT42 go-live to Monday, December 7, after Thanksgiving, to allow time for Reach onboarding, training and the Amazon connection. The date is proposed and still to be confirmed with Amazon. | SVT project team |
 | 2026-11-18T16:30:00Z | Complete Reach service-provider activation | In progress | Reach issued the service-provider agreement for signature and SVT's review is under way, aiming to finish before Thanksgiving. Account activation follows signature. | SVT project team |
 | 2026-11-18T03:00:00Z | Site visit held at ONT42 and ONT43 | In progress | SVT visited ONT42 and ONT43 on November 17. The recommendation for nearby offsite work versus the ONT43 working area will be recorded here. | SVT project team |

@@ -4,17 +4,18 @@
     "amazonText": "Reach service agreement signed",
     "area": "Contract & terms",
     "due": "2026-11-20",
-    "evidence": "Sent to Mike and Richard Nov 17, 11:55 AM CT. Richard Barron (Nov 17, 5:49 PM ET): innovation can't sign contracts, so Mike should send it to Matt Flannery for review. Mike (Nov 17, 9:50 PM ET): he will get it to Matt Flannery to start the SaaS review process. Nov 18, 9:54 AM CT: Brooke asked Mike whether to reassign the DocHub signature to him, aiming to finish before Thanksgiving. Nov 18, 10:26 AM ET: Reach (Kuldeep Rana) sent a DocHub reminder to review and sign. Not signed yet.",
+    "evidence": "Sent to Mike and Richard Nov 17, 11:55 AM CT. Richard Barron (Nov 17, 5:49 PM ET): innovation can't sign contracts, so Mike should send it to Matt Flannery for review. Mike (Nov 17, 9:50 PM ET): he will get it to Matt Flannery to start the SaaS review process. Nov 18, 9:54 AM CT: Brooke asked Mike whether to reassign the DocHub signature to him, aiming to finish before Thanksgiving. Nov 18, 10:26 AM ET: Reach (Kuldeep Rana) sent a DocHub reminder to review and sign. Nov 19, 10:32 AM: Brooke asked Mike for an update (Sid at Reach asked if SVT has questions or concerns). Mike, Nov 19, 2:05 PM: forwarded and spelled out the opportunity to In House Counsel and Global IT, copied Scott Z, asked for a quick turnaround; expects a quick review because VTC likely has a similar agreement for Velocity. SVT still needs its own agreement. Not signed yet.",
     "gate": "Gate",
     "id": "rd01",
     "item": "Reach agreement (Vantage License and Services Agreement) approved and signed",
     "order": 1,
-    "owner": "Mike / Matt Flannery (review)",
+    "owner": "Mike / In House Counsel and Global IT (review)",
     "party": "SVT",
     "ref": "p1-ti-09",
     "site": "ONT42 + ONT43",
     "status": "In progress",
-    "updatedAt": "2026-11-18T22:20:00Z"
+    "updatedAt": "2026-11-19T22:10:00Z",
+    "updatedBy": "Brooke"
   },
   {
     "amazon": "Hide",
@@ -86,6 +87,7 @@
     "amazon": "Show",
     "amazonText": "Site details (hours, users, roles) sent to Reach",
     "area": "Reach & Relay Garage",
+    "blockedBy": "rd01",
     "due": "2026-11-18",
     "evidence": "Waiting on Lon's shop hours and user counts. Reach needs, per site: hours of operation and each user's role (admin, dispatcher, technician) to set up the locations and schedule training.",
     "gate": "Gate",
@@ -95,14 +97,17 @@
     "owner": "Brooke (needs Lon)",
     "party": "SVT",
     "ref": "p1-ti-03",
+    "resumeStatus": "Not started",
     "site": "ONT42 + ONT43",
-    "status": "Waiting",
-    "updatedAt": "2026-11-17T21:00:00Z"
+    "status": "Blocked",
+    "updatedAt": "2026-11-19T22:31:05.600Z",
+    "updatedBy": "Brooke"
   },
   {
     "amazon": "Show",
     "amazonText": "Reach credentials shared and Relay Garage connection completed",
     "area": "Reach & Relay Garage",
+    "blockedBy": "rd01",
     "due": "",
     "evidence": "Takes 2 to 3 business days after Reach shares the locations.",
     "gate": "Gate",
@@ -112,9 +117,11 @@
     "owner": "Reach / Edmund Park (Amazon)",
     "party": "Reach + Amazon",
     "ref": "p1-ti-12",
+    "resumeStatus": "Not started",
     "site": "ONT42 + ONT43",
-    "status": "Not started",
-    "updatedAt": "2026-11-17T19:00:00Z"
+    "status": "Blocked",
+    "updatedAt": "2026-11-19T22:31:24.301Z",
+    "updatedBy": "Brooke"
   },
   {
     "amazon": "Show",
