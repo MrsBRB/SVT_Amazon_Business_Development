@@ -428,7 +428,7 @@ const SCHEMA = {
     ["status","Status","select",false,["Next","Doing","Waiting","Done"]],["phase","Phase","select",false,["Initiate","Plan","Execute","Monitor","Close"]],
     ["owner","Owner","text"],["due","Due","date"],["site","Related site","text"],["notes","Notes","textarea"],["source","Source link","url"]]},
   regsteps:{label:"Approval step",fields:[
-    ["order","Order","number",true],["title","Step","text",true],["status","Status","select",false,["Not started","In progress","Blocked","Done"]],
+    ["order","Order","number",true],["title","Step","text",true],["status","Status","select",false,["Not started","In progress","Blocked","Done"]],["blockedBy","Blocked by (required when Blocked)","blocker"],
     ["owner","Owner","text"],["date","Date (done or target)","date"],["evidence","Evidence / proof","textarea"],["notes","Notes","textarea"]]},
   sites:{label:"Site",fields:[
     ["code","Site code","text",true],["name","Location","text"],["track","Track","select",false,["Middle Mile","Last Mile"]],
@@ -569,7 +569,7 @@ function renderApproval(){
     <div class="dot">${s.status==="Done"?"✓":i+1}</div>
     <div style="min-width:0"><div class="t">${esc(s.title)}</div>
       <div class="d">${esc(s.owner||"Owner not set")}${s.date?" · "+fmtD(s.date):""}</div>
-      ${s.evidence?`<div class="ev">${esc(s.evidence)}</div>`:""}${s.notes?`<div class="d">${esc(s.notes)}</div>`:""}</div>
+      ${s.status==="Blocked"?`<div class="d blk-flag">Blocked by: ${s.blockedBy?esc((blockerOf(s.blockedBy)||{}).title||"item unavailable"):"not chosen yet. Edit this step to choose it."}</div>`:""}${s.evidence?`<div class="ev">${esc(s.evidence)}</div>`:""}${s.notes?`<div class="d">${esc(s.notes)}</div>`:""}</div>
     <div class="r">${canWrite?selectHTML("regsteps",s,"status",SCHEMA.regsteps.fields[2][4]):`<span class="pill ${pc[s.status]||""}">${esc(s.status||"Not started")}</span>`}
       ${canWrite?`<button class="btn sm" data-edit="regsteps:${esc(s.id)}">Edit</button>`:""}</div></div>`).join("")
     : `<div class="empty">No approval steps yet. Add the first step.</div>`;
@@ -800,14 +800,16 @@ function route(){
 }
 addEventListener("hashchange",route);
 
-function openDrawer(col,id){
+function openDrawer(col,id,preset){
   const sc=SCHEMA[col]; const rec=id?S[col].find(r=>r.id===id):null;
   if(id&&!rec) return;
-  const base=rec||defaults(col); const ro=!canWrite;
+  const base={...(rec||defaults(col)),...(preset||{})}; const ro=!canWrite;
   const field=([k,l,type,req,opts])=>{
     let v=base[k]??""; if(Array.isArray(v)) v=v.join(", ");
     const idA=`f-${col}-${k}`;
     if(type==="select") return `<label for="${idA}">${l}<select id="${idA}" name="${k}" ${ro?"disabled":""}>${opts.map(o=>`<option value="${esc(o)}"${o===v?" selected":""}>${esc(OBJS[o]&&k==="obj"?OBJS[o]:o)}</option>`).join("")}</select></label>`;
+    if(type==="blocker"){ const opts2=[...S.regsteps.filter(x=>x.id!==(rec&&rec.id)&&x.status!=="Done").sort((a,b)=>(+a.order||0)-(+b.order||0)).map(x=>["regsteps:"+x.id,"Step "+(x.order||"")+" · "+x.title]),...S.tasks.filter(x=>x.status!=="Done").map(x=>["tasks:"+x.id,"Action · "+x.title])];
+      return `<label for="${idA}" id="blk-wrap"${base.status==="Blocked"?"":" hidden"}>${l}<select id="${idA}" name="${k}" ${ro?"disabled":""}><option value="">Choose the blocking step or action…</option>${opts2.map(([vv,tt])=>`<option value="${esc(vv)}"${vv===v?" selected":""}>${esc(tt)}</option>`).join("")}</select></label>`; }
     if(type==="textarea") return `<label for="${idA}">${l}<textarea id="${idA}" name="${k}" ${ro?"readonly":""}>${esc(v)}</textarea></label>`;
     return `<label for="${idA}">${l}<input id="${idA}" name="${k}" type="${type}" value="${esc(v)}" ${req?"required":""} ${ro?"readonly":""}></label>`;
   };
@@ -817,12 +819,19 @@ function openDrawer(col,id){
     <form id="dr-form" novalidate>${sc.fields.map(field).join("")}${rec&&safeUrl(rec.source)?`<a href="${esc(rec.source)}" target="_blank" rel="noopener">Open source</a>`:""}${ro?'<p class="ro-note">You can view this record. Editing needs Contributor access or higher.</p>':""}</form>
     <footer>${rec&&!ro?`<button class="btn danger" id="dr-del" type="button">Delete</button>`:"<span></span>"}${ro?"":`<button class="btn primary" form="dr-form" type="submit">${rec?"Save":"Add"}</button>`}</footer>
   </aside>`;
-  const f=$("#dr-form"); setTimeout(()=>f.querySelector("input,select,textarea")?.focus(),0);
+  const f=$("#dr-form"); setTimeout(()=>((preset&&preset.status==="Blocked"&&f.blockedBy)||f.querySelector("input,select,textarea"))?.focus(),0);
+  if(f.status&&$("#blk-wrap")) f.status.addEventListener("change",()=>{$("#blk-wrap").hidden=f.status.value!=="Blocked"});
   f.addEventListener("submit",async e=>{
     e.preventDefault(); if(ro) return;
     const fd=new FormData(f); const body={};
     sc.fields.forEach(([k,,type])=>{let v=(fd.get(k)??"").toString().trim(); if(type==="number"&&v!=="") v=+v; body[k]=v;});
     if(col==="schedules") body.tags=String(body.tags||"").split(",").map(t=>t.trim()).filter(Boolean);
+    if(col==="regsteps"){
+      if(body.status!=="Blocked") body.blockedBy="";
+      else if(!body.blockedBy){ toast("Choose the step or action that's blocking this one"); return; }
+      const prev=rec?rec.status:"Not started";
+      body.resumeStatus=body.status!=="Blocked"?"":(prev==="Blocked"?((rec&&rec.resumeStatus)||"Not started"):(prev==="Done"?"Not started":prev));
+    }
     const miss=sc.fields.find(([k,,,req])=>req&&(body[k]===""||body[k]===undefined));
     if(miss){ toast(`${miss[1]} is required`); return; }
     body.updatedAt=new Date().toISOString();
@@ -860,6 +869,21 @@ function defaults(col){
   return {};
 }
 function closeDrawer(){ $("#drawer-root").innerHTML=""; }
+// Clear a blocked approval step once its blocking step or action is Done.
+const blockerOf=v=>{ const [c,id]=String(v||"").split(":"); return c&&id&&S[c]?S[c].find(x=>x.id===id):null; };
+const unblocking=new Set();
+async function reconcileBlocks(){
+  if(!db||!canWrite) return;
+  for(const r of S.regsteps.filter(x=>x.status==="Blocked"&&x.blockedBy)){
+    const b=blockerOf(r.blockedBy); if(!b||b.status!=="Done"||unblocking.has(r.id)) continue;
+    unblocking.add(r.id);
+    try{ const g=await db.doc("regsteps/"+r.id).get(); const c=g.exists?g.data():null; if(!c||c.status!=="Blocked"||c.blockedBy!==r.blockedBy) continue;
+      const now=new Date().toISOString(), back=c.resumeStatus&&!["Blocked","Done"].includes(c.resumeStatus)?c.resumeStatus:"Not started";
+      await SVTLive.saving(db.doc("regsteps/"+r.id).update({status:back,blockedBy:"",resumeStatus:"",updatedAt:now}));
+      await db.doc(`log/l-unblock-${r.id}-${String(r.blockedBy).replace(/[^A-Za-z0-9_-]/g,"_")}`).set({date:now.slice(0,10),obj:"VA",kind:"Update",text:`Approval step “${c.title}” unblocked automatically because “${b.title}” is done. Status is back to ${back}.`,link:"",updatedAt:now});
+    }catch(err){ console.warn("unblock",err&&err.code); } finally{ unblocking.delete(r.id); }
+  }
+}
 function handleWriteErr(err){
   if(err&&err.code==="invalid_argument"){ canWrite=false; renderAll(); toast("You can view this hub but not change it"); }
   else if(err&&err.code==="unavailable") toast("Connection hiccup. Try again in a moment.");
@@ -895,9 +919,11 @@ document.addEventListener("change",e=>{ if(e.target.id==="doc-file"&&e.target.fi
 document.addEventListener("change",async e=>{
   const s=e.target.closest("select.inline-sel"); if(!s||!db) return;
   const [c,id,f]=s.dataset.inline.split(":");
+  if(c==="regsteps"&&f==="status"&&s.value==="Blocked"){ const r=S.regsteps.find(x=>x.id===id); s.value=r?r.status:"Not started"; openDrawer("regsteps",id,{status:"Blocked"}); toast("Choose what's blocking this step, then save"); return; }
   const patch={[f]:s.value,updatedAt:new Date().toISOString()};
   if(c==="sites") patch.lastTouch=new Date().toISOString().slice(0,10);
   if(c==="regsteps"&&s.value==="Done") patch.date=new Date().toISOString().slice(0,10);
+  if(c==="regsteps"&&f==="status"){ patch.blockedBy=""; patch.resumeStatus=""; }
   try{ await SVTLive.saving(db.doc(`${c}/${id}`).update(patch)); toast("Updated"); }catch(err){ handleWriteErr(err); }
 });
 
@@ -951,7 +977,7 @@ route(); renderAll();
     try{ const me=user&&user.me?await user.me():null; viewerName=(me&&me.name)||""; }catch(_){}
     refreshUsage();
     Object.keys(S).forEach(col=>{
-      db.collection(col).onSnapshot(snap=>{ SVTLive.seen(snap); S[col]=snap.docs.map(d=>({id:d.id,...d.data()})); renderAll(); },
+      db.collection(col).onSnapshot(snap=>{ SVTLive.seen(snap); S[col]=snap.docs.map(d=>({id:d.id,...d.data()})); renderAll(); if(col==="regsteps"||col==="tasks") setTimeout(reconcileBlocks,0); },
         err=>{ console.warn(col,err&&err.code); });
     });
     renderAll();

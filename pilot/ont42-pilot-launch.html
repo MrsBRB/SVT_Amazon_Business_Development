@@ -103,6 +103,7 @@ nav .navsep{border-top:1px solid #5b6b7f;margin:14px 10px}
 @media(max-width:700px){nav a{white-space:nowrap}nav a span{display:none}nav .navsep{display:none}}
 
 #sync{color:#fff;font-size:11px;margin:0 0 6px}#sync::before{content:"● ";color:#6fd3a0}#sync[data-state="saving"]::before{color:#f2bf62}#sync[data-state="offline"]::before{color:#ff8a92}
+.task p.blk{color:var(--red);margin-top:6px;-webkit-line-clamp:2}.blk-flag{color:var(--red);font-weight:600}
 
 /* One-page progress report (US Letter). Fixed light palette so the PDF and print look the same in any theme. */
 .rp-tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
@@ -441,7 +442,7 @@ function toast(m){$("#toast-root").innerHTML=`<div class="toast" role="status">$
 const items=()=>S.readiness.slice().sort((a,b)=>(+a.order||99)-(+b.order||99));
 const gates=()=>S.readiness.filter(isGate);
 
-function card(r){const dd=days(r.due);return `<button class="task" data-open="${esc(r.id)}"><div class="between"><span class="eyebrow">${esc(r.area)}</span>${isGate(r)?'<span class="gate">LAUNCH GATE</span>':""}</div><h3>${esc(r.item)}</h3><p>${esc(r.evidence||"No evidence recorded yet.")}</p><div class="tags"><span class="status ${stCls(r.status)}">${esc(r.status)}</span><span>${esc(r.site)}</span></div><div class="taskfoot"><span>${esc(r.owner||"Owner not set")}</span><small class="${dd!==null&&dd<0&&r.status!=="Ready"?"overdue":""}">${r.due?"Due "+esc(fmtD(r.due)):"Date unconfirmed"}</small></div></button>`}
+function card(r){const dd=days(r.due);return `<button class="task" data-open="${esc(r.id)}"><div class="between"><span class="eyebrow">${esc(r.area)}</span>${isGate(r)?'<span class="gate">LAUNCH GATE</span>':""}</div><h3>${esc(r.item)}</h3>${r.status==="Blocked"?`<p class="blk"><b>Blocked by:</b> ${r.blockedBy?esc((S.readiness.find(x=>x.id===r.blockedBy)||{}).item||"Item unavailable"):"not chosen yet. Open to choose it."}</p>`:""}<p>${esc(r.evidence||"No evidence recorded yet.")}</p><div class="tags"><span class="status ${stCls(r.status)}">${esc(r.status)}</span><span>${esc(r.site)}</span></div><div class="taskfoot"><span>${esc(r.owner||"Owner not set")}</span><small class="${dd!==null&&dd<0&&r.status!=="Ready"?"overdue":""}">${r.due?"Due "+esc(fmtD(r.due)):"Date unconfirmed"}</small></div></button>`}
 function sel(r){return `<select class="inline-sel" aria-label="Status for ${esc(r.item)}" data-inline="${esc(r.id)}">${STAT.map(o=>`<option${o===r.status?" selected":""}>${o}</option>`).join("")}</select>`}
 
 function siteDemand(){return `<section aria-label="Site work demand"><div class="sectionhead"><h2>Site work demand · Amazon-provided snapshot</h2><small>Work types &amp; makes / models</small></div><p class="sourceNote">Historical work-request mix for support planning. Counts describe supplied records, not today’s open backlog or unique work orders. The 10.9 / 11.0 day medians cover Freightliner dealer work only.</p>${["ONT42","ONT43"].map(site=>{const d=DEMAND[site];return `<details class="panel compact"><summary>${site} · ${site==="ONT42"?"Primary":"Add-on"}<span>${d.records} work-request records · ${d.units} vehicles</span></summary><div class="demandGrid"><div><h3>Type of work</h3><div class="tags">${d.categories.map(([n,c])=>`<span>${esc(n)} <b>${c}</b></span>`).join("")}</div><p><b>Common components:</b> ${d.components.map(([n,c])=>`${esc(n)} (${c})`).join(" · ")}</p></div><div><h3>Makes &amp; models needing support</h3><div class="tablewrap"><table><thead><tr><th>Make / model</th><th>Vehicles</th><th>WR records</th></tr></thead><tbody>${d.models.map(m=>`<tr><td>${esc(m.model)}</td><td>${m.units}</td><td>${m.records}</td></tr>`).join("")}</tbody></table></div></div></div><p class="sourceNote"><b>Sources:</b> Amazon’s DTNA WR Data.xlsx (Services sheet, by Asset Domicile Site), matched to ATS Asset Inventory 2026-10-30.xlsx. Modified dates ${d.dateRange[0]}–${d.dateRange[1]}.</p><p><b>Planning implication:</b> ${site==="ONT42"?"Prioritize Cascadia transmission / clutch and engine diagnostics; keep support pathways for Volvo, International and Peterbilt.":"Plan Cascadia transmission and electrical diagnostics, with Volvo support and cooling / engine capability."}</p></details>`}).join("")}</section>`}
@@ -467,7 +468,7 @@ function vChecklist(){
   const keep=r=>rdFilter==="all"?true:rdFilter==="gate"?isGate(r):r.status!=="Ready";
   return `<div class="toolbar" style="align-items:center"><div class="seg" role="group" aria-label="Filter checklist">${[["open","Not ready"],["gate","Gates"],["all","All"]].map(([k,l])=>`<button data-rd="${k}" aria-pressed="${rdFilter===k}">${l}</button>`).join("")}</div><span class="sourceNote">Change a status as soon as it moves, and add the evidence (who confirmed, when) by opening the item.</span></div>
   ${AREAS.map(a=>{const all=S.readiness.filter(r=>r.area===a);if(!all.length)return"";const list=items().filter(r=>r.area===a&&keep(r));const rd=all.filter(r=>r.status==="Ready").length;
-  return `<article class="panel area"><div class="between"><h2 style="margin:0">${esc(a)}</h2><span class="status">${rd}/${all.length} ready</span></div>${list.length?list.map(r=>{const dd=days(r.due);return `<div class="rdrow"><div>${canWrite?sel(r):`<span class="status ${stCls(r.status)}">${esc(r.status)}</span>`}</div><div style="min-width:0"><button class="t" data-open="${esc(r.id)}">${esc(r.item)}</button>${isGate(r)?' <span class="gate">GATE</span>':""}<div class="m">${esc(r.site)} · ${r.owner?esc(r.owner):"owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${esc(fmtD(r.due))}</span>`:""}</div>${r.evidence?`<div class="e">${esc(r.evidence)}</div>`:""}</div><div></div></div>`}).join(""):'<p class="sourceNote">All ready in this area.</p>'}</article>`}).join("")||'<div class="empty">The checklist is loading.</div>'}`;
+  return `<article class="panel area"><div class="between"><h2 style="margin:0">${esc(a)}</h2><span class="status">${rd}/${all.length} ready</span></div>${list.length?list.map(r=>{const dd=days(r.due);return `<div class="rdrow"><div>${canWrite?sel(r):`<span class="status ${stCls(r.status)}">${esc(r.status)}</span>`}</div><div style="min-width:0"><button class="t" data-open="${esc(r.id)}">${esc(r.item)}</button>${isGate(r)?' <span class="gate">GATE</span>':""}<div class="m">${esc(r.site)} · ${r.owner?esc(r.owner):"owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${esc(fmtD(r.due))}</span>`:""}</div>${r.status==="Blocked"?`<div class="e blk-flag">Blocked by: ${r.blockedBy?esc((S.readiness.find(x=>x.id===r.blockedBy)||{}).item||"item unavailable"):"not chosen yet. Open the item to choose it."}</div>`:""}${r.evidence?`<div class="e">${esc(r.evidence)}</div>`:""}</div><div></div></div>`}).join(""):'<p class="sourceNote">All ready in this area.</p>'}</article>`}).join("")||'<div class="empty">The checklist is loading.</div>'}`;
 }
 
 function vBoard(){
@@ -547,22 +548,30 @@ function render(){
 }
 function setTab(k){tab=k;try{history.replaceState(null,"","#"+k)}catch(e){}render();scrollTo(0,0)}
 
-function openDrawer(id){
+function openDrawer(id,preset){
   const rec=id?S.readiness.find(r=>r.id===id):null;if(id&&!rec)return;
-  const base=rec||{status:"Not started",gate:"Gate",site:"ONT42 + ONT43",area:AREAS[1],order:99},ro=!canWrite||!db,dis=ro?" disabled":"";
+  const base={...(rec||{status:"Not started",gate:"Gate",site:"ONT42 + ONT43",area:AREAS[1],order:99}),...(preset||{})},ro=!canWrite||!db,dis=ro?" disabled":"";
   const fld=([k,l,t,req,opts])=>{const v=base[k]??"";
     if(t==="select")return `<label>${l}<select name="${k}"${dis}>${opts.map(o=>`<option${o===v?" selected":""}>${esc(o)}</option>`).join("")}</select></label>`;
     if(t==="textarea")return `<label>${l}<textarea name="${k}"${dis}>${esc(v)}</textarea></label>`;
     return `<label>${l}<input name="${k}" type="${t}" value="${esc(v)}"${req?" required":""}${dis}></label>`};
   $("#drawer-root").innerHTML=`<div class="overlay" data-close-scrim><form class="modal" role="dialog" aria-modal="true" aria-labelledby="dr-h" id="dr" novalidate><div class="between"><h2 id="dr-h">${rec?"Checklist item":"New checklist item"}</h2><button type="button" data-close aria-label="Close">✕</button></div>
   <p>Visible to the SVT and VVG team. Never add Exhibit A, incentive or compensation details.</p>${ro?'<p class="ro-note">You can view this item. Ask Brooke for edit access to change it.</p>':""}
-  ${fld(FIELDS[0])}<div class="twocol">${FIELDS.slice(1,7).map(fld).join("")}</div>${fld(FIELDS[7])}${fld(FIELDS[8])}
+  ${fld(FIELDS[0])}<div class="twocol">${FIELDS.slice(1,7).map(fld).join("")}</div>
+  <label id="blk-wrap"${base.status==="Blocked"?"":" hidden"}>Blocked by (required)<select name="blockedBy"${dis}><option value="">Choose the blocking item…</option>${items().filter(r=>r.id!==(rec&&rec.id)&&r.status!=="Ready").map(r=>`<option value="${esc(r.id)}"${r.id===base.blockedBy?" selected":""}>${esc(r.item)}</option>`).join("")}</select></label>
+  ${preset&&preset.status==="Blocked"?'<p class="ro-note">Choose which item is blocking this one, then save. It unblocks automatically when that item is Ready.</p>':""}${fld(FIELDS[7])}${fld(FIELDS[8])}
   ${ro?"":`<label>Team update (optional)<textarea name="note" placeholder="Posts to Updates with your name"></textarea></label>`}
   <div id="dr-err" role="alert" class="alert" hidden></div>${ro?"":`<button class="primary" id="dr-save">${rec?"Save":"Add item"}</button>`}</form></div>`;
-  const f=$("#dr");setTimeout(()=>(f.querySelector("input:not([disabled])")||f.querySelector("[data-close]")).focus(),0);
+  const f=$("#dr");setTimeout(()=>((preset&&preset.status==="Blocked"&&f.blockedBy)||f.querySelector("input:not([disabled])")||f.querySelector("[data-close]")).focus(),0);
+  f.status.addEventListener("change",()=>{$("#blk-wrap").hidden=f.status.value!=="Blocked"});
   f.addEventListener("submit",async e=>{e.preventDefault();if(ro)return;const fd=new FormData(f),err=$("#dr-err"),btn=$("#dr-save"),body={};
     FIELDS.forEach(([k,,t])=>{let v=(fd.get(k)??"").toString().trim();if(t==="number"&&v!=="")v=+v;body[k]=v});
     if(!body.item){err.hidden=false;err.innerHTML="<b>Missing information</b><p>Item is required.</p>";return}
+    body.blockedBy=body.status==="Blocked"?(fd.get("blockedBy")||""):"";
+    if(body.status==="Blocked"&&!body.blockedBy){err.hidden=false;err.innerHTML="<b>Choose the blocking item</b><p>A blocked item needs the item that's blocking it. It unblocks automatically when that item is Ready.</p>";return}
+    if(body.blockedBy){let x=body.blockedBy,seen=new Set([rec&&rec.id]);while(x){if(seen.has(x)){err.hidden=false;err.innerHTML="<b>Dependency loop</b><p>Items can't block themselves or form a cycle.</p>";return}seen.add(x);x=(S.readiness.find(r=>r.id===x)||{}).blockedBy}}
+    const prev=rec?rec.status:"Not started";
+    body.resumeStatus=body.status!=="Blocked"?"":(prev==="Blocked"?((rec&&rec.resumeStatus)||"Not started"):(prev==="Ready"?"Not started":prev));
     btn.disabled=true;
     try{
       const now=new Date().toISOString();
@@ -579,6 +588,20 @@ function openDrawer(id){
   });
 }
 function closeDrawer(){$("#drawer-root").innerHTML=""}
+// Clear a block once its blocking item is Ready. Idempotent across viewers.
+const unblocking=new Set();
+async function reconcileBlocks(){
+  if(!db||!canWrite)return;
+  for(const r of S.readiness.filter(x=>x.status==="Blocked"&&x.blockedBy)){
+    const b=S.readiness.find(x=>x.id===r.blockedBy);if(!b||b.status!=="Ready"||unblocking.has(r.id))continue;
+    unblocking.add(r.id);
+    try{const g=await db.doc("readiness/"+r.id).get();const c=g.exists?g.data():null;if(!c||c.status!=="Blocked"||c.blockedBy!==b.id)continue;
+      const now=new Date().toISOString(),back=c.resumeStatus&&!["Blocked","Ready"].includes(c.resumeStatus)?c.resumeStatus:"Not started";
+      await SVTLive.saving(db.doc("readiness/"+r.id).update({status:back,blockedBy:"",resumeStatus:"",updatedAt:now,updatedBy:"Automatic dependency update"}));
+      await db.doc(`updates/u-unblock-${r.id}-${b.id}`).set({text:`${c.item}: unblocked automatically because “${b.item}” is Ready. Status is back to ${back}.`,at:now,date:now.slice(0,10),by:"",byName:"Automatic dependency update"});
+    }catch(x){console.warn("unblock",x&&x.code)}finally{unblocking.delete(r.id)}
+  }
+}
 
 document.addEventListener("click",e=>{
   const tb=e.target.closest("[data-tab]");if(tb){setTab(tb.dataset.tab);return}
@@ -595,7 +618,9 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer-root").i
 document.addEventListener("input",e=>{if(e.target.id==="q"){F.q=e.target.value;render()}});
 document.addEventListener("change",async e=>{
   const s=e.target.closest("select[data-f]");if(s){F[s.dataset.f]=s.value;render();return}
-  const i=e.target.closest("select.inline-sel");if(i&&db){try{await SVTLive.saving(db.doc("readiness/"+i.dataset.inline).update({status:i.value,updatedAt:new Date().toISOString(),updatedBy:viewerName||""}));toast("Updated")}catch(x){toast(x&&x.code==="invalid_argument"?"You can view this page but not change it":"Couldn't save. Try again.")}}
+  const i=e.target.closest("select.inline-sel");
+  if(i&&i.value==="Blocked"){const r=S.readiness.find(x=>x.id===i.dataset.inline);i.value=r?r.status:"Not started";openDrawer(i.dataset.inline,{status:"Blocked"});return}
+  if(i&&db){try{await SVTLive.saving(db.doc("readiness/"+i.dataset.inline).update({status:i.value,blockedBy:"",resumeStatus:"",updatedAt:new Date().toISOString(),updatedBy:viewerName||""}));toast("Updated")}catch(x){toast(x&&x.code==="invalid_argument"?"You can view this page but not change it":"Couldn't save. Try again.")}}
 });
 document.addEventListener("submit",async e=>{if(e.target.id!=="up-form")return;e.preventDefault();const t=$("#up-text").value.trim();if(!t||!db)return;
   try{const uid=user?await user.id():null,now=new Date().toISOString();await db.collection("updates").doc().set({text:t,at:now,date:now.slice(0,10),by:uid||"",byName:viewerName||""});$("#up-text").value="";toast("Posted")}catch(x){toast("Couldn't post. Try again.")}});
@@ -608,7 +633,7 @@ render();
   const w=user?await user.can("data.write"):null;canWrite=w!==false;
   try{const me=user&&user.me?await user.me():null;viewerName=(me&&me.name)||""}catch(_){}
   const pending=new Set(Object.keys(S));
-  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{SVTLive.seen(snap);S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));pending.delete(c);if(!pending.size)ready=true;render()},err=>{console.warn(c,err&&err.code);SVTLive.failed();pending.delete(c);if(!pending.size)ready=true;render()}));
+  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{SVTLive.seen(snap);S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));if(c==="readiness")setTimeout(reconcileBlocks,0);pending.delete(c);if(!pending.size)ready=true;render()},err=>{console.warn(c,err&&err.code);SVTLive.failed();pending.delete(c);if(!pending.size)ready=true;render()}));
 }catch(x){console.warn(x)}})();
 })();
 </script>
