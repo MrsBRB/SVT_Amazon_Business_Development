@@ -1,337 +1,282 @@
 <title>ONT Pilot · Amazon View</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: read-only status page for Amazon. Navy masthead with KPIs, then asks of Amazon, launch progress by area, how the pilot works, sites, updates, contacts. */
+/* Layout: matches the SVT x Amazon Middle Mile Pilot site. Fixed navy sidebar (logo, project, five views), navy breadcrumb bar with a red rule, then the selected view: Overview, Action board, Sites & readiness, Weekly standup, Updates. Actions open in a right-hand drawer. */
 :root{
-  --navy:#1c365e; --red:#e01e2e; --steel:#5b6b7f; --gray:#e6e9ed;
-  --bg:#f4f6f9; --panel:#ffffff; --panel-2:#eef1f5; --ink:#1c365e; --ink-2:#3c4c63; --muted:#5b6b7f; --line:#d5dbe3;
-  --mast:#1c365e; --mast-ink:#ffffff; --mast-muted:#c4cfdd;
-  --ok:#1f7a4d; --ok-bg:#e3f3ea; --warn:#9a5b00; --warn-bg:#fdf0d9; --bad:#b4141f; --bad-bg:#fbe3e5; --info:#1c365e; --info-bg:#e3eaf4;
-  --accent:#e01e2e;
-  --f-head:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
-  --f-body:"Source Sans 3",Arial,sans-serif;
-  --r-sm:4px; --r-md:8px; --r-lg:14px;
+  --navy:#1c365e;--red:#e01e2e;--red-hover:#be1927;--steel:#5b6b7f;--gray:#e6e9ed;
+  --bg:#ffffff;--surface:#ffffff;--ink:#1c365e;--muted:#5b6b7f;--line:#e0e6ec;--line-2:#e9edf2;
+  --chip:#edf1f6;--chip-ink:#5c7086;--field:#ffffff;--field-line:#d9e0e8;--field-ink:#23364b;
+  --side:#1c365e;--side-ink:#e1e6ed;--side-muted:#d6dee8;--scrim:#0b1c32aa;
+  --f-head:'Barlow Semi Condensed','Arial Narrow',Arial,sans-serif;--f-body:'Source Sans 3',Arial,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0d1626; --panel:#15223a; --panel-2:#1b2b47; --ink:#e8eef7; --ink-2:#c3cee0; --muted:#93a3ba; --line:#2a3b58;
-  --mast:#0f2242; --mast-ink:#ffffff; --mast-muted:#a9b8cf;
-  --ok:#6fd3a0; --ok-bg:#163a2b; --warn:#f2bf62; --warn-bg:#3b2e14; --bad:#ff8a92; --bad-bg:#43191e; --info:#9fc0ef; --info-bg:#1d3150;
-  --accent:#ff4b58; color-scheme:dark}}
+  --bg:#0f1a2b;--surface:#16243a;--ink:#e6edf6;--muted:#a3b1c3;--line:#2a3a54;--line-2:#24344d;--gray:#1d2d47;
+  --chip:#22344f;--chip-ink:#c4d0de;--field:#122036;--field-line:#2f4260;--field-ink:#e6edf6;--side:#0f2242;--scrim:#000a;--red:#ff4b58;--red-hover:#e23a47;color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0d1626; --panel:#15223a; --panel-2:#1b2b47; --ink:#e8eef7; --ink-2:#c3cee0; --muted:#93a3ba; --line:#2a3b58;
-  --mast:#0f2242; --mast-ink:#ffffff; --mast-muted:#a9b8cf;
-  --ok:#6fd3a0; --ok-bg:#163a2b; --warn:#f2bf62; --warn-bg:#3b2e14; --bad:#ff8a92; --bad-bg:#43191e; --info:#9fc0ef; --info-bg:#1d3150;
-  --accent:#ff4b58; color-scheme:dark}
-*{box-sizing:border-box}
-[hidden]{display:none!important}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
-h1,h2,h3{font-family:var(--f-head);text-wrap:balance;margin:0}
-a{color:var(--info)}
-button,select,input,textarea{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.num{font-variant-numeric:tabular-nums}
-
-/* Masthead */
-.mast{background:var(--mast);color:var(--mast-ink)}
-.mast .wrap{padding-block:22px 18px;display:grid;gap:18px}
-.eyebrow{font-family:var(--f-head);letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--mast-muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.eyebrow .rule{width:28px;height:3px;background:#e01e2e;display:inline-block}
-.mast h1{font-size:clamp(26px,4vw,38px);font-weight:600;line-height:1.05}
-.mast .sub{color:var(--mast-muted);max-width:70ch}
-.clock{display:flex;gap:22px;flex-wrap:wrap}
-.clock div{display:grid}
-.clock b{font-family:var(--f-head);font-size:28px;font-weight:700;line-height:1}
-.clock span{font-size:12px;color:var(--mast-muted);letter-spacing:.06em;text-transform:uppercase}
-
-.lanes{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px}
-.lane{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:var(--r-md);padding:14px;display:grid;gap:8px;min-width:0;cursor:pointer;text-align:left;color:var(--mast-ink)}
-.lane:hover{background:rgba(255,255,255,.11)}
-.lane.p1{border-color:#e01e2e;box-shadow:inset 0 3px 0 #e01e2e}
-.lane .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-.lane .tag{font-family:var(--f-head);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mast-muted)}
-.lane .pri{font-family:var(--f-head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:#e01e2e;color:#fff;border-radius:var(--r-sm);padding:1px 7px}
-.lane .pri.n{background:rgba(255,255,255,.18)}
-.lane h2{font-size:20px;font-weight:600}
-.lane .big{font-family:var(--f-head);font-size:26px;font-weight:700}
-.lane .meta{font-size:13px;color:var(--mast-muted)}
-.lane .next{font-size:14px;border-top:1px solid rgba(255,255,255,.14);padding-top:8px}
-.lane .next b{font-family:var(--f-head);letter-spacing:.06em;text-transform:uppercase;font-size:11px;color:var(--mast-muted);display:block}
-.bar{height:6px;border-radius:3px;background:rgba(255,255,255,.16);overflow:hidden}
-.bar i{display:block;height:100%;background:#fff}
-
-/* Tabs */
-.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--mast)}
-.tabs .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
-.tabs a{font-family:var(--f-head);font-weight:600;letter-spacing:.04em;font-size:15px;padding:12px 14px;text-decoration:none;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
-.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
-main .wrap{padding-block:22px 60px;display:grid;gap:22px}
-section[data-view]{display:grid;gap:18px}
-.head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
-.head h2{font-size:24px;font-weight:600}
-.head p{margin:2px 0 0;color:var(--muted);max-width:75ch}
-.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-
-.btn{border:1px solid var(--line);background:var(--panel);border-radius:var(--r-md);padding:7px 12px;cursor:pointer;font-weight:600;font-size:14px}
-.btn:hover{border-color:var(--muted)}
-.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
-:root[data-theme="dark"] .btn.primary{background:#2c5490;border-color:#2c5490}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{background:#2c5490;border-color:#2c5490}}
-.btn.danger{color:var(--bad);border-color:var(--bad)}
-.btn.sm{padding:3px 8px;font-size:13px}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
-.seg button{border:0;background:var(--panel);padding:6px 10px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted)}
-.seg button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink)}
-
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;min-width:0}
-.panel h3{font-size:17px;font-weight:600;margin-bottom:8px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-
-.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap;background:var(--panel-2);color:var(--ink-2)}
-.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)}
-.pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.info{background:var(--info-bg);color:var(--info)}
-.chip{font-family:var(--f-head);font-size:12px;letter-spacing:.06em;font-weight:600;border:1px solid var(--line);border-radius:var(--r-sm);padding:0 6px;color:var(--muted)}
-.chip.o3{color:var(--accent);border-color:var(--accent)}
-.muted{color:var(--muted)} .small{font-size:13px}
-
-/* Stepper */
-.steps{display:grid;gap:0;counter-reset:s}
-.step{display:grid;grid-template-columns:34px 1fr auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
-.step:last-child{border-bottom:0}
-.dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-head);font-weight:700;font-size:14px;border:2px solid var(--line);color:var(--muted);background:var(--panel)}
-.step[data-s="Done"] .dot{background:var(--ok);border-color:var(--ok);color:var(--panel)}
-.step[data-s="In progress"] .dot{border-color:var(--info);color:var(--info)}
-.step[data-s="Blocked"] .dot{border-color:var(--bad);color:var(--bad)}
-.step .t{font-weight:700}
-.step .d{font-size:13px;color:var(--muted);margin-top:2px}
-.step .ev{font-size:13px;margin-top:4px;color:var(--ink-2)}
-.step .r{display:grid;gap:6px;justify-items:end}
-
-/* Tables */
-.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel)}
-table{border-collapse:collapse;width:100%;min-width:760px}
-th,td{padding:9px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:14px}
-th{font-family:var(--f-head);font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:12px;color:var(--muted);background:var(--panel-2);position:sticky;top:0}
-tr:last-child td{border-bottom:0}
-tr.grp td{background:var(--panel-2);font-family:var(--f-head);font-weight:600;font-size:15px;color:var(--ink)}
-td.money{font-family:var(--f-head);font-weight:700;font-size:16px;white-space:nowrap}
-td .sub{font-size:12px;color:var(--muted)}
-.inline-sel{border:1px solid var(--line);border-radius:var(--r-sm);background:var(--panel);padding:2px 4px;font-size:13px;max-width:140px}
-.flag{font-size:12px;color:var(--warn);font-weight:700}
-.stale{color:var(--bad);font-weight:700}
-
-/* Stations */
-.stations{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
-.st{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:12px;display:grid;gap:8px;min-width:0}
-.st.open{border-color:var(--ok);box-shadow:inset 0 3px 0 var(--ok)}
-.st .row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-.st .code{font-family:var(--f-head);font-weight:700;font-size:20px}
-.slots{display:flex;gap:4px}
-.slots i{flex:1;height:8px;border-radius:2px;background:var(--panel-2);border:1px solid var(--line)}
-.slots i.f{background:var(--ok);border-color:var(--ok)}
-.slots i.p{background:var(--info-bg);border-color:var(--info)}
-
-/* Board */
-.board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.col{background:var(--panel-2);border-radius:var(--r-md);padding:10px;display:grid;gap:8px;align-content:start;min-width:0}
-.col h3{font-size:15px;display:flex;justify-content:space-between}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:10px;display:grid;gap:6px;cursor:pointer;min-width:0}
-.card:hover{border-color:var(--muted)}
-.card .t{font-weight:600;overflow-wrap:anywhere}
-.card .m{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)}
-.overdue{color:var(--bad);font-weight:700}
-
-/* Lists */
-.list{display:grid;gap:0}
-.li{display:grid;grid-template-columns:96px 1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
-.li:last-child{border-bottom:0}
-.grid3 .li{grid-template-columns:58px 1fr}
-.grid3 .li>*:last-child{grid-column:2;justify-self:start}
-.li .when{font-family:var(--f-head);font-weight:600;color:var(--muted)}
-.src{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-.src:last-child{border-bottom:0}
-.src a{font-weight:700;text-decoration:none}
-.src a:hover{text-decoration:underline}
-.src p{margin:2px 0 0;font-size:13px;color:var(--muted)}
-
-.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r-md)}
-.method ol,.method ul{margin:6px 0 0;padding-left:20px}
-.method li{margin:4px 0}
-.phase{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-.phase div{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:12px;min-width:0}
-.phase b{font-family:var(--f-head);font-size:17px;display:block}
-.phase small{color:var(--muted);display:block;margin-top:4px}
-
-/* Drawer */
-.scrim{position:fixed;inset:0;background:rgba(8,15,28,.45);z-index:20}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--panel);z-index:21;border-left:1px solid var(--line);display:grid;grid-template-rows:auto 1fr auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
-.drawer header,.drawer footer{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}
-.drawer footer{border-bottom:0;border-top:1px solid var(--line)}
-.drawer form{overflow:auto;padding:14px 16px;display:grid;gap:12px;align-content:start}
-.drawer label{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
-.drawer input,.drawer select,.drawer textarea{border:1px solid var(--line);border-radius:var(--r-sm);padding:7px 8px;background:var(--bg);font-weight:400;font-size:15px;color:var(--ink)}
-.drawer textarea{min-height:90px;resize:vertical}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--navy);color:#fff;padding:8px 14px;border-radius:var(--r-md);z-index:30;font-weight:600}
-.ro-note{font-size:13px;color:var(--muted)}
-
-@media (max-width:900px){.lanes{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.board{grid-template-columns:1fr 1fr}.phase{grid-template-columns:1fr 1fr}}
-@media (max-width:560px){.board{grid-template-columns:1fr}.phase{grid-template-columns:1fr}.step{grid-template-columns:30px 1fr}.step .r{grid-column:2;justify-items:start}.li{grid-template-columns:1fr}.li>*:last-child{justify-self:start}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  --bg:#0f1a2b;--surface:#16243a;--ink:#e6edf6;--muted:#a3b1c3;--line:#2a3a54;--line-2:#24344d;--gray:#1d2d47;
+  --chip:#22344f;--chip-ink:#c4d0de;--field:#122036;--field-line:#2f4260;--field-ink:#e6edf6;--side:#0f2242;--scrim:#000a;--red:#ff4b58;--red-hover:#e23a47;color-scheme:dark}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px}
+button,input,select,textarea{font:inherit}button{cursor:pointer;color:inherit;background:var(--surface);border:1px solid var(--field-line);border-radius:7px;padding:10px 14px}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+h1,h2,h3{font-family:var(--f-head);font-weight:600;letter-spacing:0;color:var(--ink)}h1{font-size:32px;margin:10px 0}h2{font-size:22px}h3{font-size:15px}
+p{line-height:1.65;color:var(--muted)}small{color:var(--muted)}
+.shell{display:flex;min-height:100vh}
+aside{width:238px;position:fixed;inset:0 auto 0 0;background:var(--side);color:var(--side-ink);padding:32px 24px;display:flex;flex-direction:column;z-index:3}
+.brand{background:#fff;padding:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;min-height:82px}.brand img{width:100%;max-width:160px;height:58px;object-fit:contain}
+.project{padding:32px 0 24px;border-bottom:1px solid #5b6b7f}.project h3{font-size:24px;line-height:1.4;margin:12px 0;color:#fff}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:1.4px;color:var(--muted);text-transform:uppercase}.project>.eyebrow{color:var(--side-muted)}
+.pill{display:inline-block;line-height:1.6;font-size:10px;letter-spacing:1px;border:1px solid #8090a7;color:#fff;padding:5px 8px;border-radius:4px}
+nav{margin:26px -10px}nav button{display:flex;align-items:center;gap:13px;background:none;border:0;color:#e1e6ed;width:100%;text-align:left;margin:6px 0;padding:13px;font-size:13px;border-radius:4px}
+nav button span{font-size:20px;width:20px}nav button[aria-current="page"]{background:#ffffff1a;color:#fff;box-shadow:inset 2px 0 #fff}nav button:hover{background:#ffffff12}
+.sidebottom{margin-top:auto;font-size:11px}.sidebottom p,.sidebottom small{color:var(--side-muted)}.live{color:#fff}
+main{margin-left:238px;width:calc(100% - 238px)}
+header.top{height:80px;display:flex;align-items:center;padding:0 38px;background:var(--navy);color:#fff;border-bottom:2px solid var(--red);font-size:12px;font-weight:600}header.top span{color:#d6dee8;margin-left:10px;font-weight:400}
+.content{max-width:1550px;margin:auto;padding:32px}
+.between{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.title{margin-bottom:24px}.title p{margin:0}.title .eyebrow:before{content:'';display:block;background:var(--red);height:2px;width:32px;margin-bottom:8px}.red{color:var(--red)}
+.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700;padding:12px 19px;border-radius:4px}.primary:hover{background:var(--red-hover)}.primary:disabled{opacity:.6}
+.hero{background:var(--navy);border-radius:8px;padding:32px;display:flex;justify-content:space-between;color:#fff;gap:25px;align-items:center}
+.hero h2{font-size:32px;margin:13px 0 8px;color:#fff}.hero p{color:#e0e6ee;margin:0}.hero .eyebrow{color:#d6dee8}
+.heroTags{display:flex;gap:18px;font-size:11px;color:#e0e6ee;margin-top:25px;flex-wrap:wrap}
+.ring{width:155px;min-width:155px;height:155px;position:relative;display:grid;place-items:center}.ring svg{position:absolute;inset:0}.ring div{text-align:center;display:grid}.ring strong{font-family:var(--f-head);font-size:40px;font-weight:700;line-height:1}.ring span{font-size:11px;margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0}.stats article{background:var(--gray);border-radius:8px;padding:24px}
+.stats article>span{font-size:13px;color:var(--muted)}.stats strong{display:block;font-family:var(--f-head);font-size:40px;font-weight:700;line-height:1.1;margin:12px 0;color:var(--ink)}.stats article:first-child strong{color:var(--red)}.stats small{font-size:13px;display:block}
+.alert{background:var(--surface);border:1px solid var(--gray);border-left:2px solid var(--red);border-radius:4px;padding:16px 24px;margin:24px 0;font-size:13px}.alert b{color:var(--red)}.alert p{margin:5px 0 0}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:28px 0 14px;gap:12px;flex-wrap:wrap}.sectionhead h2{margin:0}.sectionhead .link{background:none;border:0;color:var(--red);font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.task{text-align:left;display:block;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px}.task:hover{border-color:var(--steel)}
+.task .eyebrow{font-size:10px;letter-spacing:.8px}.gate{color:var(--ink);background:var(--gray);font-size:9px;font-weight:700;padding:4px 6px;border-radius:4px;white-space:nowrap}
+.task h3{font-size:18px;line-height:1.3;margin:16px 0 8px}.task p{font-size:13px;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;gap:7px;align-items:center;font-size:11px;color:var(--muted);margin:18px 0;flex-wrap:wrap}
+.status{display:inline-block;padding:5px 8px;background:var(--chip);color:var(--chip-ink);border-radius:4px;font-size:12px;white-space:nowrap}
+.status.s-done{background:#e3f1e8;color:#1f6b45}.status.s-blocked{background:#fbe3e5;color:#a0121c}.status.s-prog{background:#e3eaf4;color:#1c365e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .status.s-done{background:#163a2b;color:#8fe0b5}:root:not([data-theme="light"]) .status.s-blocked{background:#43191e;color:#ff9aa1}:root:not([data-theme="light"]) .status.s-prog{background:#1d3150;color:#a9c6ef}}
+.taskfoot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line-2);padding-top:13px;gap:5px;font-size:11px}.taskfoot small{font-size:10px}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:22px 0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:24px;min-width:0}.panel h2{margin-top:0}.panel p{font-size:14px}
+.track{padding:18px 0;border-top:1px solid var(--line-2)}.track p{margin:8px 0 12px}
+.activity{padding:15px 0;border-top:1px solid var(--line-2);font-size:14px}.activity small{font-size:12px}.activity p{margin:5px 0}
+article.activity{border-top:1px solid var(--line);padding:20px 24px;margin:12px 0}
+.toolbar{display:flex;gap:16px;margin-bottom:25px;flex-wrap:wrap}
+input,select,textarea{border:1px solid var(--field-line);border-radius:4px;background:var(--field);padding:11px;color:var(--field-ink);width:100%}
+.toolbar input{flex:1;min-width:220px}.toolbar select{width:200px}.toolbar button{white-space:nowrap}
+.board{display:grid;grid-template-columns:repeat(4,minmax(210px,1fr));gap:16px;overflow:auto}
+.column{background:var(--gray);border-radius:8px;padding:16px;min-width:210px}.column>h3{display:flex;justify-content:space-between;font-size:16px;margin:6px 3px 20px}.column>h3 span{color:var(--muted)}
+.column .task{margin-bottom:12px;padding:14px}.column .task .between{gap:4px;flex-wrap:wrap}
+.empty{text-align:center;font-size:11px;padding:25px 0;color:var(--muted)}
+.site h2{font-size:30px;margin:15px 0}
+.checklist{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.checklist button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;border-radius:0;border:0;border-bottom:1px solid var(--line-2);padding:16px 24px;font-size:14px;background:var(--surface)}.checklist button:last-child{border-bottom:0}
+footer{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);margin-top:35px;padding-top:20px;font-size:12px;color:var(--muted)}footer span{text-align:right}
+.overlay{position:fixed;inset:0;background:var(--scrim);display:flex;justify-content:flex-end;z-index:5}
+.modal{width:600px;max-width:100%;background:var(--surface);overflow:auto;padding:32px}.modal h2{margin:0}
+.modal label{display:block;font-size:13px;font-weight:600;margin:13px 0}.modal input,.modal select,.modal textarea{display:block;margin-top:7px}
+.modal .twocol{gap:15px;margin:0}.modal textarea{min-height:80px}.modal .checkbox{display:flex;align-items:center;gap:10px}.checkbox input{width:auto;margin:0}
+.ro-note{font-size:13px;color:var(--muted);background:var(--gray);border-radius:4px;padding:10px 12px}
+.comment{padding:12px;border-left:2px solid var(--red);background:var(--surface);margin:10px 0;font-size:13px;white-space:pre-wrap;border-radius:4px}.comment small{display:block;margin-top:6px}
+.tablewrap{overflow:auto;border:1px solid var(--gray);border-radius:8px}
+table{width:100%;border-collapse:collapse;text-align:left;font-size:14px}th{background:var(--gray);padding:16px;font-weight:600}td{padding:12px 16px;border-bottom:1px solid var(--gray)}
+td button{border:0;padding:0;text-align:left;color:var(--ink);background:none;font-weight:600}
+.compact{margin:12px 0;padding:16px 20px}.compact summary{cursor:pointer;font-weight:700;color:var(--ink);line-height:1.6}.compact summary span{float:right;font-weight:400;font-size:13px;color:var(--muted)}
+.compact[open] summary{border-bottom:1px solid var(--field-line);padding-bottom:10px;margin-bottom:12px}
+.sourceNote{font-size:12px;color:var(--muted)}
+.demandGrid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.demandGrid h3{margin:16px 0 10px}.demandGrid th:nth-child(n+2),.demandGrid td:nth-child(n+2){text-align:right}
+.demandGrid .tags{margin:8px 0}.demandGrid .tags span{background:var(--chip);color:var(--chip-ink);padding:4px 8px;border-radius:4px;font-size:12px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:6px;font-size:14px;z-index:9}
+@media(max-width:1100px){aside{width:205px}main{margin-left:205px;width:calc(100% - 205px)}.content{padding:25px}.stats{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:1fr}.hero h2{font-size:24px}.board{grid-template-columns:repeat(4,250px)}}
+@media(max-width:850px){.demandGrid{grid-template-columns:1fr}}
+@media(max-width:700px){aside{position:static;width:100%;padding:16px}.shell{display:block}.project,.sidebottom{display:none}.brand{width:160px;min-height:64px;padding:8px}.brand img{height:48px}
+  nav{display:flex;overflow:auto;margin:10px 0 0}nav button{white-space:nowrap;width:auto}nav button span{display:none}main{margin:0;width:100%}
+  header.top{padding:15px;height:auto;min-height:56px}.content{padding:24px 16px}.title{align-items:flex-start}h1{font-size:26px}.title .primary{font-size:12px;white-space:nowrap}
+  .hero{padding:24px;display:block}.hero h2{font-size:26px}.ring{margin-top:25px;width:110px;height:110px;min-width:110px}.ring strong{font-size:30px}
+  .twocol{grid-template-columns:1fr}.toolbar select{width:100%}.stats article{padding:16px}.stats strong{font-size:32px}.stats small{font-size:11px}
+  footer{display:block}footer span{display:block;text-align:left;margin-top:10px}.modal{padding:24px}.modal .twocol{grid-template-columns:1fr 1fr}.compact summary span{float:none;display:block}.compact{padding:12px}}
 </style>
 
-<style>
-.kpis{display:flex;gap:22px;flex-wrap:wrap}
-.kpis div{display:grid}
-.kpis b{font-family:var(--f-head);font-size:28px;font-weight:700;line-height:1}
-.kpis span{font-size:12px;color:var(--mast-muted);letter-spacing:.06em;text-transform:uppercase}
-.sitecards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.kv{display:grid;grid-template-columns:110px 1fr;gap:5px 12px;font-size:14px}
-.kv dt{color:var(--muted);font-weight:600}
-.kv dd{margin:0;min-width:0}
-.tl{display:grid;gap:0}
-.tl .ev{display:grid;grid-template-columns:90px 18px 1fr;gap:10px;align-items:start;padding:8px 0}
-.tl .dotc{width:12px;height:12px;border-radius:50%;margin-top:4px;background:var(--panel);border:2px solid var(--muted)}
-.tl .ev.done .dotc{background:var(--ok);border-color:var(--ok)}
-.tl .ev.next .dotc{border-color:var(--accent)}
-.tl .when{font-family:var(--f-head);font-weight:600;color:var(--muted)}
-.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
-.person{border:1px solid var(--line);border-radius:var(--r-md);padding:10px;background:var(--panel)}
-.person b{display:block}
-.person span{font-size:13px;color:var(--muted)}
-.rdrow{display:grid;grid-template-columns:128px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
-.rdrow:last-child{border-bottom:0}
-.upform{display:grid;grid-template-columns:1fr auto;gap:8px}
-.upform .share{grid-column:1/-1;font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
-.chip.amz{color:var(--info);border-color:var(--info)}
-.upform textarea{min-height:60px;border:1px solid var(--line);border-radius:var(--r-sm);padding:8px;background:var(--bg);color:var(--ink);font:inherit}
-@media (max-width:760px){.sitecards{grid-template-columns:1fr}.rdrow{grid-template-columns:1fr}.upform{grid-template-columns:1fr}}
-</style>
-<style>
-main .wrap{display:grid;gap:22px;padding-block:22px 40px}
-.asks{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.ask{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:var(--r-md);padding:12px;background:var(--panel);display:grid;gap:6px}
-.ask b{font-weight:600}
-.grp{display:grid;gap:0}
-.mrow{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:start;padding:9px 0;border-bottom:1px solid var(--line)}
-.mrow:last-child{border-bottom:0}
-.bar{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden;margin:6px 0 4px}
-.bar i{display:block;height:100%;background:var(--ok)}
-.areas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
-.foot{color:var(--muted);font-size:13px;text-align:center}
-@media (max-width:760px){.areas{grid-template-columns:1fr}.mrow{grid-template-columns:1fr auto}.mrow .pillc{grid-column:1/-1}.grid2{grid-template-columns:1fr}}
-</style>
-
-<header class="mast">
-  <div class="wrap">
-    <div class="eyebrow"><span class="rule"></span>Prepared for Amazon Middle Mile · SVT Fleet Solutions</div>
-    <div style="display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:end">
-      <div style="display:grid;gap:6px;min-width:0">
-        <h1>ONT42 / ONT43 Repair Pilot</h1>
-        <div class="sub">SVT repair support for the ONT42 and ONT43 AFP tractor yards in Ontario, CA. Work requests come through Reach and connect to Relay Garage. This page shows where launch stands and what we need from Amazon.</div>
-      </div>
-      <div class="kpis num" id="kpis"></div>
-    </div>
-  </div>
-</header>
-
-<main><div class="wrap">
-
-<section aria-labelledby="h-asks">
-  <div class="head"><div><h2 id="h-asks">Needs Amazon input</h2><p>Open launch items where Amazon has a part to play.</p></div></div>
-  <div class="asks" id="asks" style="margin-top:12px"></div>
-</section>
-
-<section aria-labelledby="h-prog">
-  <div class="head"><div><h2 id="h-prog">Launch progress</h2><p>Everything that has to be in place before SVT takes the first work request.</p></div></div>
-  <div class="areas" id="areas" style="margin-top:12px"></div>
-</section>
-
-<section class="grid2">
-  <div class="panel"><h3>How the pilot works</h3>
-    <dl class="kv" style="margin-top:8px">
-      <dt>Sites</dt><dd>ONT42 and ONT43, Ontario, CA</dd>
-      <dt>Vehicles</dt><dd>Middle-mile tractors, Class 7 and 8 first. SVT services Class 1 to 8.</dd>
-      <dt>Work requests</dt><dd>Through Reach, connected to Relay Garage. SVT dispatchers use the Reach web portal; technicians use the Reach mobile app.</dd>
-      <dt>Site access</dt><dd>Under DTNA's Avetta clearance. Safety vest, gate code by email.</dd>
-      <dt>Invoicing</dt><dd>Through DTNA / Corcentric</dd>
-      <dt>Coverage</dt><dd>SVT Corona / Inland Empire</dd>
-      <dt>Go-live</dt><dd id="golive-text"></dd>
-    </dl></div>
-  <div class="panel"><h3>How we'll measure it</h3>
-    <p class="small muted" style="margin:6px 0">To agree with Amazon before go-live.</p>
-    <ul style="margin:4px 0 0;padding-left:18px">
-      <li>Median days to complete a repair, against today's baseline (ONT42 10.9 days, ONT43 11.0 days)</li>
-      <li>Share of repairs open more than 7 and more than 14 days</li>
-      <li>Tractors down at any time</li>
-    </ul></div>
-</section>
-
-<section class="sitecards">
-  <div class="panel"><h3>ONT42</h3>
-    <dl class="kv" style="margin-top:8px"><dt>Fleet</dt><dd>226 tractors: 133 CNG; Volvo 111, Freightliner 61</dd><dt>Repair time</dt><dd>10.9-day median today</dd><dt>Space</dt><dd>Limited on site; complex work handled off site nearby</dd></dl></div>
-  <div class="panel"><h3>ONT43</h3>
-    <dl class="kv" style="margin-top:8px"><dt>Fleet</dt><dd>147 tractors: 106 CNG; Volvo 86</dd><dt>Repair time</dt><dd>11.0-day median today</dd><dt>Space</dt><dd>More room on a dirt lot; being assessed</dd></dl></div>
-</section>
-
-<section aria-labelledby="h-up">
-  <div class="head"><div><h2 id="h-up">Updates</h2></div></div>
-  <div class="panel" style="margin-top:12px"><div class="list" id="up-list"></div></div>
-</section>
-
-<section class="panel" aria-labelledby="h-ct">
-  <h3 id="h-ct">Contacts</h3>
-  <div class="people" style="margin-top:10px">
-    <div class="person"><b>Mike Thompson</b><span>President, SVT · Sponsor</span></div>
-    <div class="person"><b>Brooke Benkert</b><span>Director of Business Development, SVT · Launch Readiness</span></div>
-    <div class="person"><b>Lon Samford</b><span>Director of Operations, SVT · Operational Readiness</span></div>
-    <div class="person"><b>Mark Gallison</b><span>Director of Business Development, SVT</span></div>
-    <div class="person"><b>Sidhant Mishra</b><span>Reach · onboarding</span></div>
-    <div class="person"><b>Kuldeep Rana</b><span>Reach · account setup</span></div>
-  </div>
-</section>
-
-<p class="foot" id="foot"></p>
-</div></main>
+<div class="shell">
+<aside>
+  <div class="brand"><img src="data:image/png;base64,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" alt="SVT Fleet Solutions"></div>
+  <div class="project"><span class="eyebrow">Amazon pilot view</span><h3>Amazon<br>Middle Mile</h3><span class="pill">ONT42 PRIMARY · ONT43 ADD-ON</span></div>
+  <nav id="nav" aria-label="Pilot views"></nav>
+  <div class="sidebottom"><div class="live">● Amazon pilot view</div><p>Shared records · live updates</p><small>Prepared for Amazon Middle Mile by SVT Fleet Solutions.</small></div>
+</aside>
+<main>
+  <header class="top"><div>SVT Fleet Solutions <span>/ Amazon pilot view</span></div></header>
+  <section class="content">
+    <div class="between title"><div><div class="eyebrow red">Middle mile pilot / Ontario, CA</div><h1 id="view-title">Amazon pilot view</h1><p>Launch readiness, shared dependencies and pilot progress.</p></div><button class="primary" id="add" hidden>＋ Add action</button></div>
+    <div id="err" role="alert" class="alert" hidden></div>
+    <div id="view"></div>
+    <footer>SVT Fleet Solutions · Amazon pilot view<span>ONT42 primary / ONT43 add-on · Proposed dates require confirmation</span></footer>
+  </section>
+</main>
+</div>
+<div id="drawer-root"></div><div id="toast-root"></div>
 
 <script>
 (() => {
-const FALLBACK_GO_LIVE="2026-11-25";
-const GROUPS=["Reach & Relay Garage","Site access & readiness","Service readiness","Scope, start date & measures","Billing & approvals"];
-const S={milestones:[],updates:[],meta:[]};
+const DEMAND={"ONT42":{"records":108,"units":49,"categories":[["Transmission",37],["Engine",34],["Accessories",11],["Check Engine Light",10],["Brakes",7],["Electrical",6],["HVAC",5],["Fuel",4],["Exhaust",4],["Body",3],["Chassis",2],["Doors",1],["Steering",1],["APU",1]],"components":[["Transmission Assembly",30],["Engine Assembly",18],["Accessories Components",7],["Air Conditioning",5],["Coolant",5],["CEL Overall Issue",5],["Engine Shutdown",4],["Exhaust System",4]],"models":[{"model":"FREIGHTLINER NEW CASCADIA PRL-23K","records":69,"units":21},{"model":"FREIGHTLINER CASCADIA PRL-23K","records":27,"units":17},{"model":"VOLVO VNL64T300","records":5,"units":4},{"model":"FREIGHTLINER Cascadia","records":2,"units":2},{"model":"INTERNATIONAL LT625 6x4","records":1,"units":1},{"model":"VOLVO VNR64T300","records":1,"units":1},{"model":"Inventory match unavailable","records":1,"units":1},{"model":"VOLVO VNL64T760","records":1,"units":1},{"model":"PETERBILT 579","records":1,"units":1}],"dateRange":["2025-09-12","2026-10-26"]},"ONT43":{"records":17,"units":12,"categories":[["Transmission",6],["Electrical",5],["Engine",4],["Suspension",1],["HVAC",1],["Fuel",1],["Body",1]],"components":[["Engine Assembly",3],["Transmission Assembly",3],["Electrical System",2],["Solenoid Assembly",2],["Modules",1],["Cooling System",1],["Suspension Assembly",1],["Air Conditioning",1]],"models":[{"model":"FREIGHTLINER NEW CASCADIA PRL-23K","records":11,"units":7},{"model":"FREIGHTLINER Cascadia","records":3,"units":2},{"model":"VOLVO VNL64T300","records":3,"units":3}],"dateRange":["2025-10-03","2026-10-27"]}};
+const STREAMS=["Launch readiness","Pilot performance","Reach onboarding","Service readiness","Site readiness","Technology readiness"];
+const STATUSES=["Not started","In progress","Awaiting response","Awaiting confirmation","Blocked","Done"];
+const SITES=["Project-wide","Both sites","ONT42","ONT43"];
+const TABS=[["Overview","◫","overview"],["Action board","▦","board"],["Sites & readiness","◎","sites"],["Weekly standup","◷","standup"],["Updates","≡","updates"]];
+const S={tasks:[],activity:[],meta:[]};
+let db=null,user=null,canWrite=false,ready=false,viewerName="";
+const F={q:"",stream:"All workstreams",site:"All sites",status:"All statuses",owner:"All owners",view:"Board"};
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
-const pd=s=>{if(!s)return null;const d=new Date(String(s).slice(0,10)+"T00:00:00");return isNaN(d)?null:d};
-const days=s=>{const d=pd(s);return d?Math.round((d-today())/864e5):null};
-const fmtD=s=>{const d=pd(s);return d?d.toLocaleDateString(undefined,{month:"short",day:"numeric"}):""};
-const PC={"Complete":"ok","In progress":"info","At risk":"bad","Not started":""};
+const fmtDue=d=>{if(!d)return"";const x=new Date(d+"T00:00:00");return isNaN(x)?d:x.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})};
+const fmtAt=a=>{const x=new Date(a);return isNaN(x)?"":x.toLocaleString()};
+const stCls=s=>s==="Done"?"s-done":s==="Blocked"?"s-blocked":s==="In progress"?"s-prog":"";
+function toast(m){$("#toast-root").innerHTML=`<div class="toast" role="status">${esc(m)}</div>`;clearTimeout(toast.t);toast.t=setTimeout(()=>$("#toast-root").innerHTML="",2400)}
+function showErr(m){const e=$("#err");e.hidden=!m;e.innerHTML=m?`<b>Couldn't save</b><p>${esc(m)}</p>`:""}
 const meta=()=>S.meta.find(m=>m.id==="status")||{};
-function render(){
-  const m=meta(), gl=m.goLive||FALLBACK_GO_LIVE, d=days(gl);
-  const ms=S.milestones.slice().sort((a,b)=>(+a.order||99)-(+b.order||99));
-  const gates=ms.filter(x=>x.gate!=="Nice to have"), done=gates.filter(x=>x.status==="Complete").length;
-  const asks=ms.filter(x=>String(x.party||"").includes("Amazon")&&x.status!=="Complete");
-  $("#kpis").innerHTML=`<div><b>${fmtD(gl)}</b><span>go-live target</span></div><div><b>${done}/${gates.length||"–"}</b><span>launch items complete</span></div><div><b>${asks.length}</b><span>need Amazon input</span></div>`;
-  $("#golive-text").textContent=`Target ${fmtD(gl)}${d!==null&&d>=0?` (${d} days)`:""}. ${m.goLiveNote||"Start date to confirm with Amazon."}`;
-  $("#asks").innerHTML=asks.length?asks.map(x=>`<div class="ask"><b>${esc(x.label)}</b><div class="small muted">${esc(x.site||"")} · ${esc(x.party)}</div><div><span class="pill ${PC[x.status]||""}">${esc(x.status)}</span></div></div>`).join(""):`<div class="empty">Nothing waiting on Amazon right now.</div>`;
-  $("#areas").innerHTML=ms.length?GROUPS.map(g=>{const list=ms.filter(x=>x.group===g);if(!list.length)return"";
-    const c=list.filter(x=>x.status==="Complete").length,pct=Math.round(c/list.length*100);
-    return `<div class="panel"><div class="head" style="align-items:baseline"><h3>${esc(g)}</h3><span class="small muted num">${c}/${list.length} complete</span></div>
-      <div class="bar" role="img" aria-label="${pct}% complete"><i style="width:${pct}%"></i></div>
-      <div class="grp">${list.map(x=>`<div class="mrow"><div class="pillc"><span class="pill ${PC[x.status]||""}">${esc(x.status)}</span></div><div style="min-width:0">${esc(x.label)}<div class="small muted">${esc(x.site||"")}</div></div><div><span class="chip">${esc(x.party||"")}</span></div></div>`).join("")}</div></div>`}).join(""):`<div class="empty">Status is loading. If it stays empty, sign in to claude.ai.</div>`;
-  const ups=S.updates.slice().sort((a,b)=>String(b.at||b.date).localeCompare(String(a.at||a.date)));
-  $("#up-list").innerHTML=ups.length?ups.map(u=>`<div class="li"><div class="when">${esc(fmtD(u.date))}</div><div style="min-width:0;overflow-wrap:anywhere">${esc(u.text)}</div><div></div></div>`).join(""):`<div class="empty">No updates yet.</div>`;
-  $("#foot").textContent=m.syncedAt?`Status as of ${new Date(m.syncedAt).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}. Maintained by SVT Fleet Solutions.`:"Maintained by SVT Fleet Solutions.";
+const tasksSorted=()=>S.tasks.slice().sort((a,b)=>(+a.order||99)-(+b.order||99));
+const gates=()=>S.tasks.filter(t=>t.gate);
+
+function card(t){return `<button class="task" data-open="${esc(t.id)}"><div class="between"><span class="eyebrow">${esc(t.stream)}</span>${t.gate?'<span class="gate">LAUNCH GATE</span>':""}</div><h3>${esc(t.title)}</h3><p>${esc(t.detail)}</p>${t.status==="Blocked"&&t.blockedBy?`<p><b>Blocked by:</b> ${esc((S.tasks.find(x=>x.id===t.blockedBy)||{}).title||"Task unavailable")}</p>`:""}<div class="tags"><span class="status ${stCls(t.status)}">${esc(t.status)}</span><span>${esc(t.site)}</span></div><div class="taskfoot"><span>${esc(t.owner)}</span><small>${t.due?esc(fmtDue(t.due)):"Date unconfirmed"}</small></div></button>`}
+
+function siteDemand(){return `<section aria-label="Site work demand"><div class="sectionhead"><h2>Site work demand · Amazon-provided snapshot</h2><small>Work types &amp; makes / models</small></div><p class="sourceNote">Historical work-request mix for support planning. Counts describe supplied records, not today’s open backlog or unique work orders.</p>${["ONT42","ONT43"].map(site=>{const d=DEMAND[site];return `<details class="panel compact"><summary>${site} · ${site==="ONT42"?"Primary":"Add-on"}<span>${d.records} work-request records · ${d.units} vehicles</span></summary><div class="demandGrid"><div><h3>Type of work</h3><div class="tags">${d.categories.map(([n,c])=>`<span>${esc(n)} <b>${c}</b></span>`).join("")}</div><p><b>Common components:</b> ${d.components.map(([n,c])=>`${esc(n)} (${c})`).join(" · ")}</p><p><b>Examples from Amazon’s descriptions:</b> ${site==="ONT42"?"Clutch replacement; transmission faults / no shifting; engine shutdown and low fuel or oil pressure; IPPC calibration.":"Transmission shift-solenoid faults (5910); radar calibration; radiator / engine leaks; misfire alerts; wiring and electrical faults."}</p><p class="sourceNote">Category counts count each distinct concern once per record. A record may have multiple concerns, so totals exceed the record count.</p></div><div><h3>Makes &amp; models needing support</h3><div class="tablewrap"><table><thead><tr><th>Make / model</th><th>Vehicles</th><th>WR records</th></tr></thead><tbody>${d.models.map(m=>`<tr><td>${esc(m.model)}</td><td>${m.units}</td><td>${m.records}</td></tr>`).join("")}</tbody></table></div></div></div><p class="sourceNote"><b>Sources:</b> Amazon’s DTNA WR Data.xlsx, Services sheet; site selected by Asset Domicile Site. Makes/models matched by Equipment ID to ATS Asset Inventory 2026-10-30.xlsx (October 29 snapshot). ${site==="ONT42"?"107 of 108 records matched; one vehicle has no inventory match.":"All 17 records matched."} Work-request modified dates in this subset: ${d.dateRange[0]}–${d.dateRange[1]}. These are modified dates, not opened dates. Multiple requests can refer to the same vehicle.</p><p><b>Planning implication:</b> ${site==="ONT42"?"Prioritize Cascadia transmission / clutch and engine diagnostic capability; retain support pathways for Volvo, International and Peterbilt.":"Plan Cascadia transmission and electrical diagnostics, with Volvo support and cooling / engine capability."} This is a planning interpretation of the supplied mix; confirm current demand with Amazon.</p></details>`}).join("")}</section>`}
+
+function ring(done,total){const r=70,c=2*Math.PI*r,p=total?done/total:0;return `<div class="ring" role="img" aria-label="${done} of ${total} gates complete"><svg viewBox="0 0 155 155" width="100%" height="100%"><circle cx="77.5" cy="77.5" r="${r}" fill="none" stroke="#5b6b7f" stroke-width="7"/><circle cx="77.5" cy="77.5" r="${r}" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(c*p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 77.5 77.5)"/></svg><div><strong>${ready?done+"/"+total:"—"}</strong><span>gates complete</span></div></div>`}
+
+function vOverview(){
+  const g=gates(),done=g.filter(t=>t.status==="Done").length,m=meta();
+  const latest=S.activity.slice().sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,5);
+  const next=tasksSorted().filter(t=>t.status!=="Done"&&t.gate).sort((a,b)=>(a.priority==="High"?0:1)-(b.priority==="High"?0:1)).slice(0,3);
+  return `<div class="hero"><div><span class="eyebrow">Launch readiness</span><h2>ONT42 first. ONT43 to follow.</h2><p>Reach web and mobile for the pilot. Native connection to Relay Garage.</p><div class="heroTags"><span>Proposed: ${esc(m.goLiveLabel||"Nov 25")} · ${m.goLiveConfirmed?"confirmed":"unconfirmed"}</span><span>Primary: ONT42</span><span>Add-on: ONT43</span></div></div>${ring(done,g.length)}</div>
+  <div class="stats"><article><span>Open launch gates</span><strong>${ready?g.length-done:"—"}</strong><small>Awaiting evidence or confirmation</small></article><article><span>Waiting on input</span><strong>${ready?S.tasks.filter(t=>t.status.startsWith("Awaiting")).length:"—"}</strong><small>Team and partner dependencies</small></article><article><span>In progress</span><strong>${ready?S.tasks.filter(t=>t.status==="In progress").length:"—"}</strong><small>Active actions</small></article><article><span>Blocked</span><strong>${ready?S.tasks.filter(t=>t.status==="Blocked").length:"—"}</strong><small>Resolve before proceeding</small></article></div>
+  <div class="alert"><b>Confirm the launch commitment</b><p>${esc(m.commitmentNote||"November 25 is proposed. Validate Reach onboarding/training and the 2–3 business day Amazon connection lead time before confirming go-live.")}</p></div>
+  ${siteDemand()}
+  <div class="sectionhead"><h2>Shared next actions</h2><button class="link" data-tab="board">View all →</button></div>
+  <div class="cards">${next.map(card).join("")||`<div class="empty">No open launch gates.</div>`}</div>
+  <div class="twocol"><article class="panel"><h2>Launch path</h2><div class="track"><b>Reach onboarding</b><p>Activate service-provider account, set up locations and users, complete web and mobile training.</p></div><div class="track"><b>Amazon connection</b><p>Reach sends setup details to Edmund Park. Amazon connects Relay Garage; team validates service-event flow and acceptance criteria.</p></div></article>
+  <article class="panel"><h2>Latest updates</h2>${latest.length?latest.map(a=>`<div class="activity"><b>${esc(a.title)}</b><p>${esc(a.note)}</p><small>${esc(a.actor||"Project team member")} · ${esc(fmtAt(a.at))}</small></div>`).join(""):`<p>No team updates recorded yet. Open an action to post progress or confirmation.</p>`}</article></div>`;
 }
+
+function vBoard(){
+  const owners=[...new Set(S.tasks.map(t=>t.owner).filter(Boolean))].sort();
+  const q=F.q.toLowerCase();
+  const list=tasksSorted().filter(t=>(F.stream==="All workstreams"||t.stream===F.stream)&&(F.site==="All sites"||t.site===F.site)&&(F.status==="All statuses"||t.status===F.status)&&(F.owner==="All owners"||t.owner===F.owner)&&(t.title+" "+t.owner+" "+t.detail).toLowerCase().includes(q));
+  const sel=(k,label,opts)=>`<select aria-label="${label}" data-f="${k}">${opts.map(o=>`<option${o===F[k]?" selected":""}>${esc(o)}</option>`).join("")}</select>`;
+  let body;
+  if(F.view==="Table") body=`<div class="tablewrap"><table><thead><tr><th>Action</th><th>Owner</th><th>Site</th><th>Status</th><th>Due</th></tr></thead><tbody>${list.map(t=>`<tr><td><button data-open="${esc(t.id)}">${esc(t.title)}</button></td><td>${esc(t.owner)}</td><td>${esc(t.site)}</td><td>${esc(t.status)}</td><td>${t.due?esc(fmtDue(t.due)):"Unconfirmed"}</td></tr>`).join("")}</tbody></table></div>`;
+  else body=`<div class="board">${["To do","In progress","Waiting / blocked","Complete"].map((s,i)=>{const l=list.filter(t=>i===0?t.status==="Not started":i===1?t.status==="In progress":i===2?["Awaiting confirmation","Awaiting response","Blocked"].includes(t.status):t.status==="Done");return `<div class="column"><h3>${s}<span>${l.length}</span></h3>${l.map(card).join("")}${l.length?"":'<p class="empty">No actions</p>'}</div>`}).join("")}</div>`;
+  return `<div class="toolbar"><input type="search" aria-label="Search actions" placeholder="Search actions or owners…" id="q" value="${esc(F.q)}">${sel("stream","Filter workstream",["All workstreams",...STREAMS])}${sel("site","Filter site",["All sites",...SITES])}</div>
+  <div class="toolbar">${sel("status","Filter status",["All statuses",...STATUSES])}${sel("owner","Filter owner",["All owners",...owners])}<button id="toggle-view">${F.view==="Board"?"Table view":"Board view"}</button></div>${body}`;
+}
+
+function vSites(){
+  const SC={ONT42:["Confirmed primary site","Limited onsite space. Confirm safe repair area and offsite route for complex work."],ONT43:["Add-on site","Confirm add-on activation date, working area and coverage separately."]};
+  return `${siteDemand()}<div class="twocol">${["ONT42","ONT43"].map(s=>`<article class="panel site"><span class="eyebrow">Ontario · Middle Mile</span><h2>${s}</h2><span class="status">${SC[s][0]}</span><p>${SC[s][1]}</p><p>Operating hours, coverage and first-event readiness require confirmation.</p></article>`).join("")}</div>
+  <h2>Launch readiness gates</h2><p>Primary go-live requires sign-off. Track add-on readiness by site.</p>
+  <div class="checklist">${tasksSorted().filter(t=>t.gate).map(t=>`<button data-open="${esc(t.id)}"><span>${t.status==="Done"?"☑":"□"} ${esc(t.title)}</span><span class="status ${stCls(t.status)}">${esc(t.status)}</span></button>`).join("")||'<p class="empty">No gates yet.</p>'}</div>`;
+}
+
+const GROUPS=[["Launch decisions & blockers",5],["Reach onboarding & training",8],["Site readiness & vehicle / WO review",8],["Technology & future integration",5],["Other open actions & expansion",6]];
+function group(t){const x=(t.title+" "+t.stream).toLowerCase();if(t.status==="Blocked"||/launch date|go.no.go|acceptance criteria/.test(x))return 0;if(/reach|saas|agreement|training|train |mobile|activation|location setup/.test(x)&&!/api|mcp|integration test|exceed|excede|map .*data/.test(x))return 1;if(/site|asset|inventory|backlog|safety|cng|volvo|utilization|coverage|work.request|measures|performance|technician|parts/.test(x))return 2;if(/api|mcp|integration|invoice|billing|aws|technical|relay|validation/.test(x))return 3;return 4}
+function vStandup(){
+  const open=S.tasks.filter(t=>t.status!=="Done");
+  return `<article class="panel"><div class="between"><h2>Weekly pilot standup · 35 minutes</h2><span class="status">${ready?open.length:"—"} open actions</span></div><p>ONT42 primary · ONT43 add-on. Proposed November 25 launch remains unconfirmed. Agenda reflects the latest saved actions in this view.</p><p><b>Attendees:</b> SVT (Brooke, Mike, Lon, Mark); Reach and Amazon owners as relevant. Meeting time: to be agreed.</p><p><b>For every open action:</b> owner update → blocker or decision → next step → committed date → completion evidence. Open an item below to record the outcome.</p></article>
+  ${!ready?"<p>Loading saved actions…</p>":GROUPS.map(([title,min],i)=>{const l=open.filter(t=>group(t)===i).sort((a,b)=>Number(!!b.gate)-Number(!!a.gate)||String(a.due||"9999").localeCompare(String(b.due||"9999")));return `<details class="panel compact"${i===0?" open":""}><summary>${min} min · ${title}<span>${l.length} actions</span></summary>${l.length?`<div class="tablewrap"><table><thead><tr><th>Open action</th><th>Owner</th><th>Status</th><th>Committed date</th></tr></thead><tbody>${l.map(t=>`<tr><td><button data-open="${esc(t.id)}">${t.gate?"Gate · ":""}${esc(t.title)}</button></td><td>${esc(t.owner)}</td><td>${esc(t.status)}</td><td>${t.due?esc(fmtDue(t.due)):"Agree at standup"}</td></tr>`).join("")}</tbody></table></div>`:"<p>No open actions in this group.</p>"}</details>`}).join("")}
+  <article class="panel"><h3>3 min · Read back commitments</h3><p>Confirm decisions, one accountable owner and date for each next step; identify escalations. Close actions only with evidence.</p><p><b>Standing decisions:</b> Reach activation status; Reach-to-Amazon handoff receipt; training and test completion; ONT42 go/no-go owner and date; ONT43 add-on timing; vehicle/WO baseline and reporting owner.</p></article>`;
+}
+
+function vUpdates(){
+  const a=S.activity.slice().sort((x,y)=>String(y.at).localeCompare(String(x.at)));
+  return `<div class="alert"><b>Amazon pilot view updates</b><p>Only post information suitable for this audience. Statuses are meeting-reported or team-entered until supporting confirmation is recorded. Do not paste credentials, gate codes, private correspondence or contract terms.</p></div>${a.length?a.map(x=>`<article class="panel activity"><b>${esc(x.title)}${x.status?" · "+esc(x.status):""}</b><p>${esc(x.note)}</p><small>${esc(x.actor||"Project team member")} · ${esc(fmtAt(x.at))}</small></article>`).join(""):`<article class="panel"><p>No updates posted yet.</p></article>`}`;
+}
+
+let tab="overview";
+function render(){
+  $("#nav").innerHTML=TABS.map(([n,i,k])=>`<button data-tab="${k}"${tab===k?' aria-current="page"':""}><span aria-hidden="true">${i}</span>${n}</button>`).join("");
+  $("#view-title").textContent=tab==="overview"?"Amazon pilot view":TABS.find(x=>x[2]===tab)[0];
+  $("#add").hidden=!(db&&canWrite);
+  const v={overview:vOverview,board:vBoard,sites:vSites,standup:vStandup,updates:vUpdates}[tab]();
+  const focusQ=document.activeElement&&document.activeElement.id==="q", pos=focusQ?document.activeElement.selectionStart:0;
+  $("#view").innerHTML=v;
+  if(focusQ){const q=$("#q");if(q){q.focus();q.setSelectionRange(pos,pos)}}
+}
+function setTab(k){tab=k;try{history.replaceState(null,"","#"+k)}catch(e){}render();scrollTo(0,0)}
+
+function openDrawer(t){
+  const isNew=!t, ro=!canWrite||!db;
+  const e=t?JSON.parse(JSON.stringify(t)):{id:"",title:"",owner:"Unassigned",stream:STREAMS[0],status:"Not started",priority:"Medium",site:"Project-wide",due:"",gate:false,detail:"",evidence:"Team-entered",comments:[],rev:0};
+  const opt=(arr,v)=>arr.map(o=>`<option${o===v?" selected":""}>${esc(o)}</option>`).join("");
+  const blockers=S.tasks.filter(x=>x.id!==e.id);
+  const dis=ro?" disabled":"";
+  $("#drawer-root").innerHTML=`<div class="overlay" data-close-scrim><form class="modal" role="dialog" aria-modal="true" aria-labelledby="dr-h" id="dr"><div class="between"><h2 id="dr-h">Action details</h2><button type="button" data-close aria-label="Close action">✕</button></div>
+  <p>Updates here are visible to users granted access to the amazon pilot view.</p>${ro?'<p class="ro-note">You can view this action. Ask SVT for edit access to change it.</p>':""}
+  <label>Action title<input name="title" required maxlength="300" value="${esc(e.title)}"${dis}></label>
+  <div class="twocol"><label>Owner<input name="owner" required value="${esc(e.owner)}"${dis}></label><label>Due date<input name="due" type="date" value="${esc(e.due)}"${dis}></label>
+  <label>Status<select name="status"${dis}>${opt(STATUSES,e.status)}</select></label>
+  <label id="blk-wrap"${e.status==="Blocked"?"":" hidden"}>Blocked by<select name="blockedBy"${dis}><option value="">External or not listed</option>${blockers.map(x=>`<option value="${esc(x.id)}"${x.id===e.blockedBy?" selected":""}>${esc(x.title)}</option>`).join("")}</select></label>
+  <label>Workstream<select name="stream"${dis}>${opt(STREAMS,e.stream)}</select></label><label>Site<select name="site"${dis}>${opt(SITES,e.site)}</select></label><label>Priority<select name="priority"${dis}>${opt(["High","Medium","Low"],e.priority)}</select></label></div>
+  <label class="checkbox"><input type="checkbox" name="gate"${e.gate?" checked":""}${dis}>Launch gate</label>
+  <label>Details<textarea name="detail"${dis}>${esc(e.detail)}</textarea></label>
+  <label>Confirmation / evidence reference<input name="evidence" value="${esc(e.evidence)}"${dis}></label>
+  ${ro?"":`<label>Team update<textarea name="update" placeholder="Progress, blocker or confirmation suitable for this audience"></textarea></label>`}
+  ${(e.comments||[]).map(c=>`<div class="comment">${esc(c.text)}<small>${esc(c.actor||"Project team member")} · ${esc(fmtAt(c.at))}</small></div>`).join("")}
+  <div id="dr-err" role="alert" class="alert" hidden></div>
+  ${ro?"":`<button class="primary" id="dr-save">Save update</button>`}</form></div>`;
+  const f=$("#dr");
+  f.status.addEventListener("change",()=>{$("#blk-wrap").hidden=f.status.value!=="Blocked"});
+  setTimeout(()=>(f.querySelector("input:not([disabled])")||f.querySelector("[data-close]")).focus(),0);
+  f.addEventListener("submit",async ev=>{ev.preventDefault();if(ro)return;
+    const btn=$("#dr-save"),errBox=$("#dr-err");errBox.hidden=true;
+    const fd=new FormData(f);const now=new Date().toISOString();
+    const body={...e,title:fd.get("title").trim(),owner:fd.get("owner").trim(),due:fd.get("due")||"",status:fd.get("status"),stream:fd.get("stream"),site:fd.get("site"),priority:fd.get("priority"),gate:!!fd.get("gate"),detail:fd.get("detail").trim(),evidence:fd.get("evidence").trim()};
+    body.blockedBy=body.status==="Blocked"?(fd.get("blockedBy")||""):"";
+    if(!body.title||!body.owner){errBox.hidden=false;errBox.innerHTML="<b>Missing information</b><p>Action title and owner are required.</p>";return}
+    if(body.blockedBy){let id=body.blockedBy,seen=new Set([body.id]);while(id){if(seen.has(id)){errBox.hidden=false;errBox.innerHTML="<b>Dependency loop</b><p>Tasks cannot block themselves or form a dependency cycle.</p>";return}seen.add(id);id=(S.tasks.find(x=>x.id===id)||{}).blockedBy}}
+    const note=(fd.get("update")||"").trim();
+    btn.disabled=true;btn.textContent="Saving…";
+    try{
+      if(isNew){body.id=db.collection("tasks").doc().id;body.order=99;body.comments=[];body.src=[]}
+      else{const cur=await db.doc("tasks/"+e.id).get();const c=cur.exists?cur.data():null;if(c&&(c.rev||0)!==(e.rev||0)){errBox.hidden=false;errBox.innerHTML="<b>Someone else just changed this action</b><p>Close and reopen it to see their changes, then save again.</p>";btn.disabled=false;btn.textContent="Save update";return}}
+      const changed=isNew||["title","owner","due","status","stream","site","priority","gate","detail","evidence","blockedBy"].some(k=>JSON.stringify(body[k])!==JSON.stringify(e[k]));
+      if(note) body.comments=[...(body.comments||[]),{text:note,actor:viewerName||"Project team member",at:now}];
+      body.rev=(e.rev||0)+1;body.updatedAt=now;body.updatedBy=viewerName||"Project team member";
+      await db.doc("tasks/"+body.id).set(body);
+      if(note||changed){const a={title:body.title,status:body.status,note:note||(isNew?"Action added.":"Action details updated."),actor:viewerName||"Project team member",at:now,taskId:body.id};await db.collection("activity").doc().set(a)}
+      if(body.status==="Done") await unblockDependents(body);
+      closeDrawer();toast(isNew?"Action added":"Saved");
+    }catch(err){btn.disabled=false;btn.textContent="Save update";errBox.hidden=false;
+      if(err&&err.code==="invalid_argument"){canWrite=false;render();errBox.innerHTML="<b>View only</b><p>You can view this pilot but not change it. Ask SVT for edit access.</p>"}
+      else errBox.innerHTML=`<b>Couldn't save</b><p>${esc((err&&err.message)||"Try again in a moment.")}</p>`}
+  });
+}
+async function unblockDependents(done){
+  for(const t of S.tasks.filter(x=>x.status==="Blocked"&&x.blockedBy===done.id)){
+    const now=new Date().toISOString();const back=t.resumeStatus&&t.resumeStatus!=="Blocked"?t.resumeStatus:"Not started";
+    await db.doc("tasks/"+t.id).set({...t,status:back,blockedBy:"",rev:(t.rev||0)+1,updatedAt:now,updatedBy:"Automatic dependency update"});
+    await db.collection("activity").doc().set({title:t.title,status:back,note:"Unblocked automatically because the selected blocking task was completed.",actor:"Automatic dependency update",at:now,taskId:t.id});
+  }
+}
+function closeDrawer(){$("#drawer-root").innerHTML="";const b=document.querySelector("[data-last-open]");if(b)b.focus()}
+
+document.addEventListener("click",e=>{
+  const tb=e.target.closest("[data-tab]");if(tb){setTab(tb.dataset.tab);return}
+  if(e.target.closest("[data-close]")||e.target.matches("[data-close-scrim]")){closeDrawer();return}
+  const o=e.target.closest("[data-open]");if(o){const t=S.tasks.find(x=>x.id===o.dataset.open);if(t)openDrawer(t);return}
+  if(e.target.closest("#add")){if(db&&canWrite)openDrawer(null);return}
+  if(e.target.closest("#toggle-view")){F.view=F.view==="Board"?"Table":"Board";render()}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer-root").innerHTML)closeDrawer()});
+document.addEventListener("input",e=>{if(e.target.id==="q"){F.q=e.target.value;render()}});
+document.addEventListener("change",e=>{const s=e.target.closest("select[data-f]");if(s){F[s.dataset.f]=s.value;render()}});
+
+const h=(location.hash||"").slice(1);if(TABS.some(x=>x[2]===h))tab=h;
 render();
 (async()=>{try{
-  const db=await window.claude?.use?.("db");
-  if(!db){$("#areas").innerHTML=`<div class="empty">Sign in to claude.ai to see live status.</div>`;return}
-  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));render()},err=>console.warn(c,err&&err.code)));
-}catch(e){console.warn(e)}})();
+  user=await window.claude?.use?.("user"); db=await window.claude?.use?.("db");
+  if(!db){$("#view").insertAdjacentHTML("afterbegin",`<div class="alert"><b>Live data isn't available here</b><p>Sign in to claude.ai to see the pilot's shared records.</p></div>`);return}
+  const w=user?await user.can("data.write"):null; canWrite=w!==false;
+  try{const me=user&&user.me?await user.me():null;viewerName=(me&&me.name)||""}catch(_){}
+  let pending=new Set(Object.keys(S));
+  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));pending.delete(c);if(!pending.size)ready=true;if(!$("#drawer-root").innerHTML||true)render()},err=>{console.warn(c,err&&err.code);pending.delete(c);if(!pending.size)ready=true;render()}));
+}catch(err){console.warn(err)}})();
 })();
 </script>

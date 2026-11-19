@@ -85,12 +85,18 @@ def build_status(snap, date):
         (STATUS / "pilot.md").write_text(md)
     amz = snap.get("amazon", {})
     if amz:
-        ms = sorted(amz.get("milestones", []), key=order)
         meta = next((m for m in amz.get("meta", []) if m.get("id") == "status"), {})
-        md = "# ONT42 / ONT43 Repair Pilot: Amazon status page\n\n" + note.format(link=LINKS["amazon"])
-        md += f"**Go-live target:** {meta.get('goLive','')} ({meta.get('goLiveNote','')})  \n**Last synced:** {meta.get('syncedAt','')}\n\n"
-        md += "## Milestones Amazon sees\n\n" + table(ms, [("group","Area"),("label","Milestone"),("status","Status"),("party","Who"),("site","Site")])
-        md += "\n## Updates Amazon sees\n\n" + table(amz.get("updates", []), [("date","Date"),("text","Update")])
+        md = "# ONT Pilot · Amazon View\n\n" + note.format(link=LINKS["amazon"])
+        md += f"**Go-live target:** {meta.get('goLive','')} ({'confirmed' if meta.get('goLiveConfirmed') else 'unconfirmed'})  \n**Last synced:** {meta.get('syncedAt','')}\n\n"
+        tasks = sorted(amz.get("tasks", []), key=order)
+        gates = [t for t in tasks if t.get("gate")]
+        md += f"**Launch gates complete:** {sum(t.get('status')=='Done' for t in gates)} of {len(gates)}\n\n"
+        for t in tasks:
+            t["_gate"] = "Gate" if t.get("gate") else ""
+            t["_src"] = ", ".join(t.get("src") or [])
+        md += "## Actions\n\n" + table(tasks, [("order","#"),("title","Action"),("status","Status"),("_gate","Gate"),("owner","Owner"),("stream","Workstream"),("site","Site"),("due","Due"),("_src","Pilot checklist link")])
+        acts = sorted(amz.get("activity", []), key=lambda a: a.get("at", ""), reverse=True)
+        md += "\n## Updates\n\n" + table(acts, [("at","When"),("title","Action"),("status","Status"),("note","Update"),("actor","By")])
         (STATUS / "amazon.md").write_text(md)
 
 if __name__ == "__main__":

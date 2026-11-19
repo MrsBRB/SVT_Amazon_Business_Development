@@ -13,7 +13,7 @@ DSP outreach, DSP leads and routing workflows are out of scope for this repo.
 |---|---|---|---|---|
 | **Amazon BD Hub · Internal Only** | Brooke only (includes Exhibit A) | [Open](https://claude.ai/artifact/KNGV7Q89vw2EJNrFfwq3uo) | [`hub/`](hub/exhibit-a-priority-hub.html) | [`status/hub.md`](status/hub.md) |
 | **ONT Pilot · SVT Team** | SVT and VVG team (Mike, Lon, Mark, VVG IT). Not for Amazon or Reach | [Open](https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H) | [`pilot/`](pilot/ont42-pilot-launch.html) | [`status/pilot.md`](status/pilot.md) |
-| **ONT Pilot · Amazon View** | Evan Christodoulides and the Amazon Middle Mile team | [Open](https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668) | [`amazon/`](amazon/ont-pilot-amazon-status.html) | [`status/amazon.md`](status/amazon.md) |
+| **ONT Pilot · Amazon View** | Shared SVT and Amazon workspace (Evan Christodoulides and the Middle Mile team) | [Open](https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668) | [`amazon/`](amazon/ont-pilot-amazon-status.html) | [`status/amazon.md`](status/amazon.md) |
 
 The live pages are claude.ai artifacts. Each keeps its data in its own database, and the links open only for people the page has been shared with (Share menu on the page).
 
@@ -23,16 +23,19 @@ The live pages are claude.ai artifacts. Each keeps its data in its own database,
 Email, meetings, Reach, Amazon replies
         │  (morning check 8:52 AM CT, close-out 4:20 PM CT, weekdays)
         ▼
-Pilot Launch page  ── master for the launch checklist and team updates
-   │                        │
-   │ copy of every item     │ only items marked "Show on Amazon page",
-   ▼                        ▼ in Amazon-facing wording, no owners or evidence
-Hub (readiness mirror)   Amazon status page (synced by the 4:20 PM close-out)
+ONT Pilot · SVT Team  ── master launch checklist (rd01 to rd33) and team updates
+   │                          │
+   │ copy of every item       │ status only, for Amazon View actions linked to checklist items
+   ▼                          ▼ (4:20 PM close-out; never overwrites edits made on the Amazon View)
+Hub (readiness mirror)     ONT Pilot · Amazon View  ── shared actions, comments and updates
 ```
 
-- **Change pilot status on the Pilot Launch page.** The hub and the Amazon page follow it.
-- **Choosing what Amazon sees:** open a checklist item on the Pilot Launch page and set *Show on the Amazon page?*, *who's on it* and, optionally, the Amazon wording. For updates, tick *Also show on the Amazon page* or use *Share with Amazon* on an existing update.
-- The Amazon page refreshes at the weekday close-out. It never shows owners, evidence notes, fees, internal approvals or anything from the hub.
+- **ONT Pilot · Amazon View** matches the SVT x Amazon Middle Mile Pilot site layout: Overview, Action board, Sites & readiness, Weekly standup and Updates.
+  - It holds 29 actions. Each one's `src` field lists the SVT Team checklist items it follows. Actions with no link (pilot scope, end-to-end validation, ONT42 sign-off, ONT43 timing) are updated by hand.
+  - Anyone with edit access can add or update actions, post updates and set dependencies. Comments and status changes made there are reported in the close-out as evidence.
+  - Never add owners' notes, fees, contract terms, internal approvals, gate codes or Exhibit A content.
+- **Change SVT-side launch status on the SVT Team page.** The hub mirrors it, and the Amazon View follows at the 4:20 PM close-out.
+- Site work demand (ONT42 108 records / 49 vehicles, ONT43 17 / 12) comes from Amazon's DTNA WR data and the Oct 29 ATS inventory. It is historical, not current backlog.
 
 ## Working in this repo
 

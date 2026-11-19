@@ -1,0 +1,47 @@
+[
+  {
+    "actor": "SVT project team",
+    "at": "2026-11-16T23:30:00Z",
+    "id": "a-20261116-coverage",
+    "note": "Amazon requested input on possible wider ONT coverage. This is exploratory and does not change ONT42 primary / ONT43 add-on scope or establish new site approval.",
+    "status": "Not started",
+    "taskId": "coverage",
+    "title": "Assess possible wider ONT coverage"
+  },
+  {
+    "actor": "SVT project team",
+    "at": "2026-11-16T22:00:36Z",
+    "id": "a-20261116-intake",
+    "note": "Reach intake submission confirmed for November 16. No activation or integration completion is implied.",
+    "status": "Done",
+    "taskId": "intake",
+    "title": "Reach intake submitted"
+  },
+  {
+    "actor": "SVT project team",
+    "at": "2026-11-16T23:00:00Z",
+    "id": "a-20261116-reach",
+    "note": "Reach is creating SVT's service-provider account with a new Relay Garage integration for ONT42 and ONT43. SVT dispatchers will use the Reach web portal and technicians the Reach mobile app. Reach estimates about two weeks to go live, targeting before Thanksgiving.",
+    "status": "In progress",
+    "taskId": "activate",
+    "title": "Reach onboarding underway"
+  },
+  {
+    "actor": "SVT project team",
+    "at": "2026-11-18T03:00:00Z",
+    "id": "a-20261117-visit",
+    "note": "SVT visited ONT42 and ONT43 on November 17. The recommendation for nearby offsite work versus the ONT43 working area will be recorded here.",
+    "status": "In progress",
+    "taskId": "visit",
+    "title": "Site visit held at ONT42 and ONT43"
+  },
+  {
+    "actor": "SVT project team",
+    "at": "2026-11-18T16:30:00Z",
+    "id": "a-20261118-activate",
+    "note": "Reach issued the service-provider agreement for signature and SVT's review is under way, aiming to finish before Thanksgiving. Account activation follows signature.",
+    "status": "In progress",
+    "taskId": "activate",
+    "title": "Complete Reach service-provider activation"
+  }
+]
