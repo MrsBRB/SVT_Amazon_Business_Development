@@ -95,3 +95,5 @@ nav a span{font-size:20px;width:20px;text-align:center}nav a[aria-current="page"
 nav .navsep{border-top:1px solid #5b6b7f;margin:14px 10px}
 .side-links{font-size:12px;margin:0 0 14px}.side-links a{color:var(--side-muted);display:block;margin:4px 0}
 @media(max-width:700px){nav a{white-space:nowrap}nav a span{display:none}nav .navsep{display:none}}
+
+#sync{color:#fff;font-size:11px;margin:0 0 6px}#sync::before{content:"● ";color:#6fd3a0}#sync[data-state="saving"]::before{color:#f2bf62}#sync[data-state="offline"]::before{color:#ff8a92}

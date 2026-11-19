@@ -37,6 +37,16 @@ Hub (readiness mirror)     ONT Pilot · Amazon View  ── shared actions, comm
 - **Change SVT-side launch status on the SVT Team page.** The hub mirrors it, and the Amazon View follows at the 4:20 PM close-out.
 - Site work demand (ONT42 108 records / 49 vehicles, ONT43 17 / 12) comes from Amazon's DTNA WR data and the Oct 29 ATS inventory. It is historical, not current backlog.
 
+## Working together and syncing
+
+- **Live editing.** Each dashboard keeps its records in a shared real-time database. When anyone saves, everyone with the page open sees the change within a second or two. The sidebar shows *Live · synced <time>*, *Saving…* or *Offline* (offline changes sync on reconnect).
+- **No lost edits.** A save writes only the fields that person changed. If two people edit different fields of the same item, both changes are kept. If they edit the same field at the same time, the second person is told who changed it and asked to reopen the item. Their note text is kept.
+- **Cross-dashboard sync.**
+  - The *Amazon dashboards sync* scheduled task runs every 2 hours on weekdays, 8 AM to 6 PM CT.
+  - It mirrors the SVT Team checklist into the hub and updates linked Amazon View statuses, without overwriting edits made on the Amazon View.
+  - The 8:52 AM morning check and 4:20 PM close-out also sync, and add evidence from email and meetings.
+- **Who can edit.** Only people the page is shared with at Contributor or Editor level can change records. Viewers and Commenters can only read. People outside your organization (for example Amazon or SVT staff on other accounts) must be invited by email as **Editor**, and the page must not also be shared by public link.
+
 ## Working in this repo
 
 All three dashboards share one design system (the SVT sidebar layout from the ChatGPT pilot template) and one report engine.

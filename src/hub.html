@@ -221,7 +221,8 @@ td .sub{font-size:12px;color:var(--muted)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--panel:#16243a;--panel-2:#1d2d47;--line:#2a3a54;--bg:#0f1a2b;--accent:#ff4b58}}
 :root[data-theme="dark"]{--panel:#16243a;--panel-2:#1d2d47;--line:#2a3a54;--bg:#0f1a2b;--accent:#ff4b58}
 body::before{display:none}
-.hubwrap{display:grid;gap:22px}
+.hubwrap{display:grid;gap:22px;grid-template-columns:minmax(0,1fr)}
+section[data-view]{grid-template-columns:minmax(0,1fr)}
 section[data-view]>.head h2{display:none}
 section[data-view]>.head p{font-size:15px}
 .btn{border-radius:4px;padding:9px 14px}.btn.primary{background:var(--red);border-color:var(--red);color:#fff}.btn.primary:hover{background:var(--red-hover)}
@@ -235,6 +236,13 @@ section[data-view]>.head p{font-size:15px}
 .seg{border-radius:4px}.seg button{padding:9px 12px}
 .col{background:var(--gray);border-radius:8px;padding:14px}.card{border-radius:8px;padding:14px}
 .st,.site{border-radius:8px}
+.ov-tbl td{font-size:14px}.ov-tbl .sub,td .sub{font-size:12px;color:var(--muted)}
+.ov-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.ov-mini{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0}.ov-mini div{display:grid}.ov-mini b{font-family:var(--f-head);font-size:26px;line-height:1;color:var(--ink)}.ov-mini span{font-size:12px;color:var(--muted)}
+.ov-bars{display:grid;gap:6px}.ov-bars div{display:grid;grid-template-columns:110px 1fr 36px;gap:8px;align-items:center;font-size:13px}.ov-bars i{height:8px;background:var(--gray);border-radius:4px;overflow:hidden}.ov-bars i b{display:block;height:100%;background:var(--navy)}.ov-bars em{font-style:normal;text-align:right;font-weight:600}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ov-bars i b{background:#9fc0ef}}
+.ov-k span{font-size:13px;color:var(--muted)}.ov-k b{display:block;font-family:var(--f-head);font-size:34px;line-height:1.1;margin:8px 0;color:var(--ink)}.ov-k b.red{color:var(--red)}.ov-k small{font-size:12px}
+.hub-hero .clock{row-gap:16px}
 .project .pill{background:none;color:#fff;border:1px solid #8090a7;border-radius:4px;font-weight:400;font-size:10px;letter-spacing:1px;padding:5px 8px}
 </style>
 
@@ -242,15 +250,32 @@ section[data-view]>.head p{font-size:15px}
 <aside>
   <div class="brand"><img src="data:image/png;base64,__LOGO__" alt="SVT Fleet Solutions"></div>
   <div class="project"><span class="eyebrow">Brooke only</span><h3>Amazon BD<br>Hub</h3><span class="pill">INTERNAL · EXHIBIT A</span></div>
-  <nav id="tabs" aria-label="Hub sections"><a href="#today"><span aria-hidden="true">◷</span>Today</a><a href="#approval"><span aria-hidden="true">◆</span>Vendor Approval</a><a href="#stations"><span aria-hidden="true">◎</span>Station Conversions</a><a href="#readiness"><span aria-hidden="true">☑</span>Pilot Readiness</a><a href="#board"><span aria-hidden="true">▦</span>Action Board</a><a href="#log"><span aria-hidden="true">≡</span>Decisions &amp; Evidence</a><a href="#docs"><span aria-hidden="true">▤</span>Documents</a><a href="#sources"><span aria-hidden="true">◫</span>Sources</a><a href="#schedules"><span aria-hidden="true">◴</span>Scheduled Tasks</a><a href="#method"><span aria-hidden="true">◇</span>Method</a><a href="#report"><span aria-hidden="true">▣</span>Progress report</a></nav>
+  <nav id="tabs" aria-label="Hub sections"><a href="#overview"><span aria-hidden="true">◫</span>Amazon BD overview</a><a href="#today"><span aria-hidden="true">◷</span>Today</a><a href="#approval"><span aria-hidden="true">◆</span>Vendor Approval</a><a href="#stations"><span aria-hidden="true">◎</span>Station Conversions</a><a href="#readiness"><span aria-hidden="true">☑</span>Pilot Readiness</a><a href="#board"><span aria-hidden="true">▦</span>Action Board</a><a href="#log"><span aria-hidden="true">≡</span>Decisions &amp; Evidence</a><a href="#docs"><span aria-hidden="true">▤</span>Documents</a><a href="#sources"><span aria-hidden="true">❐</span>Sources</a><a href="#schedules"><span aria-hidden="true">◴</span>Scheduled Tasks</a><a href="#method"><span aria-hidden="true">◇</span>Method</a><a href="#report"><span aria-hidden="true">▣</span>Progress report</a></nav>
   <div class="side-links"><a href="https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H" target="_blank" rel="noopener">↗ ONT Pilot · SVT Team</a><a href="https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668" target="_blank" rel="noopener">↗ ONT Pilot · Amazon View</a></div>
-  <div class="sidebottom"><div class="live">● Brooke only</div><p>Shared records · live updates</p><small>Do not share outside SVT leadership.</small></div>
+  <div class="sidebottom"><div class="live">Brooke only</div><p id="sync">Connecting…</p><p>Edits sync live across devices.</p><small>Do not share outside SVT leadership.</small></div>
 </aside>
 <main>
   <header class="top"><div>SVT Fleet Solutions <span>/ Amazon BD hub · internal only</span></div></header>
   <section class="content">
     <div class="between title"><div><div class="eyebrow red">Vendor approval &amp; station conversions / Brooke only</div><h1 id="view-title">Today</h1><p>Two initiatives only: Amazon Vendor Approval (Exhibit A #3) and Station Conversions, Middle Mile and Last Mile.</p></div></div>
     <div class="hubwrap">
+
+<section data-view="overview">
+  <div class="hub-hero"><div><span class="eyebrow">Amazon business development · whole program</span><h2>Sites, vehicles, launch dates, technicians and repair orders in one place.</h2></div><div class="clock num" id="ov-kpis"></div></div>
+  <div class="sectionhead"><h2>Sites</h2><div class="tools"><button class="btn primary" data-add="sites">Add site</button></div></div>
+  <div class="tablewrap"><table class="ov-tbl"><thead><tr><th>Site</th><th>Track</th><th>Stage</th><th>Launch date</th><th>Tractors</th><th>Technicians</th><th>Open ROs</th><th>Next step</th></tr></thead><tbody id="ov-sites"></tbody></table></div>
+  <div class="sectionhead"><h2>Vehicles in pilot scope</h2><small id="veh-src"></small></div>
+  <div class="ov-cards" id="ov-fleet"></div>
+  <details class="panel compact" id="veh-box"><summary>Vehicle details<span id="veh-count"></span></summary>
+    <div class="toolbar" style="margin-top:12px"><input type="search" id="veh-q" aria-label="Search vehicles" placeholder="Search equipment ID, VIN or model…"><select id="veh-site" aria-label="Filter site"><option>All sites</option><option>ONT42</option><option>ONT43</option></select><select id="veh-make" aria-label="Filter make"></select><select id="veh-fuel" aria-label="Filter fuel"></select><select id="veh-state" aria-label="Filter availability"><option>All availability</option><option>Active</option><option>Unavailable</option></select></div>
+    <div class="tablewrap" style="max-height:420px"><table><thead><tr><th>Equipment ID</th><th>Site</th><th>Make / model</th><th>Year</th><th>Fuel</th><th>Availability</th><th>VIN</th><th>RO history</th></tr></thead><tbody id="veh-rows"></tbody></table></div>
+    <p class="sourceNote" id="veh-more"></p></details>
+  <div class="sectionhead"><h2>Assigned technicians</h2><div class="tools"><button class="btn primary" data-add="techs">Add technician</button></div></div>
+  <div id="ov-techs"></div>
+  <div class="sectionhead"><h2>Repair orders (ROs)</h2><div class="tools"><button class="btn primary" data-add="ros">Add RO</button></div></div>
+  <div class="ov-cards" id="ov-ro-kpis"></div>
+  <div id="ov-ros"></div>
+</section>
 
 <section data-view="today">
   <div class="hub-hero"><div><span class="eyebrow">Exhibit A priorities · Initial Term ends Jan 31, 2027</span><h2>Vendor approval first. Stations next.</h2></div><div class="clock num" id="clock"></div><div class="lanes" id="lanes"></div></div>
@@ -389,6 +414,7 @@ section[data-view]>.head p{font-size:15px}
 <div id="toast-root"></div>
 
 <script>/*@REPORT_JS*/</script>
+<script>/*@LIVE_JS*/</script>
 <script>
 (() => {
 const TERM_END = new Date("2027-01-31T23:59:59");
@@ -408,7 +434,18 @@ const SCHEMA = {
     ["code","Site code","text",true],["name","Location","text"],["track","Track","select",false,["Middle Mile","Last Mile"]],
     ["stage","Stage","select",false,SITE_STAGES],["priority","Priority (1 = highest)","number"],["contact","Amazon contacts","text"],
     ["fleet","Fleet / volume","text"],["coverage","SVT coverage","text"],["gate","What must happen to convert","textarea"],
-    ["next","Next step","text"],["due","Next step due","date"],["lastTouch","Last touch","date"],["notes","Notes","textarea"],["source","Source link","url"]]},
+    ["next","Next step","text"],["due","Next step due","date"],["launch","Launch date (target)","date"],["launchNote","Launch note","text"],["lastTouch","Last touch","date"],["notes","Notes","textarea"],["source","Source link","url"]]},
+  techs:{label:"Technician",fields:[
+    ["name","Name","text",true],["role","Role","select",false,["Technician","Lead technician","Dispatcher","Service manager"]],["status","Assignment","select",false,["Proposed","Confirmed","Backup","Released"]],
+    ["site","Site","select",false,["ONT42","ONT43","Both sites"]],["shop","Home shop","text"],["skills","Skills (CNG, Volvo, Freightliner, electrical…)","text"],
+    ["unit","Mobile service unit","text"],["shift","Shift / availability","text"],["reach","Reach user","select",false,["Not set up","Invited","Active"]],
+    ["trained","Reach training","select",false,["Not yet","Web portal","Mobile app","Both"]],["start","Start date","date"],["notes","Notes","textarea"]]},
+  ros:{label:"Repair order",fields:[
+    ["ro","RO number","text",true],["reach","Reach event ID","text"],["wo","Relay Garage work order","text"],["site","Site","select",false,["ONT42","ONT43"]],
+    ["eq","Equipment ID","text"],["concern","Concern / work type","select",false,["Transmission","Engine","Electrical","Brakes","HVAC","Fuel","Exhaust","Accessories","Check Engine Light","Body","Chassis","Suspension","Steering","Doors","APU","Other"]],
+    ["detail","Description","textarea"],["status","Status","select",false,["Open","Dispatched","In progress","Waiting on parts","Waiting on approval","Complete","Invoiced","Cancelled"]],
+    ["tech","Technician","text"],["opened","Opened","date"],["closed","Completed","date"],["location","Repair location","select",false,["On site","Off site nearby","ONT43 lot","SVT shop"]],
+    ["preauth","Pre-authorization","select",false,["Not needed","Requested","Approved","Declined"]],["invoice","Invoice","select",false,["Not invoiced","Submitted","Paid"]],["amount","Invoice amount ($)","number"],["notes","Notes","textarea"]]},
   log:{label:"Log entry",fields:[
     ["date","Date","date",true],["obj","Initiative","select",false,Object.keys(OBJS)],["kind","Type","select",false,["Decision","Evidence","Meeting","Risk","Update"]],
     ["text","Entry","textarea",true],["link","Link","url"]]},
@@ -426,7 +463,7 @@ const SCHEMA = {
     ["name","Name","text",true],["schedule","When","text"],["enabled","On?","select",false,["on","off"]],["lastRun","Last run","text"],
     ["tags","Tags (comma separated)","text"],["recommendation","Recommendation","text"],["does","What it does","textarea"],["touches","Reads / writes","textarea"],["notes","Notes","textarea"]]}
 };
-const S = {tasks:[],regsteps:[],sites:[],log:[],sources:[],schedules:[],readiness:[],docs:[]};
+const S = {tasks:[],regsteps:[],sites:[],log:[],sources:[],schedules:[],readiness:[],docs:[],techs:[],ros:[]};
 const GO_LIVE="2026-11-25";
 let rdFilter="open";
 let viewerName="", assets=null, docFilter="all", docUsage=null;
@@ -699,12 +736,63 @@ function renderMethod(){
   const c=k=>S.tasks.filter(t=>t.phase===k&&t.status!=="Done").length;
   $("#phases").innerHTML = ph.map(([k,v])=>`<div><b>${k}</b><small>${v}</small><small class="num" style="color:var(--ink)">${c(k)} open action${c(k)===1?"":"s"}</small></div>`).join("");
 }
-function renderAll(){ renderClock(); renderLanes(); renderToday(); renderApproval(); renderStations(); renderReadiness(); renderBoard(); renderLog(); renderSources(); renderDocs(); renderSchedules(); renderMethod(); if((location.hash||"").slice(1)==="report") renderReport();
+const INV=/*@INVENTORY*/null;
+const VEH=(INV&&INV.rows||[]).map(r=>({eq:r[0],vin:r[1],site:r[2],make:r[3],model:r[4],year:r[5],fuel:r[6],state:r[7],reason:r[8]}));
+const VF={q:"",site:"All sites",make:"All makes",fuel:"All fuels",state:"All availability",n:60};
+const RO_OPEN=r=>!["Complete","Invoiced","Cancelled"].includes(r.status);
+const titleCase=t=>{const u=String(t||"");if(/^(CNG|EV|LNG)$/.test(u))return u;return u.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())};
+function renderOverview(){
+  if(!$("#ov-sites")) return;
+  const rp=regProgress(), rs=rdStats(), techs=S.techs, ros=S.ros, openRo=ros.filter(RO_OPEN);
+  const conf=techs.filter(t=>t.status==="Confirmed").length;
+  $("#ov-kpis").innerHTML=`<div><b>${rp.done}/${rp.n}</b><span>vendor approval steps</span></div><div><b>${S.sites.length}</b><span>sites tracked</span></div><div><b>${VEH.length}</b><span>tractors in pilot scope</span></div><div><b>${fmtD(GO_LIVE)}</b><span>pilot go-live (proposed)</span></div><div><b>${conf}/${techs.length}</b><span>technicians confirmed</span></div><div><b>${openRo.length}</b><span>open repair orders</span></div>`;
+  const order={"Middle Mile":0,"Last Mile":1};
+  const sites=S.sites.slice().sort((a,b)=>(order[a.track]??2)-(order[b.track]??2)||(+a.priority||99)-(+b.priority||99));
+  const inSite=(code,list,key="site")=>list.filter(x=>x[key]===code||(x[key]==="Both sites"&&/^ONT4[23]$/.test(code)));
+  $("#ov-sites").innerHTML=sites.length?sites.map(x=>{const veh=VEH.filter(v=>v.site===x.code).length;const t=inSite(x.code,techs);const o=inSite(x.code,openRo).length;
+    const launch=x.launch?`${fmtD(x.launch)}${x.launchNote?` <span class="sub">${esc(x.launchNote)}</span>`:""}`:(x.launchNote?esc(x.launchNote):'<span class="sub">Not set</span>');
+    return `<tr data-edit="sites:${esc(x.id)}" style="cursor:pointer"><td><b>${esc(x.code)}</b><div class="sub">${esc(x.name||"")}</div></td><td>${esc(x.track||"")}</td><td><span class="status ${lvl(x.stage)>=lvl("Live")?"s-done":x.stage==="Blocked"?"s-blocked":lvl(x.stage)>=lvl("Pilot agreed")?"s-prog":""}">${esc(x.stage||"")}</span></td><td>${launch}</td><td>${veh||esc(x.fleet||"—")}</td><td>${t.length?`${t.filter(z=>z.status==="Confirmed").length} confirmed / ${t.length}`:"—"}</td><td>${o||"—"}</td><td>${esc(x.next||"")}${x.due?` <span class="sub">· ${fmtD(x.due)}</span>`:""}</td></tr>`}).join(""):'<tr><td colspan="8"><div class="empty">No sites yet.</div></td></tr>';
+  // fleet cards
+  $("#veh-src").textContent=INV?`Source: ${INV.source}`:"";
+  const cnt=(l,k)=>{const m={};l.forEach(v=>m[v[k]]=(m[v[k]]||0)+1);return Object.entries(m).sort((a,b)=>b[1]-a[1])};
+  $("#ov-fleet").innerHTML=["ONT42","ONT43"].map(site=>{const l=VEH.filter(v=>v.site===site);if(!l.length)return"";const act=l.filter(v=>v.state==="Active").length;const fuel=cnt(l,"fuel"),make=cnt(l,"make"),yr=cnt(l,"year").sort((a,b)=>b[0]-a[0]);
+    const wr=(typeof DEMAND_SITES!=="undefined"&&DEMAND_SITES[site])||null;
+    return `<article class="panel"><div class="track-h"><h3 style="margin:0">${site} · ${site==="ONT42"?"Primary":"Add-on"}</h3><span class="status">${l.length} tractors</span></div>
+      <div class="ov-mini"><div><b>${act}</b><span>active</span></div><div><b>${l.length-act}</b><span>unavailable</span></div>${fuel.map(([f,n])=>`<div><b>${n}</b><span>${esc(titleCase(f))}</span></div>`).join("")}</div>
+      <div class="ov-bars">${make.map(([m,n])=>`<div><span>${esc(titleCase(m))}</span><i><b style="width:${(n/l.length*100).toFixed(1)}%"></b></i><em>${n}</em></div>`).join("")}</div>
+      <p class="sourceNote">Model years: ${yr.map(([y,n])=>`${y} (${n})`).join(" · ")}</p></article>`}).join("");
+  // vehicle table
+  const mk=["All makes",...new Set(VEH.map(v=>v.make))].sort((a,b)=>a==="All makes"?-1:b==="All makes"?1:a.localeCompare(b)), fu=["All fuels",...new Set(VEH.map(v=>v.fuel))];
+  const fill=(id,opts,val)=>{const e=$(id);if(e&&!e.options.length)e.innerHTML=opts.map(o=>`<option>${esc(o)}</option>`).join("");if(e)e.value=val};
+  fill("#veh-make",mk,VF.make);fill("#veh-fuel",fu,VF.fuel);$("#veh-site").value=VF.site;$("#veh-state").value=VF.state;
+  const q=VF.q.toLowerCase();
+  const list=VEH.filter(v=>(VF.site==="All sites"||v.site===VF.site)&&(VF.make==="All makes"||v.make===VF.make)&&(VF.fuel==="All fuels"||v.fuel===VF.fuel)&&(VF.state==="All availability"||v.state===VF.state)&&(v.eq+" "+v.vin+" "+v.model+" "+v.make).toLowerCase().includes(q));
+  const roBy={};ros.forEach(r=>{if(r.eq)(roBy[r.eq]=roBy[r.eq]||[]).push(r)});
+  $("#veh-count").textContent=`${list.length} of ${VEH.length} tractors`;
+  $("#veh-rows").innerHTML=list.slice(0,VF.n).map(v=>{const r=roBy[v.eq]||[];return `<tr><td><b>${esc(v.eq)}</b></td><td>${esc(v.site)}</td><td>${esc(titleCase(v.make))} ${esc(v.model)}</td><td>${esc(v.year)}</td><td>${esc(titleCase(v.fuel))}</td><td>${v.state==="Active"?"Active":`<span class="flag">Unavailable</span>${v.reason?` <span class="sub">${esc(v.reason)}</span>`:""}`}</td><td class="sub">${esc(v.vin)}</td><td>${r.length?`${r.length} RO${r.length>1?"s":""} · ${r.filter(RO_OPEN).length} open`:"—"}</td></tr>`}).join("")||'<tr><td colspan="8"><div class="empty">No vehicles match.</div></td></tr>';
+  $("#veh-more").innerHTML=list.length>VF.n?`Showing ${VF.n} of ${list.length}. <button class="btn sm" id="veh-show">Show all</button>`:"";
+  // technicians
+  $("#ov-techs").innerHTML=techs.length?`<div class="tablewrap"><table><thead><tr><th>Name</th><th>Role</th><th>Site</th><th>Assignment</th><th>Skills</th><th>Mobile unit</th><th>Shift</th><th>Reach</th><th>Training</th></tr></thead><tbody>${techs.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name))).map(t=>`<tr data-edit="techs:${esc(t.id)}" style="cursor:pointer"><td><b>${esc(t.name)}</b>${t.shop?`<div class="sub">${esc(t.shop)}</div>`:""}</td><td>${esc(t.role||"")}</td><td>${esc(t.site||"")}</td><td><span class="status ${t.status==="Confirmed"?"s-done":""}">${esc(t.status||"")}</span></td><td>${esc(t.skills||"")}</td><td>${esc(t.unit||"")}</td><td>${esc(t.shift||"")}</td><td>${esc(t.reach||"")}</td><td>${esc(t.trained||"")}</td></tr>`).join("")}</tbody></table></div>`
+    :`<div class="empty">No technicians assigned yet. Lon is confirming the pilot crew (the checklist notes Corona's 12 technicians under VTC). Add each one here with their site, skills and Reach setup.</div>`;
+  // ROs
+  const done=ros.filter(r=>["Complete","Invoiced"].includes(r.status)&&r.opened&&r.closed);
+  const avg=done.length?(done.reduce((a,r)=>a+Math.max(0,Math.round((pd(r.closed)-pd(r.opened))/864e5)),0)/done.length).toFixed(1):"—";
+  const aged=openRo.filter(r=>r.opened&&days(r.opened)<=-7).length;
+  $("#ov-ro-kpis").innerHTML=[["Open ROs",openRo.length,"Not yet complete"],["Completed",ros.filter(r=>["Complete","Invoiced"].includes(r.status)).length,"Complete or invoiced"],["Average days to complete",avg,"Baseline: 10.9 days at ONT42"],["Open over 7 days",aged,"Pilot measure"]].map(([l,v,sub],i)=>`<article class="panel ov-k"><span>${l}</span><b class="${i===3&&aged?"red":""}">${v}</b><small>${sub}</small></article>`).join("");
+  const inv=Object.fromEntries(VEH.map(v=>[v.eq,v]));
+  $("#ov-ros").innerHTML=ros.length?`<div class="tablewrap"><table><thead><tr><th>RO</th><th>Site</th><th>Unit</th><th>Concern</th><th>Status</th><th>Technician</th><th>Opened</th><th>Days open</th><th>Invoice</th></tr></thead><tbody>${ros.slice().sort((a,b)=>String(b.opened||"").localeCompare(String(a.opened||""))).map(r=>{const v=inv[r.eq];const open=RO_OPEN(r);const dOpen=r.opened?Math.max(0,open?-days(r.opened):Math.round((pd(r.closed||r.opened)-pd(r.opened))/864e5)):"";
+      return `<tr data-edit="ros:${esc(r.id)}" style="cursor:pointer"><td><b>${esc(r.ro)}</b>${r.reach||r.wo?`<div class="sub">${[r.reach&&"Reach "+r.reach,r.wo&&"WO "+r.wo].filter(Boolean).map(esc).join(" · ")}</div>`:""}</td><td>${esc(r.site||"")}</td><td>${esc(r.eq||"")}${v?`<div class="sub">${esc(titleCase(v.make))} ${esc(v.model)} · ${esc(v.year)} · ${esc(titleCase(v.fuel))}</div>`:""}</td><td>${esc(r.concern||"")}</td><td><span class="status ${open?(/Waiting/.test(r.status)?"":"s-prog"):"s-done"}">${esc(r.status||"")}</span></td><td>${esc(r.tech||"")}</td><td>${r.opened?fmtD(r.opened):""}</td><td class="${open&&dOpen>7?"overdue":""}">${dOpen}</td><td>${esc(r.invoice||"")}${r.amount?` <span class="sub">$${(+r.amount).toLocaleString()}</span>`:""}</td></tr>`}).join("")}</tbody></table></div>`
+    :`<div class="empty">No repair orders yet. The first ones arrive through Reach after go-live. Log each RO here with its Reach event, Relay Garage work order and unit, and the hub tracks days open against the 10.9-day ONT42 baseline.</div>`;
+}
+document.addEventListener("input",e=>{if(e.target.id==="veh-q"){VF.q=e.target.value;VF.n=60;renderOverview()}});
+document.addEventListener("change",e=>{const m={"veh-site":"site","veh-make":"make","veh-fuel":"fuel","veh-state":"state"}[e.target.id];if(m){VF[m]=e.target.value;VF.n=60;renderOverview()}});
+document.addEventListener("click",e=>{if(e.target.closest("#veh-show")){VF.n=1e9;renderOverview()}});
+function renderAll(){ renderOverview(); renderClock(); renderLanes(); renderToday(); renderApproval(); renderStations(); renderReadiness(); renderBoard(); renderLog(); renderSources(); renderDocs(); renderSchedules(); renderMethod(); if((location.hash||"").slice(1)==="report") renderReport();
   document.querySelectorAll("[data-add]").forEach(b=>b.hidden=!canWrite); }
 
-const VIEWS=["today","approval","stations","readiness","board","log","docs","sources","schedules","method","report"];
+const VIEWS=["overview","today","approval","stations","readiness","board","log","docs","sources","schedules","method","report"];
 function route(){
-  const h=(location.hash||"").slice(1); const v=VIEWS.includes(h)?h:"today";
+  const h=(location.hash||"").slice(1); const v=VIEWS.includes(h)?h:"overview";
   document.querySelectorAll("section[data-view]").forEach(s=>s.hidden=s.dataset.view!==v);
   document.querySelectorAll("#tabs a").forEach(a=>a.setAttribute("aria-current",a.getAttribute("href")==="#"+v?"page":"false"));
   const cur=document.querySelector(`#tabs a[href="#${v}"]`); const vt=document.getElementById("view-title"); if(cur&&vt) vt.textContent=cur.textContent.slice(1);
@@ -738,7 +826,11 @@ function openDrawer(col,id){
     const miss=sc.fields.find(([k,,,req])=>req&&(body[k]===""||body[k]===undefined));
     if(miss){ toast(`${miss[1]} is required`); return; }
     body.updatedAt=new Date().toISOString();
-    try{ const ref=rec?db.doc(`${col}/${rec.id}`):db.collection(col).doc(); const {id:_omit,...rest}=rec||{}; await ref.set({...rest,...body}); closeDrawer(); toast(rec?"Saved":"Added"); }
+    try{
+      if(rec){ const r=await SVTLive.patch(db,`${col}/${rec.id}`,rec,{...rec,...body},"updatedAt");
+        if(r.conflict){ toast("Someone else just saved this. Reopen it to see their changes, then save again."); return; } }
+      else await SVTLive.saving(db.collection(col).doc().set(body));
+      closeDrawer(); toast(rec?"Saved":"Added"); }
     catch(err){ handleWriteErr(err); }
   });
   const del=$("#dr-del");
@@ -759,6 +851,8 @@ function defaults(col){
   if(col==="tasks") return {obj:o,status:"Next",phase:"Execute",owner:"Brooke"};
   if(col==="regsteps") return {order:(S.regsteps.reduce((m,s)=>Math.max(m,+s.order||0),0)+1),status:"Not started",owner:"Brooke"};
   if(col==="sites") return {track:"Middle Mile",stage:"Identified",lastTouch:d};
+  if(col==="techs") return {role:"Technician",status:"Proposed",site:"ONT42",reach:"Not set up",trained:"Not yet"};
+  if(col==="ros") return {site:"ONT42",status:"Open",opened:d,location:"On site",preauth:"Not needed",invoice:"Not invoiced",concern:"Other"};
   if(col==="log") return {date:d,obj:o,kind:"Evidence"};
   if(col==="sources") return {role:"Supporting",kind:"Artifact",obj:"VA"};
   if(col==="schedules") return {enabled:"on"};
@@ -804,7 +898,7 @@ document.addEventListener("change",async e=>{
   const patch={[f]:s.value,updatedAt:new Date().toISOString()};
   if(c==="sites") patch.lastTouch=new Date().toISOString().slice(0,10);
   if(c==="regsteps"&&s.value==="Done") patch.date=new Date().toISOString().slice(0,10);
-  try{ await db.doc(`${c}/${id}`).update(patch); toast("Updated"); }catch(err){ handleWriteErr(err); }
+  try{ await SVTLive.saving(db.doc(`${c}/${id}`).update(patch)); toast("Updated"); }catch(err){ handleWriteErr(err); }
 });
 
 const RST={task:{Done:"done",Doing:"prog",Waiting:"wait",Next:"todo"},reg:{Done:"done","In progress":"prog",Blocked:"blocked","Not started":"todo"},rd:{Ready:"done","In progress":"prog",Waiting:"wait",Blocked:"blocked","Not started":"todo"}};
@@ -857,7 +951,7 @@ route(); renderAll();
     try{ const me=user&&user.me?await user.me():null; viewerName=(me&&me.name)||""; }catch(_){}
     refreshUsage();
     Object.keys(S).forEach(col=>{
-      db.collection(col).onSnapshot(snap=>{ S[col]=snap.docs.map(d=>({id:d.id,...d.data()})); renderAll(); },
+      db.collection(col).onSnapshot(snap=>{ SVTLive.seen(snap); S[col]=snap.docs.map(d=>({id:d.id,...d.data()})); renderAll(); },
         err=>{ console.warn(col,err&&err.code); });
     });
     renderAll();

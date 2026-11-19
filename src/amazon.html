@@ -12,7 +12,7 @@
   <div class="brand"><img src="data:image/png;base64,__LOGO__" alt="SVT Fleet Solutions"></div>
   <div class="project"><span class="eyebrow">Amazon pilot view</span><h3>Amazon<br>Middle Mile</h3><span class="pill">ONT42 PRIMARY · ONT43 ADD-ON</span></div>
   <nav id="nav" aria-label="Pilot views"></nav>
-  <div class="sidebottom"><div class="live">● Amazon pilot view</div><p>Shared records · live updates</p><small>Prepared for Amazon Middle Mile by SVT Fleet Solutions.</small></div>
+  <div class="sidebottom"><div class="live">Amazon pilot view</div><p id="sync">Connecting…</p><p>Everyone with access sees edits as they happen.</p><small>Prepared for Amazon Middle Mile by SVT Fleet Solutions.</small></div>
 </aside>
 <main>
   <header class="top"><div>SVT Fleet Solutions <span>/ Amazon pilot view</span></div></header>
@@ -27,6 +27,7 @@
 <div id="drawer-root"></div><div id="toast-root"></div>
 
 <script>/*@REPORT_JS*/</script>
+<script>/*@LIVE_JS*/</script>
 <script>
 (() => {
 const DEMAND=/*@DEMAND*/null;
@@ -176,11 +177,17 @@ function openDrawer(t){
     btn.disabled=true;btn.textContent="Saving…";
     try{
       if(isNew){body.id=db.collection("tasks").doc().id;body.order=99;body.comments=[];body.src=[]}
-      else{const cur=await db.doc("tasks/"+e.id).get();const c=cur.exists?cur.data():null;if(c&&(c.rev||0)!==(e.rev||0)){errBox.hidden=false;errBox.innerHTML="<b>Someone else just changed this action</b><p>Close and reopen it to see their changes, then save again.</p>";btn.disabled=false;btn.textContent="Save update";return}}
+      let cur=null;
+      if(!isNew){const g=await db.doc("tasks/"+e.id).get();cur=g.exists?g.data():null;
+        const mine=["title","owner","due","status","stream","site","priority","gate","detail","evidence","blockedBy"].filter(k=>JSON.stringify(body[k])!==JSON.stringify(e[k]));
+        const theirs=cur&&(cur.rev||0)!==(e.rev||0)?mine.filter(k=>JSON.stringify(cur[k])!==JSON.stringify(e[k])):[];
+        if(theirs.length){errBox.hidden=false;errBox.innerHTML=`<b>${esc(cur.updatedBy||"Someone else")} just changed this action</b><p>They also edited: ${esc(theirs.join(", "))}. Close and reopen it to see their changes, then save again. Your team update text is still here.</p>`;btn.disabled=false;btn.textContent="Save update";return}
+        if(cur) body.comments=cur.comments||[]; }
       const changed=isNew||["title","owner","due","status","stream","site","priority","gate","detail","evidence","blockedBy"].some(k=>JSON.stringify(body[k])!==JSON.stringify(e[k]));
       if(note) body.comments=[...(body.comments||[]),{text:note,actor:viewerName||"Project team member",at:now}];
-      body.rev=(e.rev||0)+1;body.updatedAt=now;body.updatedBy=viewerName||"Project team member";
-      await db.doc("tasks/"+body.id).set(body);
+      body.rev=((cur&&cur.rev)||e.rev||0)+1;body.updatedAt=now;body.updatedBy=viewerName||"Project team member";
+      if(isNew) await SVTLive.saving(db.doc("tasks/"+body.id).set(body));
+      else{const out={rev:body.rev,updatedAt:now,updatedBy:body.updatedBy};["title","owner","due","status","stream","site","priority","gate","detail","evidence","blockedBy"].forEach(k=>{if(JSON.stringify(body[k])!==JSON.stringify(e[k]))out[k]=body[k]});if(note)out.comments=body.comments;await SVTLive.saving(db.doc("tasks/"+body.id).update(out))}
       if(note||changed){const a={title:body.title,status:body.status,note:note||(isNew?"Action added.":"Action details updated."),actor:viewerName||"Project team member",at:now,taskId:body.id};await db.collection("activity").doc().set(a)}
       if(body.status==="Done") await unblockDependents(body);
       closeDrawer();toast(isNew?"Action added":"Saved");
@@ -219,7 +226,7 @@ render();
   const w=user?await user.can("data.write"):null; canWrite=w!==false;
   try{const me=user&&user.me?await user.me():null;viewerName=(me&&me.name)||""}catch(_){}
   let pending=new Set(Object.keys(S));
-  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));pending.delete(c);if(!pending.size)ready=true;if(!$("#drawer-root").innerHTML||true)render()},err=>{console.warn(c,err&&err.code);pending.delete(c);if(!pending.size)ready=true;render()}));
+  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{SVTLive.seen(snap);S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));pending.delete(c);if(!pending.size)ready=true;if(!$("#drawer-root").innerHTML||true)render()},err=>{console.warn(c,err&&err.code);SVTLive.failed();pending.delete(c);if(!pending.size)ready=true;render()}));
 }catch(err){console.warn(err)}})();
 })();
 </script>

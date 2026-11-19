@@ -26,7 +26,7 @@
   <div class="brand"><img src="data:image/png;base64,__LOGO__" alt="SVT Fleet Solutions"></div>
   <div class="project"><span class="eyebrow">SVT team view</span><h3>ONT42 / ONT43<br>Pilot Launch</h3><span class="pill">INTERNAL · NOT FOR AMAZON</span></div>
   <nav id="nav" aria-label="Pilot views"></nav>
-  <div class="sidebottom"><div class="live">● SVT team view</div><p>Shared records · live updates</p><small>For the SVT and VVG team. Amazon has its own view.</small></div>
+  <div class="sidebottom"><div class="live">SVT team view</div><p id="sync">Connecting…</p><p>Everyone with access sees edits as they happen.</p><small>For the SVT and VVG team. Amazon has its own view.</small></div>
 </aside>
 <main>
   <header class="top"><div>SVT Fleet Solutions <span>/ ONT pilot · SVT team</span></div></header>
@@ -40,6 +40,7 @@
 <div id="drawer-root"></div><div id="toast-root"></div>
 
 <script>/*@REPORT_JS*/</script>
+<script>/*@LIVE_JS*/</script>
 <script>
 (() => {
 const DEMAND=/*@DEMAND*/null;
@@ -191,9 +192,13 @@ function openDrawer(id){
     if(!body.item){err.hidden=false;err.innerHTML="<b>Missing information</b><p>Item is required.</p>";return}
     btn.disabled=true;
     try{
-      if(rec){const cur=await db.doc("readiness/"+rec.id).get();const c=cur.exists?cur.data():null;if(c&&c.updatedAt!==rec.updatedAt){err.hidden=false;err.innerHTML="<b>Someone else just changed this item</b><p>Close and reopen it to see their changes, then save again.</p>";btn.disabled=false;return}}
-      const now=new Date().toISOString();body.updatedAt=now;
-      const {id:_x,...rest}=rec||{};const ref=rec?db.doc("readiness/"+rec.id):db.collection("readiness").doc();await ref.set({...rest,...body});
+      const now=new Date().toISOString();
+      if(rec){const g=await db.doc("readiness/"+rec.id).get();const c=g.exists?g.data():null;
+        const mine=Object.keys(body).filter(k=>JSON.stringify(body[k]??"")!==JSON.stringify(rec[k]??""));
+        const theirs=c&&c.updatedAt!==rec.updatedAt?mine.filter(k=>JSON.stringify(c[k]??"")!==JSON.stringify(rec[k]??"")):[];
+        if(theirs.length){err.hidden=false;err.innerHTML=`<b>Someone else just changed this item</b><p>They also edited: ${esc(theirs.join(", "))}. Close and reopen it to see their changes, then save again.</p>`;btn.disabled=false;return}
+        const out={};mine.forEach(k=>out[k]=body[k]);if(mine.length){out.updatedAt=now;out.updatedBy=viewerName||"";await SVTLive.saving(db.doc("readiness/"+rec.id).update(out))}}
+      else{body.updatedAt=now;body.updatedBy=viewerName||"";await SVTLive.saving(db.collection("readiness").doc().set(body))}
       const note=(fd.get("note")||"").toString().trim();
       if(note){const uid=user?await user.id():null;await db.collection("updates").doc().set({text:`${body.item}: ${note}`,at:now,date:now.slice(0,10),by:uid||"",byName:viewerName||""})}
       closeDrawer();toast(rec?"Saved":"Added");
@@ -217,7 +222,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer-root").i
 document.addEventListener("input",e=>{if(e.target.id==="q"){F.q=e.target.value;render()}});
 document.addEventListener("change",async e=>{
   const s=e.target.closest("select[data-f]");if(s){F[s.dataset.f]=s.value;render();return}
-  const i=e.target.closest("select.inline-sel");if(i&&db){try{await db.doc("readiness/"+i.dataset.inline).update({status:i.value,updatedAt:new Date().toISOString()});toast("Updated")}catch(x){toast(x&&x.code==="invalid_argument"?"You can view this page but not change it":"Couldn't save. Try again.")}}
+  const i=e.target.closest("select.inline-sel");if(i&&db){try{await SVTLive.saving(db.doc("readiness/"+i.dataset.inline).update({status:i.value,updatedAt:new Date().toISOString(),updatedBy:viewerName||""}));toast("Updated")}catch(x){toast(x&&x.code==="invalid_argument"?"You can view this page but not change it":"Couldn't save. Try again.")}}
 });
 document.addEventListener("submit",async e=>{if(e.target.id!=="up-form")return;e.preventDefault();const t=$("#up-text").value.trim();if(!t||!db)return;
   try{const uid=user?await user.id():null,now=new Date().toISOString();await db.collection("updates").doc().set({text:t,at:now,date:now.slice(0,10),by:uid||"",byName:viewerName||""});$("#up-text").value="";toast("Posted")}catch(x){toast("Couldn't post. Try again.")}});
@@ -230,7 +235,7 @@ render();
   const w=user?await user.can("data.write"):null;canWrite=w!==false;
   try{const me=user&&user.me?await user.me():null;viewerName=(me&&me.name)||""}catch(_){}
   const pending=new Set(Object.keys(S));
-  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));pending.delete(c);if(!pending.size)ready=true;render()},err=>{console.warn(c,err&&err.code);pending.delete(c);if(!pending.size)ready=true;render()}));
+  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{SVTLive.seen(snap);S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));pending.delete(c);if(!pending.size)ready=true;render()},err=>{console.warn(c,err&&err.code);SVTLive.failed();pending.delete(c);if(!pending.size)ready=true;render()}));
 }catch(x){console.warn(x)}})();
 })();
 </script>

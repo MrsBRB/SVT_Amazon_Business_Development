@@ -101,6 +101,8 @@ nav .navsep{border-top:1px solid #5b6b7f;margin:14px 10px}
 .side-links{font-size:12px;margin:0 0 14px}.side-links a{color:var(--side-muted);display:block;margin:4px 0}
 @media(max-width:700px){nav a{white-space:nowrap}nav a span{display:none}nav .navsep{display:none}}
 
+#sync{color:#fff;font-size:11px;margin:0 0 6px}#sync::before{content:"● ";color:#6fd3a0}#sync[data-state="saving"]::before{color:#f2bf62}#sync[data-state="offline"]::before{color:#ff8a92}
+
 /* One-page progress report (US Letter). Fixed light palette so the PDF and print look the same in any theme. */
 .rp-tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
 .rp-tools .note{font-size:13px;color:var(--muted)}
@@ -170,7 +172,7 @@ nav .navsep{border-top:1px solid #5b6b7f;margin:14px 10px}
   <div class="brand"><img src="data:image/png;base64,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" alt="SVT Fleet Solutions"></div>
   <div class="project"><span class="eyebrow">Amazon pilot view</span><h3>Amazon<br>Middle Mile</h3><span class="pill">ONT42 PRIMARY · ONT43 ADD-ON</span></div>
   <nav id="nav" aria-label="Pilot views"></nav>
-  <div class="sidebottom"><div class="live">● Amazon pilot view</div><p>Shared records · live updates</p><small>Prepared for Amazon Middle Mile by SVT Fleet Solutions.</small></div>
+  <div class="sidebottom"><div class="live">Amazon pilot view</div><p id="sync">Connecting…</p><p>Everyone with access sees edits as they happen.</p><small>Prepared for Amazon Middle Mile by SVT Fleet Solutions.</small></div>
 </aside>
 <main>
   <header class="top"><div>SVT Fleet Solutions <span>/ Amazon pilot view</span></div></header>
@@ -365,6 +367,39 @@ window.SVTReport = (() => {
   return {render, download, addBiz, fmt, D, days};
 })();
 </script>
+<script>/* Live sync indicator + field-level save helper shared by all three dashboards.
+   SVTLive.seen(snapshot) after every onSnapshot delivery; SVTLive.saving(promise) around writes.
+   SVTLive.patch(db, path, before, after) writes only the fields this person changed, after
+   checking nobody else saved the record since it was opened. */
+window.SVTLive = (() => {
+  let last = null, pending = 0, offline = false, el = null;
+  const node = () => el || (el = document.getElementById("sync"));
+  function paint() {
+    const n = node(); if (!n) return;
+    const t = last ? last.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}) : "";
+    n.textContent = pending ? "Saving…" : offline ? "Offline · changes sync when you reconnect" : last ? `Live · synced ${t}` : "Connecting…";
+    n.dataset.state = pending ? "saving" : offline ? "offline" : "live";
+  }
+  function seen(snap) { const m = snap && snap.metadata; offline = !!(m && m.fromCache); last = new Date(); paint(); }
+  function failed() { offline = true; paint(); }
+  async function saving(p) { pending++; paint(); try { return await p; } finally { pending--; last = new Date(); paint(); } }
+  const same = (a, b) => JSON.stringify(a ?? "") === JSON.stringify(b ?? "");
+  // Returns {ok:true} or {conflict:true}. stamp = field that changes on every save (updatedAt or rev).
+  async function patch(db, path, before, after, stamp) {
+    const cur = await db.doc(path).get(), c = cur.exists ? cur.data() : null;
+    if (c && !same(c[stamp], before[stamp])) return {conflict:true, current:c};
+    const out = {};
+    Object.keys(after).forEach(k => { if (k !== "id" && !same(after[k], before[k])) out[k] = after[k]; });
+    if (!Object.keys(out).length) return {ok:true, nothing:true};
+    await saving(c ? db.doc(path).update(out) : db.doc(path).set(after));
+    return {ok:true};
+  }
+  setInterval(paint, 30000);
+  addEventListener("online", () => { offline = false; paint(); });
+  addEventListener("offline", () => { offline = true; paint(); });
+  return {seen, failed, saving, patch};
+})();
+</script>
 <script>
 (() => {
 const DEMAND={"ONT42":{"records":108,"units":49,"categories":[["Transmission",37],["Engine",34],["Accessories",11],["Check Engine Light",10],["Brakes",7],["Electrical",6],["HVAC",5],["Fuel",4],["Exhaust",4],["Body",3],["Chassis",2],["Doors",1],["Steering",1],["APU",1]],"components":[["Transmission Assembly",30],["Engine Assembly",18],["Accessories Components",7],["Air Conditioning",5],["Coolant",5],["CEL Overall Issue",5],["Engine Shutdown",4],["Exhaust System",4]],"models":[{"model":"FREIGHTLINER NEW CASCADIA PRL-23K","records":69,"units":21},{"model":"FREIGHTLINER CASCADIA PRL-23K","records":27,"units":17},{"model":"VOLVO VNL64T300","records":5,"units":4},{"model":"FREIGHTLINER Cascadia","records":2,"units":2},{"model":"INTERNATIONAL LT625 6x4","records":1,"units":1},{"model":"VOLVO VNR64T300","records":1,"units":1},{"model":"Inventory match unavailable","records":1,"units":1},{"model":"VOLVO VNL64T760","records":1,"units":1},{"model":"PETERBILT 579","records":1,"units":1}],"dateRange":["2025-09-12","2026-10-26"]},"ONT43":{"records":17,"units":12,"categories":[["Transmission",6],["Electrical",5],["Engine",4],["Suspension",1],["HVAC",1],["Fuel",1],["Body",1]],"components":[["Engine Assembly",3],["Transmission Assembly",3],["Electrical System",2],["Solenoid Assembly",2],["Modules",1],["Cooling System",1],["Suspension Assembly",1],["Air Conditioning",1]],"models":[{"model":"FREIGHTLINER NEW CASCADIA PRL-23K","records":11,"units":7},{"model":"FREIGHTLINER Cascadia","records":3,"units":2},{"model":"VOLVO VNL64T300","records":3,"units":3}],"dateRange":["2025-10-03","2026-10-27"]}};
@@ -514,11 +549,17 @@ function openDrawer(t){
     btn.disabled=true;btn.textContent="Saving…";
     try{
       if(isNew){body.id=db.collection("tasks").doc().id;body.order=99;body.comments=[];body.src=[]}
-      else{const cur=await db.doc("tasks/"+e.id).get();const c=cur.exists?cur.data():null;if(c&&(c.rev||0)!==(e.rev||0)){errBox.hidden=false;errBox.innerHTML="<b>Someone else just changed this action</b><p>Close and reopen it to see their changes, then save again.</p>";btn.disabled=false;btn.textContent="Save update";return}}
+      let cur=null;
+      if(!isNew){const g=await db.doc("tasks/"+e.id).get();cur=g.exists?g.data():null;
+        const mine=["title","owner","due","status","stream","site","priority","gate","detail","evidence","blockedBy"].filter(k=>JSON.stringify(body[k])!==JSON.stringify(e[k]));
+        const theirs=cur&&(cur.rev||0)!==(e.rev||0)?mine.filter(k=>JSON.stringify(cur[k])!==JSON.stringify(e[k])):[];
+        if(theirs.length){errBox.hidden=false;errBox.innerHTML=`<b>${esc(cur.updatedBy||"Someone else")} just changed this action</b><p>They also edited: ${esc(theirs.join(", "))}. Close and reopen it to see their changes, then save again. Your team update text is still here.</p>`;btn.disabled=false;btn.textContent="Save update";return}
+        if(cur) body.comments=cur.comments||[]; }
       const changed=isNew||["title","owner","due","status","stream","site","priority","gate","detail","evidence","blockedBy"].some(k=>JSON.stringify(body[k])!==JSON.stringify(e[k]));
       if(note) body.comments=[...(body.comments||[]),{text:note,actor:viewerName||"Project team member",at:now}];
-      body.rev=(e.rev||0)+1;body.updatedAt=now;body.updatedBy=viewerName||"Project team member";
-      await db.doc("tasks/"+body.id).set(body);
+      body.rev=((cur&&cur.rev)||e.rev||0)+1;body.updatedAt=now;body.updatedBy=viewerName||"Project team member";
+      if(isNew) await SVTLive.saving(db.doc("tasks/"+body.id).set(body));
+      else{const out={rev:body.rev,updatedAt:now,updatedBy:body.updatedBy};["title","owner","due","status","stream","site","priority","gate","detail","evidence","blockedBy"].forEach(k=>{if(JSON.stringify(body[k])!==JSON.stringify(e[k]))out[k]=body[k]});if(note)out.comments=body.comments;await SVTLive.saving(db.doc("tasks/"+body.id).update(out))}
       if(note||changed){const a={title:body.title,status:body.status,note:note||(isNew?"Action added.":"Action details updated."),actor:viewerName||"Project team member",at:now,taskId:body.id};await db.collection("activity").doc().set(a)}
       if(body.status==="Done") await unblockDependents(body);
       closeDrawer();toast(isNew?"Action added":"Saved");
@@ -557,7 +598,7 @@ render();
   const w=user?await user.can("data.write"):null; canWrite=w!==false;
   try{const me=user&&user.me?await user.me():null;viewerName=(me&&me.name)||""}catch(_){}
   let pending=new Set(Object.keys(S));
-  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));pending.delete(c);if(!pending.size)ready=true;if(!$("#drawer-root").innerHTML||true)render()},err=>{console.warn(c,err&&err.code);pending.delete(c);if(!pending.size)ready=true;render()}));
+  Object.keys(S).forEach(c=>db.collection(c).onSnapshot(snap=>{SVTLive.seen(snap);S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));pending.delete(c);if(!pending.size)ready=true;if(!$("#drawer-root").innerHTML||true)render()},err=>{console.warn(c,err&&err.code);SVTLive.failed();pending.delete(c);if(!pending.size)ready=true;render()}));
 }catch(err){console.warn(err)}})();
 })();
 </script>
