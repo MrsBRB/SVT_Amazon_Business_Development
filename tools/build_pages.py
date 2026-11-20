@@ -11,6 +11,7 @@ Markers replaced in each src/*.html:
   /*@DEMAND*/null  shared/work-demand.json (Amazon-provided ONT42/ONT43 WR mix)
   /*@INVENTORY*/null shared/asset-inventory.json (Amazon ATS tractor inventory, ONT42/ONT43)
   __LOGO__         shared/svt-logo.png as base64
+  __PLAN__         shared/ont42-plan.jpg as base64 (ONT42 repair area plan, Rev D)
 """
 import base64, json, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -25,6 +26,7 @@ parts = {
     "/*@LIVE_JS*/": (SH / "live.js").read_text(),
     "/*@INVENTORY*/null": (SH / "asset-inventory.json").read_text(),
     "/*@DEMAND*/null": json.dumps(json.loads((SH / "work-demand.json").read_text()), separators=(",", ":")),
+    "__PLAN__": base64.b64encode((SH / "ont42-plan.jpg").read_bytes()).decode(),
     "__LOGO__": base64.b64encode((SH / "svt-logo.png").read_bytes()).decode(),
 }
 for src, dst in OUT.items():
