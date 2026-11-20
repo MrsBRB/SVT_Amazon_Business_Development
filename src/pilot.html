@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: same SVT shell as the Amazon pilot view (fixed navy sidebar, breadcrumb bar, view title). Views: Overview, Launch checklist, Action board, Sites & readiness, Weekly standup, Updates, Team, Progress report. Items open in a right-hand drawer. */
+/* Layout: same SVT shell as the Amazon pilot view (fixed navy sidebar, breadcrumb bar, view title). Views: Overview, Launch checklist (By area / Board / Table), Sites & readiness, Weekly standup, Updates, Team, Progress report. Items open in a right-hand drawer. */
 /*@SHELL_CSS*/
 /*@REPORT_CSS*/
 .bp-wrap{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:22px;align-items:start}
@@ -18,6 +18,7 @@
 .ins-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.ins-grid .panel h3{margin:0 0 8px;font-size:16px}.ins-grid ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.45;color:var(--muted)}.ins-grid li{margin-bottom:5px}.ins-grid li b{color:var(--ink)}
 .ins-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 16px}.ins-stats div{background:var(--gray,#e6e9ed);border-radius:6px;padding:12px 14px}.ins-stats strong{display:block;font-size:26px;line-height:1.1;color:var(--ink)}.ins-stats span{font-size:12px;color:var(--muted)}
 @media(max-width:980px){.bp-wrap,.ins-grid{grid-template-columns:minmax(0,1fr)}.ins-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tablewrap td select{min-width:128px}
 .area{margin-bottom:16px}.area .between{margin-bottom:6px}
 .rdrow{display:grid;grid-template-columns:150px 1fr auto;gap:14px;align-items:start;padding:12px 0;border-top:1px solid var(--line-2)}
 .rdrow:first-of-type{border-top:0}.rdrow .t{font-weight:600;color:var(--ink);background:none;border:0;padding:0;text-align:left;font-size:15px}
@@ -71,11 +72,11 @@ const STAT=["Not started","In progress","Waiting","Blocked","Ready"];
 const SITES=["ONT42 + ONT43","ONT42","ONT43"];
 const FIELDS=[["item","Item","text",true],["area","Area","select",false,AREAS],["status","Status","select",false,STAT],["gate","Blocks go-live?","select",false,["Gate","Nice to have"]],
   ["site","Site","select",false,SITES],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands","textarea"],["order","Order","number"]];
-const TABS=[["Overview","◫","overview"],["Launch checklist","☑","checklist"],["Action board","▦","board"],["Sites & readiness","◎","sites"],["Weekly standup","◷","standup"],["Updates","≡","updates"],["Team","◉","team"],["Progress report","▤","report"]];
+const TABS=[["Overview","◫","overview"],["Launch checklist","☑","checklist"],["Sites & readiness","◎","sites"],["Weekly standup","◷","standup"],["Updates","≡","updates"],["Team","◉","team"],["Progress report","▤","report"]];
 const LOGO_SRC="data:image/png;base64,__LOGO__";
 const S={readiness:[],updates:[],notes:[]};
 let db=null,user=null,canWrite=false,ready=false,viewerName="",tab="overview",rdFilter="open";
-const F={q:"",area:"All areas",site:"All sites",status:"All statuses",owner:"All owners",view:"Board"};
+const F={q:"",area:"All areas",site:"All sites",status:"All statuses",owner:"All owners",view:"Board",layout:"area"};
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const pd=s=>{if(!s)return null;const d=new Date(String(s).slice(0,10)+"T00:00:00");return isNaN(d)?null:d};
@@ -105,26 +106,33 @@ function vOverview(){
   <div class="stats"><article><span>Open launch gates</span><strong>${ready?g.length-done:"—"}</strong><small>Must be Ready before go-live</small></article><article><span>Waiting on others</span><strong>${ready?all.filter(r=>r.status==="Waiting").length:"—"}</strong><small>Team and partner dependencies</small></article><article><span>In progress</span><strong>${ready?all.filter(r=>r.status==="In progress").length:"—"}</strong><small>Active items</small></article><article><span>Blocked</span><strong>${ready?all.filter(r=>r.status==="Blocked").length:"—"}</strong><small>Resolve before proceeding</small></article></div>
   <div class="alert"><b>Hold the ${esc(fmtD(GO_LIVE))} target</b><p>Amazon needs 2–3 business days after Reach sends the setup details. The Reach signature, then location details (hours, users, roles), have to reach Amazon by ${esc(SVTReport.fmt(cut))}.</p></div>
   ${siteDemand()}
-  <div class="sectionhead"><h2>Next team actions</h2><button class="link" data-tab="board">View all →</button></div>
+  <div class="sectionhead"><h2>Next team actions</h2><button class="link" data-tab="board">View board →</button></div>
   <div class="cards">${next.map(card).join("")||'<div class="empty">No open launch gates.</div>'}</div>
   <div class="twocol"><article class="panel"><h2>Launch path</h2><div class="track"><b>Reach onboarding</b><p>Sign the agreement, activate the service-provider account, set up locations and users, complete web and mobile training.</p></div><div class="track"><b>Amazon connection</b><p>Reach sends setup details to Edmund Park. Amazon connects Relay Garage (2–3 business days); the team validates the service-event flow.</p></div><div class="track"><b>Site and service readiness</b><p>Work area, Avetta coverage, technicians, hours, mobile units, parts, invoicing and pre-authorization.</p></div></article>
   <article class="panel"><h2>Latest updates</h2>${latest.length?latest.map(u=>`<div class="activity"><p style="color:var(--ink)">${esc(u.text)}</p><small>${esc(u.byName||"Team member")} · ${esc(u.date||fmtAt(u.at))}</small></div>`).join(""):"<p>No updates yet.</p>"}</article></div>`;
 }
 
 function vChecklist(){
-  const keep=r=>rdFilter==="all"?true:rdFilter==="gate"?isGate(r):r.status!=="Ready";
-  return `<div class="toolbar" style="align-items:center"><div class="seg" role="group" aria-label="Filter checklist">${[["open","Not ready"],["gate","Gates"],["all","All"]].map(([k,l])=>`<button data-rd="${k}" aria-pressed="${rdFilter===k}">${l}</button>`).join("")}</div><span class="sourceNote">Change a status as soon as it moves, and add the evidence (who confirmed, when) by opening the item.</span></div>
-  ${AREAS.map(a=>{const all=S.readiness.filter(r=>r.area===a);if(!all.length)return"";const list=items().filter(r=>r.area===a&&keep(r));const rd=all.filter(r=>r.status==="Ready").length;
-  return `<article class="panel area"><div class="between"><h2 style="margin:0">${esc(a)}</h2><span class="status">${rd}/${all.length} ready</span></div>${list.length?list.map(r=>{const dd=days(r.due);return `<div class="rdrow"><div>${canWrite?sel(r):`<span class="status ${stCls(r.status)}">${esc(r.status)}</span>`}</div><div style="min-width:0"><button class="t" data-open="${esc(r.id)}">${esc(r.item)}</button>${isGate(r)?' <span class="gate">GATE</span>':""}<div class="m">${esc(r.site)} · ${r.owner?esc(r.owner):"owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${esc(fmtD(r.due))}</span>`:""}</div>${r.status==="Blocked"?`<div class="e blk-flag">Blocked by: ${r.blockedBy?esc((S.readiness.find(x=>x.id===r.blockedBy)||{}).item||"item unavailable"):"not chosen yet. Open the item to choose it."}</div>`:""}${r.evidence?`<div class="e">${esc(r.evidence)}</div>`:""}</div><div></div></div>`}).join(""):'<p class="sourceNote">All ready in this area.</p>'}</article>`}).join("")||'<div class="empty">The checklist is loading.</div>'}`;
-}
-
-function vBoard(){
+  // One tab, three layouts (By area, Board, Table) sharing one filter bar.
   const owners=[...new Set(S.readiness.map(r=>r.owner).filter(Boolean))].sort(),q=F.q.toLowerCase();
-  const list=items().filter(r=>(F.area==="All areas"||r.area===F.area)&&(F.site==="All sites"||r.site===F.site)&&(F.status==="All statuses"||r.status===F.status)&&(F.owner==="All owners"||r.owner===F.owner)&&(r.item+" "+(r.owner||"")+" "+(r.evidence||"")).toLowerCase().includes(q));
+  const keep=r=>rdFilter==="all"?true:rdFilter==="gate"?isGate(r):r.status!=="Ready";
+  const match=r=>keep(r)&&(F.area==="All areas"||r.area===F.area)&&(F.site==="All sites"||r.site===F.site)&&(F.status==="All statuses"||r.status===F.status)&&(F.owner==="All owners"||r.owner===F.owner)&&(r.item+" "+(r.owner||"")+" "+(r.evidence||"")).toLowerCase().includes(q);
+  const list=items().filter(match);
   const s=(k,l,o)=>`<select aria-label="${l}" data-f="${k}">${o.map(x=>`<option${x===F[k]?" selected":""}>${esc(x)}</option>`).join("")}</select>`;
-  const body=F.view==="Table"?`<div class="tablewrap"><table><thead><tr><th>Item</th><th>Owner</th><th>Site</th><th>Status</th><th>Due</th></tr></thead><tbody>${list.map(r=>`<tr><td><button data-open="${esc(r.id)}">${esc(r.item)}</button></td><td>${esc(r.owner||"")}</td><td>${esc(r.site)}</td><td>${esc(r.status)}</td><td>${r.due?esc(fmtD(r.due)):"Unconfirmed"}</td></tr>`).join("")}</tbody></table></div>`
-   :`<div class="board">${["To do","In progress","Waiting / blocked","Complete"].map((c,i)=>{const l=list.filter(r=>i===0?r.status==="Not started":i===1?r.status==="In progress":i===2?["Waiting","Blocked"].includes(r.status):r.status==="Ready");return `<div class="column"><h3>${c}<span>${l.length}</span></h3>${l.map(card).join("")}${l.length?"":'<p class="empty">No items</p>'}</div>`}).join("")}</div>`;
-  return `<div class="toolbar"><input type="search" id="q" aria-label="Search items" placeholder="Search items, owners or evidence…" value="${esc(F.q)}">${s("area","Filter area",["All areas",...AREAS])}${s("site","Filter site",["All sites",...SITES])}</div><div class="toolbar">${s("status","Filter status",["All statuses",...STAT])}${s("owner","Filter owner",["All owners",...owners])}<button id="toggle-view">${F.view==="Board"?"Table view":"Board view"}</button></div>${body}`;
+  const seg=(attr,label,opts,cur)=>`<div class="seg" role="group" aria-label="${label}">${opts.map(([k,l])=>`<button data-${attr}="${k}" aria-pressed="${cur===k}">${l}</button>`).join("")}</div>`;
+  const filtered=F.q||F.area!=="All areas"||F.site!=="All sites"||F.status!=="All statuses"||F.owner!=="All owners";
+  const bar=`<div class="toolbar" style="align-items:center">${seg("layout","Layout",[["area","By area"],["board","Board"],["table","Table"]],F.layout)}${seg("rd","Show",[["open","Not ready"],["gate","Gates"],["all","All"]],rdFilter)}<span class="sourceNote">${list.length} of ${S.readiness.length} items${filtered?' · <button class="link" id="clear-f" style="background:none;border:0;color:var(--red);padding:0">Clear filters</button>':""}</span></div>
+  <div class="toolbar"><input type="search" id="q" aria-label="Search items" placeholder="Search items, owners or evidence…" value="${esc(F.q)}">${s("area","Filter area",["All areas",...AREAS])}${s("site","Filter site",["All sites",...SITES])}${s("status","Filter status",["All statuses",...STAT])}${s("owner","Filter owner",["All owners",...owners])}</div>`;
+  let body;
+  if(F.layout==="board"){
+    body=`<div class="board">${["To do","In progress","Waiting / blocked","Complete"].map((c,i)=>{const l=list.filter(r=>i===0?r.status==="Not started":i===1?r.status==="In progress":i===2?["Waiting","Blocked"].includes(r.status):r.status==="Ready");const hid=i===3&&rdFilter==="open";return `<div class="column"><h3>${c}<span>${l.length}</span></h3>${l.map(card).join("")}${l.length?"":`<p class="empty">${hid?"Hidden by Not ready. Choose All to see completed items.":"No items"}</p>`}</div>`}).join("")}</div>`;
+  }else if(F.layout==="table"){
+    body=list.length?`<div class="tablewrap"><table><thead><tr><th>Item</th><th>Area</th><th>Owner</th><th>Site</th><th>Status</th><th>Due</th></tr></thead><tbody>${list.map(r=>{const dd=days(r.due);return `<tr><td><button data-open="${esc(r.id)}">${isGate(r)?"Gate · ":""}${esc(r.item)}</button></td><td>${esc(r.area)}</td><td>${esc(r.owner||"")}</td><td>${esc(r.site)}</td><td>${canWrite?sel(r):esc(r.status)}</td><td class="${r.due&&dd<0&&r.status!=="Ready"?"overdue":""}">${r.due?esc(fmtD(r.due)):"Unconfirmed"}</td></tr>`}).join("")}</tbody></table></div>`:'<div class="empty">No items match these filters.</div>';
+  }else{
+    body=AREAS.map(a=>{const all=S.readiness.filter(r=>r.area===a);if(!all.length)return"";if(F.area!=="All areas"&&F.area!==a)return"";const l=list.filter(r=>r.area===a);const rd=all.filter(r=>r.status==="Ready").length;
+    return `<article class="panel area"><div class="between"><h2 style="margin:0">${esc(a)}</h2><span class="status">${rd}/${all.length} ready</span></div>${l.length?l.map(r=>{const dd=days(r.due);return `<div class="rdrow"><div>${canWrite?sel(r):`<span class="status ${stCls(r.status)}">${esc(r.status)}</span>`}</div><div style="min-width:0"><button class="t" data-open="${esc(r.id)}">${esc(r.item)}</button>${isGate(r)?' <span class="gate">GATE</span>':""}<div class="m">${esc(r.site)} · ${r.owner?esc(r.owner):"owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${esc(fmtD(r.due))}</span>`:""}</div>${r.status==="Blocked"?`<div class="e blk-flag">Blocked by: ${r.blockedBy?esc((S.readiness.find(x=>x.id===r.blockedBy)||{}).item||"item unavailable"):"not chosen yet. Open the item to choose it."}</div>`:""}${r.evidence?`<div class="e">${esc(r.evidence)}</div>`:""}</div><div></div></div>`}).join(""):`<p class="sourceNote">${filtered?"No items match these filters.":"All ready in this area."}</p>`}</article>`}).join("")||'<div class="empty">No items match these filters.</div>';
+  }
+  return `${bar}<p class="sourceNote" style="margin:-4px 0 14px">Change a status as soon as it moves, and add the evidence (who confirmed, when) by opening the item.</p>${S.readiness.length?body:'<div class="empty">The checklist is loading.</div>'}`;
 }
 
 
@@ -212,7 +220,7 @@ function reportCfg(){
       {label:"Location setup & service hours",start:"2026-11-18",end:"2026-11-25",ids:["rd07","rd18"]},
       {label:"Amazon connection",start:"2026-11-30",end:R.addBiz(GO_LIVE,-1),ids:["rd08","rd09"]},
       {label:"Training & mobile app",start:"2026-11-30",end:R.addBiz(GO_LIVE,-1),ids:["rd10","rd11"]},
-      {label:"Site & service readiness",start:"2026-11-17",end:GO_LIVE,ids:["rd15","rd16","rd17","rd19","rd20","rd21","rd22","rd23","rd24"]},
+      {label:"Site & service readiness",start:"2026-11-17",end:GO_LIVE,ids:["rd15","rd16","rd17","rd19","rd20","rd21","rd22","rd23","rd24","rd34","rd35","rd36","rd37","rd38"]},
       {label:"Launch date & measures",start:"2026-11-18",end:GO_LIVE,ids:["rd25","rd26","rd27","rd28"]},
       {label:"ONT42 go-live",milestone:true,date:GO_LIVE,note:`Proposed ${R.fmt(GO_LIVE)} · unconfirmed`},
       {label:"ONT43 add-on",start:"2026-12-14",end:"2026-12-23",ids:["rd31","rd32","rd33"]},
@@ -227,15 +235,15 @@ function vReport(){return `<div class="rp-tools"><button class="primary" id="rp-
 function render(){
   $("#nav").innerHTML=TABS.map(([n,i,k])=>`<button data-tab="${k}"${tab===k?' aria-current="page"':""}><span aria-hidden="true">${i}</span>${n}</button>`).join("");
   $("#view-title").textContent=tab==="overview"?"SVT team view":TABS.find(x=>x[2]===tab)[0];
-  $("#add").hidden=!(db&&canWrite)||!["overview","checklist","board"].includes(tab);
+  $("#add").hidden=!(db&&canWrite)||!["overview","checklist"].includes(tab);
   const focusQ=document.activeElement&&document.activeElement.id==="q",pos=focusQ?document.activeElement.selectionStart:0;
   const draft=$("#up-text")?$("#up-text").value:"";
-  $("#view").innerHTML={overview:vOverview,checklist:vChecklist,board:vBoard,sites:vSites,standup:vStandup,updates:vUpdates,team:vTeam,report:vReport}[tab]();
+  $("#view").innerHTML={overview:vOverview,checklist:vChecklist,sites:vSites,standup:vStandup,updates:vUpdates,team:vTeam,report:vReport}[tab]();
   if(draft&&$("#up-text"))$("#up-text").value=draft;
   if(focusQ){const q=$("#q");if(q){q.focus();q.setSelectionRange(pos,pos)}}
   if(tab==="report")SVTReport.render($("#rp-stage"),reportCfg());
 }
-function setTab(k){tab=k;try{history.replaceState(null,"","#"+k)}catch(e){}render();scrollTo(0,0)}
+function setTab(k){if(k==="board"){F.layout="board";k="checklist"}tab=k;try{history.replaceState(null,"","#"+k)}catch(e){}render();scrollTo(0,0)}
 
 function openDrawer(id,preset){
   const rec=id?S.readiness.find(r=>r.id===id):null;if(id&&!rec)return;
@@ -299,7 +307,8 @@ document.addEventListener("click",e=>{
   const o=e.target.closest("[data-open]");if(o){openDrawer(o.dataset.open);return}
   if(e.target.closest("#add")){if(db&&canWrite)openDrawer(null);return}
   const rd=e.target.closest("[data-rd]");if(rd){rdFilter=rd.dataset.rd;render();return}
-  if(e.target.closest("#toggle-view")){F.view=F.view==="Board"?"Table":"Board";render();return}
+  const ly=e.target.closest("[data-layout]");if(ly){F.layout=ly.dataset.layout;render();return}
+  if(e.target.closest("#clear-f")){Object.assign(F,{q:"",area:"All areas",site:"All sites",status:"All statuses",owner:"All owners"});render();return}
   if(e.target.closest("#rp-dl")){SVTReport.download($("#rp-stage"),`SVT-ONT-Pilot-Team-Progress-${new Date().toISOString().slice(0,10)}.pdf`,toast);return}
   if(e.target.closest("#rp-print")){SVTReport.print($("#rp-stage"),`SVT-ONT-Pilot-Team-Progress-${new Date().toISOString().slice(0,10)}.pdf`,toast);return}
 });
@@ -314,7 +323,7 @@ document.addEventListener("change",async e=>{
 document.addEventListener("submit",async e=>{if(e.target.id!=="up-form")return;e.preventDefault();const t=$("#up-text").value.trim();if(!t||!db)return;
   try{const uid=user?await user.id():null,now=new Date().toISOString();await db.collection("updates").doc().set({text:t,at:now,date:now.slice(0,10),by:uid||"",byName:viewerName||""});$("#up-text").value="";toast("Posted")}catch(x){toast("Couldn't post. Try again.")}});
 
-const h=(location.hash||"").slice(1);if(TABS.some(x=>x[2]===h))tab=h;
+const h=(location.hash||"").slice(1);if(h==="board"){tab="checklist";F.layout="board"}else if(TABS.some(x=>x[2]===h))tab=h;
 render();
 (async()=>{try{
   user=await window.claude?.use?.("user");db=await window.claude?.use?.("db");
