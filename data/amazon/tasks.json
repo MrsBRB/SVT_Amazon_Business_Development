@@ -164,16 +164,16 @@
     "order": 29,
     "owner": "Brooke Benkert / Amazon",
     "priority": "Low",
-    "rev": 1,
+    "rev": 2,
     "site": "Project-wide",
     "src": [
       "rd27"
     ],
-    "status": "Not started",
+    "status": "In progress",
     "stream": "Launch readiness",
     "title": "Assess possible wider ONT coverage",
-    "updatedAt": "2026-11-19T19:30:00Z",
-    "updatedBy": "SVT project team"
+    "updatedAt": "2026-11-20T22:26:00Z",
+    "updatedBy": "Automatic status sync"
   },
   {
     "blockedBy": "",
@@ -287,7 +287,7 @@
     "updatedBy": "SVT project team"
   },
   {
-    "blockedBy": "",
+    "blockedBy": "agreement",
     "comments": [],
     "detail": "Provide operating hours and administrator, dispatcher and technician roles for the primary and add-on sites.",
     "due": "",
@@ -297,7 +297,7 @@
     "order": 6,
     "owner": "Brooke Benkert / Reach",
     "priority": "High",
-    "rev": 2,
+    "rev": 3,
     "site": "Project-wide",
     "src": [
       "rd07"
@@ -305,7 +305,7 @@
     "status": "Blocked",
     "stream": "Reach onboarding",
     "title": "Confirm pilot location setup details",
-    "updatedAt": "2026-11-19T22:26:00Z",
+    "updatedAt": "2026-11-20T22:26:00Z",
     "updatedBy": "Automatic status sync"
   },
   {
@@ -381,16 +381,16 @@
     "order": 26,
     "owner": "SVT",
     "priority": "Medium",
-    "rev": 1,
+    "rev": 2,
     "site": "ONT43",
     "src": [
       "rd31"
     ],
-    "status": "Not started",
+    "status": "In progress",
     "stream": "Site readiness",
     "title": "Assess the ONT43 lot (surface, lighting, power, truck access)",
-    "updatedAt": "2026-11-19T19:30:00Z",
-    "updatedBy": "SVT project team"
+    "updatedAt": "2026-11-20T22:26:00Z",
+    "updatedBy": "Automatic status sync"
   },
   {
     "blockedBy": "",
@@ -511,16 +511,16 @@
     "order": 18,
     "owner": "SVT",
     "priority": "High",
-    "rev": 1,
+    "rev": 2,
     "site": "Both sites",
     "src": [
       "rd17"
     ],
-    "status": "Not started",
+    "status": "In progress",
     "stream": "Service readiness",
     "title": "Assign technicians and confirm availability",
-    "updatedAt": "2026-11-19T19:30:00Z",
-    "updatedBy": "SVT project team"
+    "updatedAt": "2026-11-20T22:26:00Z",
+    "updatedBy": "Automatic status sync"
   },
   {
     "blockedBy": "",
@@ -597,16 +597,16 @@
     "order": 13,
     "owner": "SVT / Amazon",
     "priority": "High",
-    "rev": 1,
+    "rev": 3,
     "site": "Both sites",
     "src": [
       "rd24"
     ],
-    "status": "Awaiting response",
+    "status": "In progress",
     "stream": "Site readiness",
     "title": "Confirm site-visit outcome and repair location plan",
-    "updatedAt": "2026-11-19T19:30:00Z",
-    "updatedBy": "SVT project team"
+    "updatedAt": "2026-11-20T22:26:00Z",
+    "updatedBy": "Automatic status sync"
   },
   {
     "blockedBy": "",

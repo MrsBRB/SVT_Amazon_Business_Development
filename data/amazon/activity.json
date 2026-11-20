@@ -64,11 +64,56 @@
   },
   {
     "actor": "Automatic status sync",
+    "at": "2026-11-20T22:26:00Z",
+    "id": "a-20261120-coverage",
+    "note": "Status updated from SVT's launch checklist.",
+    "status": "In progress",
+    "taskId": "coverage",
+    "title": "Assess possible wider ONT coverage"
+  },
+  {
+    "actor": "Automatic status sync",
+    "at": "2026-11-20T22:26:00Z",
+    "id": "a-20261120-ont43lot",
+    "note": "Status updated from SVT's launch checklist.",
+    "status": "In progress",
+    "taskId": "ont43lot",
+    "title": "Assess the ONT43 lot (surface, lighting, power, truck access)"
+  },
+  {
+    "actor": "Automatic status sync",
+    "at": "2026-11-20T22:26:00Z",
+    "id": "a-20261120-techs",
+    "note": "Status updated from SVT's launch checklist.",
+    "status": "In progress",
+    "taskId": "techs",
+    "title": "Assign technicians and confirm availability"
+  },
+  {
+    "actor": "Automatic status sync",
+    "at": "2026-11-20T22:26:00Z",
+    "id": "a-20261120-visit",
+    "note": "Status updated from SVT's launch checklist.",
+    "status": "In progress",
+    "taskId": "visit",
+    "title": "Confirm site-visit outcome and repair location plan"
+  },
+  {
+    "actor": "Automatic status sync",
     "at": "2026-11-20T00:05:14Z",
     "id": "a-202611200005-handoff",
     "note": "Status updated from SVT's launch checklist.",
     "status": "Blocked",
     "taskId": "handoff",
     "title": "Confirm Reach → Amazon setup handoff"
+  },
+  {
+    "actor": "Automatic status sync",
+    "at": "2026-11-20T20:05:47Z",
+    "id": "a-202611202005-visit",
+    "note": "Status updated from SVT's launch checklist.",
+    "status": "Not started",
+    "taskId": "visit",
+    "title": "Confirm site-visit outcome and repair location plan"
   }
 ]
