@@ -198,7 +198,7 @@
     "updatedBy": "SVT project team"
   },
   {
-    "blockedBy": "",
+    "blockedBy": "agreement",
     "comments": [],
     "detail": "Reach shares location setup with Amazon to initiate the native Relay Garage connection. Starts once Reach has the location details.",
     "due": "",
@@ -208,16 +208,17 @@
     "order": 8,
     "owner": "Reach / Edmund Park",
     "priority": "High",
-    "rev": 1,
+    "resumeStatus": "Not started",
+    "rev": 2,
     "site": "Project-wide",
     "src": [
       "rd08"
     ],
-    "status": "Not started",
+    "status": "Blocked",
     "stream": "Technology readiness",
     "title": "Confirm Reach → Amazon setup handoff",
-    "updatedAt": "2026-11-19T19:30:00Z",
-    "updatedBy": "SVT project team"
+    "updatedAt": "2026-11-20T00:05:14Z",
+    "updatedBy": "Automatic status sync"
   },
   {
     "blockedBy": "",

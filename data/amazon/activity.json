@@ -61,5 +61,14 @@
     "status": "Blocked",
     "taskId": "location",
     "title": "Confirm pilot location setup details"
+  },
+  {
+    "actor": "Automatic status sync",
+    "at": "2026-11-20T00:05:14Z",
+    "id": "a-202611200005-handoff",
+    "note": "Status updated from SVT's launch checklist.",
+    "status": "Blocked",
+    "taskId": "handoff",
+    "title": "Confirm Reach → Amazon setup handoff"
   }
 ]
