@@ -964,7 +964,7 @@ function renderReport(){
 }
 document.addEventListener("click",e=>{
   if(e.target.closest("#rp-dl")){SVTReport.download(document.getElementById("rp-stage"),`SVT-Amazon-BD-Progress-Brooke-${new Date().toISOString().slice(0,10)}.pdf`,toast);}
-  if(e.target.closest("#rp-print")){window.print();}
+  if(e.target.closest("#rp-print")){SVTReport.print(document.getElementById("rp-stage"),`SVT-Amazon-BD-Progress-Brooke-${new Date().toISOString().slice(0,10)}.pdf`,toast);}
 });
 route(); renderAll();
 (async()=>{

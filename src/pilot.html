@@ -6,6 +6,16 @@
 /* Layout: same SVT shell as the Amazon pilot view (fixed navy sidebar, breadcrumb bar, view title). Views: Overview, Launch checklist, Action board, Sites & readiness, Weekly standup, Updates, Team, Progress report. Items open in a right-hand drawer. */
 /*@SHELL_CSS*/
 /*@REPORT_CSS*/
+.bp-wrap{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:22px;align-items:start}
+.bp-sheet{background:#22313f;border-radius:6px;padding:10px}.bp-sheet svg{display:block;width:100%;height:auto}
+.bp-meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12px;color:var(--muted);margin:4px 0 14px}.bp-meta b{color:var(--ink);font-weight:600}
+.bp-key{list-style:none;margin:0;padding:0;display:grid;gap:7px}.bp-key li{display:grid;grid-template-columns:24px 1fr;gap:9px;font-size:13px;line-height:1.35;color:var(--muted)}
+.bp-key li b{color:var(--ink);font-weight:600;display:block}.bp-n{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#10202f}
+.bp-n.o{background:#f08a24}.bp-n.c{background:#3cc6e0}.bp-n.y{background:#f2c94c}.bp-n.w{background:#d6dee8}
+.bp-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11.5px;color:var(--muted);margin-top:8px}.bp-legend i{display:inline-block;width:14px;height:0;border-top:3px solid;margin-right:5px;vertical-align:middle}
+.ins-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.ins-grid .panel h3{margin:0 0 8px;font-size:16px}.ins-grid ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.45;color:var(--muted)}.ins-grid li{margin-bottom:5px}.ins-grid li b{color:var(--ink)}
+.ins-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 16px}.ins-stats div{background:var(--gray,#e6e9ed);border-radius:6px;padding:12px 14px}.ins-stats strong{display:block;font-size:26px;line-height:1.1;color:var(--ink)}.ins-stats span{font-size:12px;color:var(--muted)}
+@media(max-width:980px){.bp-wrap,.ins-grid{grid-template-columns:minmax(0,1fr)}.ins-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .area{margin-bottom:16px}.area .between{margin-bottom:6px}
 .rdrow{display:grid;grid-template-columns:150px 1fr auto;gap:14px;align-items:start;padding:12px 0;border-top:1px solid var(--line-2)}
 .rdrow:first-of-type{border-top:0}.rdrow .t{font-weight:600;color:var(--ink);background:none;border:0;padding:0;text-align:left;font-size:15px}
@@ -115,9 +125,63 @@ function vBoard(){
   return `<div class="toolbar"><input type="search" id="q" aria-label="Search items" placeholder="Search items, owners or evidence…" value="${esc(F.q)}">${s("area","Filter area",["All areas",...AREAS])}${s("site","Filter site",["All sites",...SITES])}</div><div class="toolbar">${s("status","Filter status",["All statuses",...STAT])}${s("owner","Filter owner",["All owners",...owners])}<button id="toggle-view">${F.view==="Board"?"Table view":"Board view"}</button></div>${body}`;
 }
 
+
+// ONT42 repair area plan (RevD, short form, Nov 19 2026, for SVT review). Schematic redraw of the scaled plan sheet: positions are indicative.
+function bpSvg(){
+  const n=(x,y,k,c)=>`<g><circle cx="${x}" cy="${y}" r="11" fill="${c}" stroke="#10202f" stroke-width="1.5"/><text x="${x}" y="${y+4}" text-anchor="middle" font-size="11" font-weight="700" fill="#10202f">${k}</text></g>`;
+  const O="#f08a24",C="#3cc6e0",Y="#f2c94c",W="#d6dee8";
+  let stalls="";for(let i=0;i<13;i++){const x=300+i*30;stalls+=`<rect x="${x}" y="58" width="22" height="58" fill="none" stroke="${W}" stroke-dasharray="4 4" stroke-width="1.2" opacity=".75"/>`}
+  let ready="";for(let i=0;i<8;i++){const x=150+i*30;ready+=`<rect x="${x}" y="318" width="22" height="46" fill="${i<4?"none":"#3cc6e033"}" stroke="${C}" stroke-width="1.6"/>`}
+  return `<svg viewBox="0 0 720 430" role="img" aria-label="Schematic of the ONT42 repair area at the west end of the unpaved lot">
+  <defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="${Y}" stroke-width="2" opacity=".55"/></pattern></defs>
+  <rect x="0" y="0" width="720" height="430" fill="#22313f"/>
+  <rect x="34" y="0" width="26" height="430" fill="#3a4a5a"/><text transform="translate(51 300) rotate(-90)" font-size="11" fill="${W}" letter-spacing="1.5">S TIPPECANOE AVE</text>
+  <rect x="74" y="34" width="620" height="362" fill="#4a4436" opacity=".55" stroke="${W}" stroke-dasharray="7 5" stroke-width="1.6"/>
+  <text x="684" y="390" text-anchor="end" font-size="11" fill="${W}" opacity=".85">Unpaved lot · about 3.3 acres</text>
+  ${stalls}<text x="600" y="134" text-anchor="middle" font-size="10" fill="${W}" opacity=".85">Existing stalls · clear west end with FAS</text>
+  <rect x="86" y="46" width="200" height="24" fill="none" stroke="${W}" stroke-dasharray="4 3"/><text x="186" y="62" text-anchor="middle" font-size="10" fill="${W}">E · existing structure</text>
+  <rect x="86" y="80" width="420" height="300" fill="#f08a2410" stroke="${O}" stroke-dasharray="8 5" stroke-width="2"/>
+  <text x="96" y="374" font-size="10.5" font-weight="700" fill="${O}" letter-spacing="1">SVT REPAIR ZONE</text>
+  <rect x="150" y="214" width="290" height="88" fill="url(#hatch)" stroke="${Y}" stroke-width="1.6"/><text x="295" y="262" text-anchor="middle" font-size="11" fill="${Y}" font-weight="700">100-ft clear apron · no parking</text>
+  <rect x="200" y="140" width="176" height="64" fill="${O}" opacity=".9"/><line x1="288" y1="140" x2="288" y2="204" stroke="#22313f" stroke-width="2"/><text x="288" y="176" text-anchor="middle" font-size="11" font-weight="700" fill="#10202f">4 covered bays</text>
+  <rect x="380" y="140" width="66" height="64" fill="${O}" opacity=".6" stroke="${O}"/><text x="413" y="176" text-anchor="middle" font-size="9.5" font-weight="700" fill="#10202f">40-ft unit</text>
+  ${ready}
+  <path d="M60 258 H150" stroke="${C}" stroke-width="3" stroke-dasharray="10 6" fill="none" marker-end=""/><path d="M150 258 l-13 -7 v14z" fill="${C}"/>
+  <text x="66" y="250" font-size="9.5" fill="${C}">truck route in</text>
+  <rect x="470" y="150" width="30" height="30" fill="none" stroke="${C}" stroke-width="2"/>
+  <rect x="470" y="200" width="30" height="30" fill="none" stroke="${C}" stroke-width="2"/>
+  <rect x="96" y="96" width="90" height="34" fill="none" stroke="${W}" stroke-width="1.2"/>
+  <rect x="616" y="320" width="30" height="30" fill="none" stroke="${C}" stroke-width="2"/><line x1="500" y1="230" x2="616" y2="330" stroke="${Y}" stroke-dasharray="3 4" opacity=".6"/>
+  <text x="560" y="300" font-size="9" fill="${Y}" opacity=".9" transform="rotate(40 560 300)">separation</text>
+  ${[[92,86],[500,86],[92,376],[500,376]].map(([x,y])=>`<path d="M${x} ${y} l5 -9 l5 9z" fill="${Y}"/>`).join("")}
+  ${n(178,172,1,O)}${n(413,152,2,O)}${n(162,236,3,Y)}${n(140,341,4,C)}${n(485,165,5,C)}${n(485,215,6,C)}${n(141,113,7,W)}${n(526,100,8,Y)}${n(631,335,9,C)}${n(74,58,"E",W)}
+  <g transform="translate(668 64)"><circle r="16" fill="none" stroke="${W}" opacity=".6"/><path d="M0 -12 L6 6 L0 2 L-6 6z" fill="${W}"/><text y="-20" text-anchor="middle" font-size="10" font-weight="700" fill="${W}">N</text></g>
+  <text x="694" y="420" text-anchor="end" font-size="9.5" fill="${W}" opacity=".7">Schematic redraw · positions indicative · to-scale plan: RevD sheet</text>
+  </svg>`;
+}
+const BP_KEY=[["1","o","Container shop, 4 covered positions","2 + 2 bays under a canopy, about 88 × 56 ft, on a concrete or steel-plate pad. Open sides and a ridge vent for CNG."],["2","o","40-ft end unit","Parts, tools, office, cellular router."],["3","y","100-ft clear apron","Truck turn-in and container drop zone. No parking."],["4","c","Ready line, 8 stalls","4 waiting, 4 done or in QC."],["5","c","Power and water pad","Propane generator, water tank, compressor. Off-grid."],["6","c","Fluids and waste pad","Spill-contained. The lot is unpaved."],["7","w","Staff parking","2 service trucks, 4 cars."],["8","y","Light towers","No poles at this end."],["9","c","CNG defuel point","Away from the generator and the bays."],["E","w","Existing structure","Likely the current vendor or yard office. Confirm."]];
+const BP_CONFIRM=[["Stalls SVT can use at the west end, and where the parked units move","FAS · Evan"],["Landlord OK for the structure, wet work and propane; city permits","Evan · city"],["Volvo work routed to SVT? Labor hours per job","Evan"],["Shop drawing and dimensions","Lon"],["Ground check and photos at the west end","Mike · Mark"],["Where ONT43 is and how far it is from ONT42","Steven Olivo"]];
+function vBlueprint(){
+  return `<div class="sectionhead"><h2>ONT42 repair area plan</h2></div>
+  <article class="panel"><div class="between"><div><span class="eyebrow">Blueprint · Rev D short form · Nov 19, 2026 · for SVT review</span><h3 style="margin:6px 0 2px">Where SVT's repair setup goes in the yard</h3></div><span class="status s-done">Confirmed ONT42</span></div>
+  <div class="bp-meta"><span><b>Site</b> AFP / APP yard, S Tippecanoe Ave at E Central Ave, San Bernardino, CA 92408</span><span><b>Lot</b> Unpaved, about 3.3 acres. West-end stalls need clearing with FAS first.</span><span><b>Source sheet</b> 1 px ≈ 0.84 ft, 100-ft bar, north up; county 1-ft ortho flown May 23, 2026</span></div>
+  <div class="bp-wrap"><div><div class="bp-sheet">${bpSvg()}</div><div class="bp-legend"><span><i style="border-color:#d6dee8;border-top-style:dashed"></i>Existing</span><span><i style="border-color:#f08a24"></i>SVT shop and zone</span><span><i style="border-color:#3cc6e0"></i>SVT pads and route</span><span><i style="border-color:#f2c94c"></i>Keep clear</span><span><a class="link" href="https://www.google.com/maps/search/?api=1&query=34.08768,-117.26136" target="_blank" rel="noopener">Open the yard in Google Maps</a></span></div></div>
+  <ol class="bp-key">${BP_KEY.map(([k,c,t,d])=>`<li><span class="bp-n ${c}">${k}</span><span><b>${esc(t)}</b>${esc(d)}</span></li>`).join("")}</ol></div></article>
+  <div class="sectionhead"><h2>High-level insights</h2></div>
+  <div class="ins-stats"><div><strong>108</strong><span>Dealer work requests on 49 ONT42 tractors, Aug 2025 to Oct 2026</span></div><div><strong>69%</strong><span>Drivetrain: 42 engine, 37 transmission or clutch</span></div><div><strong>10.9 days</strong><span>Median repair time today. 80% over 7 days, 39% over 14</span></div><div><strong>144</strong><span>Amazon-owned tractors in scope (133 CNG). 81 leased diesels stay with lessors' vendors</span></div></div>
+  <div class="ins-grid">
+  <article class="panel"><h3>What the history shows</h3><ul><li><b>Steady demand:</b> about 11 requests a month since April. ONT43 had 17 in total.</li><li><b>Repeat tractors:</b> 22 Freightliner CNG units made 71 requests. Nine tractors made 42%.</li><li><b>Sent away today:</b> about 45 notes end with "send to dealer".</li><li><b>VVG already involved:</b> 5 requests ended at Velocity Fontana.</li></ul></article>
+  <article class="panel"><h3>What it means for the setup</h3><ul><li><b>4 positions is right:</b> about 1 to 3 trucks in work at once at 2 to 3 days per job. Expand only if Volvo or ONT43 volume shows up.</li><li><b>Built for drivetrain and CNG:</b> transmission jacks, a gantry, defueling, gas detection, and Cummins, Detroit and Volvo diagnostic software.</li><li><b>Staff:</b> 3 techs plus a lead on one shift. Borrow Corona techs for the 22 units down at the start.</li><li><b>Repeat-unit intake:</b> full drivetrain check on any tractor with 2 or more requests.</li></ul></article>
+  <article class="panel"><h3>Options for Amazon</h3><ul><li><b>A · On-site shop (recommended):</b> this layout. Only engine pulls go off site, to Fontana.</li><li><b>B · Mobile plus off-site:</b> if the landlord bars structures or wet work.</li><li><b>C · ONT42 shop also serves ONT43:</b> if Evan adds ONT43 to the pilot.</li></ul></article>
+  </div>
+  <div class="twocol" style="align-items:start"><article class="panel"><h3 style="margin-top:0">Two phases, same footprint</h3><dl class="kv"><dt>Phase 1 · Go-live</dt><dd>Mark the zone. 2 service trucks, a rented canopy over 2 positions, a 20-ft parts container, generator and lights.</dd><dt>Phase 2 · About 90 days</dt><dd>Full container shop on a pad, 3 techs plus a lead. Measure against the 10.9-day baseline.</dd><dt>Billing later</dt><dd>The pilot bills through DTNA and Corcentric. Direct Amazon invoicing comes after the Relay Garage connection: techs log parts and labor by work-order line, and VVG IT sets up the AWS accounts and request signing.</dd></dl></article>
+  <article class="panel"><h3 style="margin-top:0">To confirm</h3><div class="tablewrap"><table><thead><tr><th>Item</th><th>Who</th></tr></thead><tbody>${BP_CONFIRM.map(([a,b])=>`<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join("")}</tbody></table></div></article></div>
+  <p style="font-size:12px;color:var(--muted)">Sources: Amazon ATS inventory (Oct 29, 2026), DTNA work-request export (Oct 27, 2026), Amazon Invoice API Guide v1.1.2 and county aerial imagery (May 2026). Measurements are within about 5%, for planning only.</p>`;
+}
 function vSites(){
-  return `${siteDemand()}<div class="twocol"><article class="panel site"><span class="eyebrow">Ontario · Middle Mile</span><h2>ONT42</h2><span class="status">Confirmed primary site</span><dl class="kv"><dt>Fleet</dt><dd>226 tractors: 133 CNG; Volvo 111, Freightliner 61</dd><dt>Repair time</dt><dd>10.9-day median (Freightliner dealer work)</dd><dt>Space</dt><dd>Very little room on site. Complex work goes off site nearby.</dd><dt>Coverage</dt><dd>SVT Corona / Inland Empire</dd></dl></article>
+  return `${siteDemand()}<div class="twocol"><article class="panel site"><span class="eyebrow">Ontario · Middle Mile</span><h2>ONT42</h2><span class="status">Confirmed primary site</span><dl class="kv"><dt>Fleet</dt><dd>226 tractors: 133 CNG; Volvo 111, Freightliner 61</dd><dt>Repair time</dt><dd>10.9-day median (Freightliner dealer work)</dd><dt>Yard</dt><dd>AFP / APP yard, S Tippecanoe Ave at E Central Ave, San Bernardino</dd><dt>Space</dt><dd>Unpaved lot of about 3.3 acres. SVT repair zone planned at the west end once FAS clears the stalls (see plan below).</dd><dt>In scope</dt><dd>144 Amazon-owned tractors (133 CNG). 81 leased diesels stay with the lessors' vendors.</dd><dt>Coverage</dt><dd>SVT Corona / Inland Empire</dd></dl></article>
   <article class="panel site"><span class="eyebrow">Ontario · Middle Mile</span><h2>ONT43</h2><span class="status">Add-on site</span><dl class="kv"><dt>Fleet</dt><dd>147 tractors: 106 CNG; Volvo 86</dd><dt>Repair time</dt><dd>11.0-day median (Freightliner dealer work)</dd><dt>Space</dt><dd>More room, but a dirt lot with no pavement. Option: move ONT42 units here.</dd><dt>Coverage</dt><dd>SVT Corona / Inland Empire</dd></dl></article></div>
+  ${vBlueprint()}
   <article class="panel"><h2>How the pilot works</h2><dl class="kv"><dt>Customer</dt><dd>Amazon Middle Mile, AFP/APP tractor yards (owner: Evan Christodoulides)</dd><dt>Work requests</dt><dd>Through the Reach portal and mobile app, connected to Relay Garage. No repair-order system integration at launch; the Reach API/MCP link is built separately.</dd><dt>Scope</dt><dd>Two sites. Middle-mile tractors, Class 7 and 8 first; SVT services Class 1 to 8.</dd><dt>Who uses what</dt><dd>Technicians on the Reach mobile app (works offline). Dispatchers on the Reach web portal. Unlimited training at no charge.</dd><dt>Reach account</dt><dd>New SVT service-provider account. $3 per service event, paid by SVT. $30 setup fee, credited after 10 events.</dd><dt>Site access</dt><dd>Under DTNA's Avetta clearance. Safety vest, no badge or orientation, gate code by email.</dd><dt>Approvals</dt><dd>Pre-authorization about $1,000 per OEM (to confirm for Reach).</dd><dt>Invoicing</dt><dd>Through DTNA / Corcentric (process and SVT owner to confirm).</dd></dl></article>
   <h2>Launch readiness gates</h2><p>Primary go-live requires every gate Ready. Track add-on readiness by site.</p>
   <div class="checklist">${items().filter(isGate).map(r=>`<button data-open="${esc(r.id)}"><span>${r.status==="Ready"?"☑":"□"} ${esc(r.item)} <small>· ${esc(r.site)}</small></span><span class="status ${stCls(r.status)}">${esc(r.status)}</span></button>`).join("")}</div>`;
@@ -265,7 +329,7 @@ document.addEventListener("click",e=>{
   const rd=e.target.closest("[data-rd]");if(rd){rdFilter=rd.dataset.rd;render();return}
   if(e.target.closest("#toggle-view")){F.view=F.view==="Board"?"Table":"Board";render();return}
   if(e.target.closest("#rp-dl")){SVTReport.download($("#rp-stage"),`SVT-ONT-Pilot-Team-Progress-${new Date().toISOString().slice(0,10)}.pdf`,toast);return}
-  if(e.target.closest("#rp-print")){window.print();return}
+  if(e.target.closest("#rp-print")){SVTReport.print($("#rp-stage"),`SVT-ONT-Pilot-Team-Progress-${new Date().toISOString().slice(0,10)}.pdf`,toast);return}
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer-root").innerHTML)closeDrawer()});
 document.addEventListener("input",e=>{if(e.target.id==="q"){F.q=e.target.value;render()}});

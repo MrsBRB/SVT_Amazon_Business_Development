@@ -731,28 +731,41 @@ window.SVTReport = (() => {
     lib = new Promise((ok, no) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"; s.onload = ok; s.onerror = () => { lib = null; no(new Error("PDF library failed to load")); }; document.head.appendChild(s); });
     return lib;
   }
-  async function download(el, filename, toast) {
+  const framed = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+  async function buildPdf(el, filename) {
     const node = el.querySelector(".rp");
+    await loadLib();
+    const sx = window.scrollX, sy = window.scrollY; window.scrollTo(0, 0);
+    const host = document.createElement("div");
+    host.style.cssText = "position:absolute;left:0;top:0;width:816px;z-index:-1;pointer-events:none";
+    const copy = node.cloneNode(true); copy.style.boxShadow = "none"; host.appendChild(copy); document.body.appendChild(host);
     try {
-      await loadLib();
-      const sx = window.scrollX, sy = window.scrollY; window.scrollTo(0, 0);
-      const host = document.createElement("div");
-      host.style.cssText = "position:absolute;left:0;top:0;width:816px;z-index:-1;pointer-events:none";
-      const copy = node.cloneNode(true); copy.style.boxShadow = "none"; host.appendChild(copy); document.body.appendChild(host);
-      let blob;
-      try {
-        blob = await window.html2pdf().set({margin:0, filename, image:{type:"jpeg", quality:0.96}, html2canvas:{scale:2, useCORS:true, backgroundColor:"#ffffff", scrollX:0, scrollY:0}, jsPDF:{unit:"px", format:[816, 1056], orientation:"portrait", hotfixes:["px_scaling"]}, pagebreak:{mode:[]}}).from(copy).outputPdf("blob");
-      } finally { host.remove(); window.scrollTo(sx, sy); }
-      const dl = await window.claude?.use?.("downloads");
-      if (dl) { await dl.save({filename, data: blob}); toast && toast("Report saved"); return; }
-      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); a.remove();
-    } catch (e) {
+      return await window.html2pdf().set({margin:0, filename, image:{type:"jpeg", quality:0.96}, html2canvas:{scale:2, useCORS:true, backgroundColor:"#ffffff", scrollX:0, scrollY:0}, jsPDF:{unit:"px", format:[816, 1056], orientation:"portrait", hotfixes:["px_scaling"]}, pagebreak:{mode:[]}}).from(copy).outputPdf("blob");
+    } finally { host.remove(); window.scrollTo(sx, sy); }
+  }
+  async function savePdf(blob, filename, toast, msg) {
+    const dl = await window.claude?.use?.("downloads");
+    if (dl) { await dl.save({filename, data: blob}); toast && toast(msg); return; }
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    toast && toast(msg);
+  }
+  async function download(el, filename, toast) {
+    try { await savePdf(await buildPdf(el, filename), filename, toast, "Report saved"); }
+    catch (e) {
       if (e && e.code === "declined") return;
-      toast && toast("Couldn't build the PDF here. Opening print instead.");
-      window.print();
+      if (!framed) { toast && toast("Couldn't build the PDF here. Opening print instead."); window.print(); return; }
+      toast && toast("Couldn't build the PDF. Try again in a moment.");
     }
   }
-  return {render, download, addBiz, fmt, D, days};
+  // Claude pages run in a sandboxed frame where browsers block the print dialog, so Print saves the
+  // one-page PDF to open and print. On the public site (not framed) it opens the browser's print dialog.
+  async function print(el, filename, toast) {
+    if (!framed) { window.print(); return; }
+    toast && toast("Preparing a printable PDF…");
+    try { await savePdf(await buildPdf(el, filename), filename, toast, "PDF saved. Open it and print (Ctrl/Cmd + P)."); }
+    catch (e) { if (e && e.code === "declined") return; toast && toast("Couldn't build the PDF. Try again in a moment."); }
+  }
+  return {render, download, print, framed, addBiz, fmt, D, days};
 })();
 </script>
 <script>/* Live sync indicator + field-level save helper shared by all three dashboards.
@@ -1338,7 +1351,7 @@ function renderReport(){
 }
 document.addEventListener("click",e=>{
   if(e.target.closest("#rp-dl")){SVTReport.download(document.getElementById("rp-stage"),`SVT-Amazon-BD-Progress-Brooke-${new Date().toISOString().slice(0,10)}.pdf`,toast);}
-  if(e.target.closest("#rp-print")){window.print();}
+  if(e.target.closest("#rp-print")){SVTReport.print(document.getElementById("rp-stage"),`SVT-Amazon-BD-Progress-Brooke-${new Date().toISOString().slice(0,10)}.pdf`,toast);}
 });
 route(); renderAll();
 (async()=>{

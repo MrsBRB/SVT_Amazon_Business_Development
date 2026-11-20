@@ -220,7 +220,7 @@ document.addEventListener("click",e=>{
   const o=e.target.closest("[data-open]");if(o){const t=S.tasks.find(x=>x.id===o.dataset.open);if(t)openDrawer(t);return}
   if(e.target.closest("#add")){if(db&&canWrite)openDrawer(null);return}
   if(e.target.closest("#rp-dl")){SVTReport.download($("#rp-stage"),`SVT-Amazon-ONT-Pilot-Progress-${new Date().toISOString().slice(0,10)}.pdf`,toast);return}
-  if(e.target.closest("#rp-print")){window.print();return}
+  if(e.target.closest("#rp-print")){SVTReport.print($("#rp-stage"),`SVT-Amazon-ONT-Pilot-Progress-${new Date().toISOString().slice(0,10)}.pdf`,toast);return}
   if(e.target.closest("#toggle-view")){F.view=F.view==="Board"?"Table":"Board";render()}
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#drawer-root").innerHTML)closeDrawer()});
