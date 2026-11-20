@@ -527,7 +527,7 @@ const PEOPLE=[
  {name:"Sidhant Mishra",title:"Onboarding",org:"Reach",grp:"partner",role:"Reach onboarding, location setup and training."},
  {name:"Kuldeep Rana",title:"Account setup",org:"Reach",grp:"partner",role:"Reach service agreement and SVT's service-provider account."}];
 const initials=n=>n.split(/\s+/).map(w=>w[0]).slice(0,2).join("").toUpperCase();
-function personCard(p){return `<article class="sh-card"><div class="sh-av">${initials(p.name)}</div><div class="eyebrow">${esc(p.org)}</div><h3>${esc(p.name)}</h3><p class="sh-title">${esc(p.title)}</p><p class="sh-role">${esc(p.role)}</p></article>`}
+function personCard(p){return `<article class="sh-card"><div class="sh-av">${initials(p.name)}</div><div class="eyebrow">${esc(p.org)}</div><h3>${esc(p.name)}</h3><p class="sh-title">${esc(p.title)}</p></article>`}
 function vTeam(){
   const grid=g=>`<div class="sh-grid">${PEOPLE.filter(x=>x.grp===g).map(personCard).join("")}</div>`;
   return `<div class="sectionhead" style="margin-top:0"><div><h2 style="margin:0">Internal project stakeholders</h2><p style="margin:6px 0 10px">Leadership, project ownership, and the people moving the Amazon opportunity forward.</p><span class="status">Names and titles provided by Brooke</span></div></div>
