@@ -67,9 +67,9 @@
 (() => {
 const DEMAND=/*@DEMAND*/null;
 const GO_LIVE="2026-12-07";
-const AREAS=["Contract & terms","Reach & Relay Garage","Site access & safety","People, parts & equipment","Billing","Scope & success measures","Communication","ONT43 site"];
+const AREAS=["Contract & terms","Reach & Relay Garage","Site access & safety","People, parts & equipment","Billing","Scope & success measures","Communication","ONT43 site","ONT45 site"];
 const STAT=["Not started","In progress","Waiting","Blocked","Ready"];
-const SITES=["ONT42 + ONT43","ONT42","ONT43"];
+const SITES=["ONT42 + ONT43","ONT42","ONT43","ONT45"];
 const FIELDS=[["item","Item","text",true],["area","Area","select",false,AREAS],["status","Status","select",false,STAT],["gate","Blocks go-live?","select",false,["Gate","Nice to have"]],
   ["site","Site","select",false,SITES],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands","textarea"],["order","Order","number"]];
 const TABS=[["Overview","◫","overview"],["Launch checklist","☑","checklist"],["Sites & readiness","◎","sites"],["Weekly standup","◷","standup"],["Updates","≡","updates"],["Team","◉","team"],["Progress report","▤","report"]];
@@ -129,7 +129,7 @@ function vChecklist(){
   }else if(F.layout==="table"){
     body=list.length?`<div class="tablewrap"><table><thead><tr><th>Item</th><th>Area</th><th>Owner</th><th>Site</th><th>Status</th><th>Due</th></tr></thead><tbody>${list.map(r=>{const dd=days(r.due);return `<tr><td><button data-open="${esc(r.id)}">${isGate(r)?"Gate · ":""}${esc(r.item)}</button></td><td>${esc(r.area)}</td><td>${esc(r.owner||"")}</td><td>${esc(r.site)}</td><td>${canWrite?sel(r):esc(r.status)}</td><td class="${r.due&&dd<0&&r.status!=="Ready"?"overdue":""}">${r.due?esc(fmtD(r.due)):"Unconfirmed"}</td></tr>`}).join("")}</tbody></table></div>`:'<div class="empty">No items match these filters.</div>';
   }else{
-    body=AREAS.map(a=>{const all=S.readiness.filter(r=>r.area===a);if(!all.length)return"";if(F.area!=="All areas"&&F.area!==a)return"";const l=list.filter(r=>r.area===a);const rd=all.filter(r=>r.status==="Ready").length;
+    body=AREAS.map(a=>{const all=S.readiness.filter(r=>r.area===a);if(!all.length)return"";if(F.area!=="All areas"&&F.area!==a)return"";const l=list.filter(r=>r.area===a);if(filtered&&!l.length)return"";const rd=all.filter(r=>r.status==="Ready").length;
     return `<article class="panel area"><div class="between"><h2 style="margin:0">${esc(a)}</h2><span class="status">${rd}/${all.length} ready</span></div>${l.length?l.map(r=>{const dd=days(r.due);return `<div class="rdrow"><div>${canWrite?sel(r):`<span class="status ${stCls(r.status)}">${esc(r.status)}</span>`}</div><div style="min-width:0"><button class="t" data-open="${esc(r.id)}">${esc(r.item)}</button>${isGate(r)?' <span class="gate">GATE</span>':""}<div class="m">${esc(r.site)} · ${r.owner?esc(r.owner):"owner not set"}${r.due?` · <span class="${dd<0&&r.status!=="Ready"?"overdue":""}">due ${esc(fmtD(r.due))}</span>`:""}</div>${r.status==="Blocked"?`<div class="e blk-flag">Blocked by: ${r.blockedBy?esc((S.readiness.find(x=>x.id===r.blockedBy)||{}).item||"item unavailable"):"not chosen yet. Open the item to choose it."}</div>`:""}${r.evidence?`<div class="e">${esc(r.evidence)}</div>`:""}</div><div></div></div>`}).join(""):`<p class="sourceNote">${filtered?"No items match these filters.":"All ready in this area."}</p>`}</article>`}).join("")||'<div class="empty">No items match these filters.</div>';
   }
   return `${bar}<p class="sourceNote" style="margin:-4px 0 14px">Change a status as soon as it moves, and add the evidence (who confirmed, when) by opening the item.</p>${S.readiness.length?body:'<div class="empty">The checklist is loading.</div>'}`;
@@ -158,10 +158,28 @@ function vBlueprint(){
   <div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>#</th><th>Decision or action</th><th>Owner</th><th>Target</th></tr></thead><tbody>${BP_PRIORITY.map(([k,t,o,d,w],i)=>`<tr><td>${i+1}</td><td><span class="status ${k==="Decide"?"s-blocked":""}" style="margin-right:6px">${k}</span><b style="color:var(--ink)">${esc(t)}</b><br><small style="color:var(--muted)">${esc(w)}</small></td><td>${esc(o)}</td><td style="white-space:nowrap">${esc(d)}</td></tr>`).join("")}</tbody></table></div>
   <p style="font-size:12px;color:var(--muted);margin-bottom:0">Sources: Amazon ATS inventory (Oct 29, 2026), DTNA work-request export (Oct 27, 2026), Nov 6–13 calls with Evan and Phil Hines. Volvo-channel volume is an estimate.</p></article>`;
 }
+// ONT45 · Perris planning. Fleet from the ATS inventory (Oct 29, 2026); no ONT45 work-request history on file yet.
+const O45_OWNED=[["Volvo VNL64T300",32,"CNG"],["Freightliner Cascadia",7,"6 diesel, 1 CNG"],["Freightliner New Cascadia PRL-23K",6,"CNG"],["Kenworth T680",5,"CNG"],["Volvo VNL 760 (incl. 6x4)",5,"4 CNG, 1 diesel"],["Volvo VNR64T300",1,"Diesel"],["Peterbilt 579 (Amazon CNG)",1,"CNG"]];
+function vOnt45(){
+  const its=S.readiness.filter(r=>r.site==="ONT45").sort((a,b)=>(+a.order||0)-(+b.order||0));
+  return `<div class="sectionhead"><h2>ONT45 · Perris · planning</h2><button class="link" data-o45>Open ONT45 items on the checklist →</button></div>
+  <article class="panel"><div class="between"><div><span class="eyebrow">Middle Mile · next site · not yet in pilot scope</span><h3 style="margin:6px 0 2px">19295 Harvill Ave, Perris, CA 92570</h3></div><span class="status">Scoping</span></div>
+  <div class="bp-meta"><span><b>Fleet source</b> Amazon ATS inventory, Oct 29, 2026 (109 tractors, plus 2 box trucks not counted)</span><span><b>RO history</b> None on file yet. The DTNA export covers ONT42 and ONT43 only</span><span><a class="link" href="https://www.google.com/maps/search/?api=1&query=19295+Harvill+Ave+Perris+CA+92570" target="_blank" rel="noopener">Open in Google Maps</a></span></div>
+  <div class="ins-stats"><div><strong>109</strong><span>tractors domiciled at ONT45</span></div><div><strong>57</strong><span>Amazon-owned (49 CNG, 8 diesel): the likely scope, as at ONT42</span></div><div><strong>13</strong><span>owned units down on Oct 29 (23%): 6 at an off-site shop, 5 damaged, 1 accident, 1 inspection</span></div><div><strong>52</strong><span>leased diesels (Merchants, Fleet Advantage, Paclease, Ryder) stay with the lessors' vendors</span></div></div>
+  <div class="twocol" style="align-items:start;margin-top:0"><article class="panel"><h3 style="margin-top:0">What's different from ONT42</h3><div class="why">
+  <div><p>ONT45's owned fleet is Volvo-led: 38 of 57, with 32 VNL64T300 CNG units. ONT42's history is mostly Freightliner.</p><p><b>→ Volvo CNG diagnostics, parts and a warranty path come first.</b></p></div>
+  <div><p>9 of the 13 owned units down on Oct 29 were Volvo CNG.</p><p><b>→ An opening backlog SVT could take on day one.</b></p></div>
+  <div><p>No ONT45 work-request history yet, and the DTNA data only shows Freightliner-dealer work.</p><p><b>→ Ask Evan for the DTNA export and the Volvo dealer work before sizing.</b></p></div>
+  <div><p>At ONT42's Freightliner rate (about 0.13 requests per unit a month), ONT45's 13 owned Freightliners would add about 2 requests a month.</p><p><b>→ Volvo volume decides whether ONT45 needs its own positions or can share ONT42's shop.</b></p></div>
+  </div><p style="font-size:12px;color:var(--muted)">The request rate is an estimate from ONT42's Sep 2025 to Oct 2026 DTNA data. Replace it once ONT45's own history arrives.</p></article>
+  <article class="panel"><h3 style="margin-top:0">Owned tractors by model</h3><div class="tablewrap"><table><thead><tr><th>Model</th><th>Units</th><th>Fuel</th></tr></thead><tbody>${O45_OWNED.map(([m,n,f])=>`<tr><td>${esc(m)}</td><td>${n}</td><td>${esc(f)}</td></tr>`).join("")}</tbody></table></div><p style="font-size:12px;color:var(--muted);margin-bottom:0">Model years: 2022 (26), 2021 (12), 2023 (11), 2025 (7), 2020 (1).</p></article></div>
+  <article class="panel"><div class="between"><h3 style="margin:0">ONT45 planning items</h3><span class="status">${its.filter(r=>r.status==="Ready").length}/${its.length} done</span></div>${its.length?its.map(r=>`<div class="rdrow"><div><span class="status ${stCls(r.status)}">${esc(r.status)}</span></div><div style="min-width:0"><button class="t" data-open="${esc(r.id)}">${esc(r.item)}</button><div class="m">${r.owner?esc(r.owner):"owner not set"}${r.due?` · due ${esc(fmtD(r.due))}`:" · date to agree"}</div></div><div></div></div>`).join(""):'<p class="sourceNote">Loading…</p>'}</article>`;
+}
 function vSites(){
   return `${siteDemand()}<div class="twocol"><article class="panel site"><span class="eyebrow">Ontario · Middle Mile</span><h2>ONT42</h2><span class="status">Confirmed primary site</span><dl class="kv"><dt>Fleet</dt><dd>226 tractors: 133 CNG; Volvo 111, Freightliner 61</dd><dt>Repair time</dt><dd>10.9-day median (Freightliner dealer work)</dd><dt>Yard</dt><dd>AFP / APP yard, San Bernardino</dd><dt>Space</dt><dd>Unpaved yard of about 727 × 201 ft (3.3 acres), gate on S Tippecanoe Ave. SVT zone of about 265 × 201 ft planned at the west dead end once the stalls are released (see plan below).</dd><dt>In scope</dt><dd>144 Amazon-owned tractors (133 CNG). 81 leased diesels stay with the lessors' vendors.</dd><dt>Coverage</dt><dd>SVT Corona / Inland Empire</dd></dl></article>
   <article class="panel site"><span class="eyebrow">Ontario · Middle Mile</span><h2>ONT43</h2><span class="status">Add-on site</span><dl class="kv"><dt>Fleet</dt><dd>147 tractors: 106 CNG; Volvo 86</dd><dt>Repair time</dt><dd>11.0-day median (Freightliner dealer work)</dd><dt>Space</dt><dd>More room, but a dirt lot with no pavement. Option: move ONT42 units here.</dd><dt>Coverage</dt><dd>SVT Corona / Inland Empire</dd></dl></article></div>
   ${vBlueprint()}
+  ${vOnt45()}
   <article class="panel"><h2>How the pilot works</h2><dl class="kv"><dt>Customer</dt><dd>Amazon Middle Mile, AFP/APP tractor yards (owner: Evan Christodoulides)</dd><dt>Work requests</dt><dd>Through the Reach portal and mobile app, connected to Relay Garage. No repair-order system integration at launch; the Reach API/MCP link is built separately.</dd><dt>Scope</dt><dd>Two sites. Middle-mile tractors, Class 7 and 8 first; SVT services Class 1 to 8.</dd><dt>Who uses what</dt><dd>Technicians on the Reach mobile app (works offline). Dispatchers on the Reach web portal. Unlimited training at no charge.</dd><dt>Reach account</dt><dd>New SVT service-provider account. $3 per service event, paid by SVT. $30 setup fee, credited after 10 events.</dd><dt>Site access</dt><dd>Under DTNA's Avetta clearance. Safety vest, no badge or orientation, gate code by email.</dd><dt>Approvals</dt><dd>Pre-authorization about $1,000 per OEM (to confirm for Reach).</dd><dt>Invoicing</dt><dd>Through DTNA / Corcentric (process and SVT owner to confirm).</dd></dl></article>
   <h2>Launch readiness gates</h2><p>Primary go-live requires every gate Ready. Track add-on readiness by site.</p>
   <div class="checklist">${items().filter(isGate).map(r=>`<button data-open="${esc(r.id)}"><span>${r.status==="Ready"?"☑":"□"} ${esc(r.item)} <small>· ${esc(r.site)}</small></span><span class="status ${stCls(r.status)}">${esc(r.status)}</span></button>`).join("")}</div>`;
@@ -224,6 +242,7 @@ function reportCfg(){
       {label:"Launch date & measures",start:"2026-11-18",end:GO_LIVE,ids:["rd25","rd26","rd27","rd28"]},
       {label:"ONT42 go-live",milestone:true,date:GO_LIVE,note:`Proposed ${R.fmt(GO_LIVE)} · unconfirmed`},
       {label:"ONT43 add-on",start:"2026-12-14",end:"2026-12-23",ids:["rd31","rd32","rd33"]},
+      {label:"ONT45 planning",start:"2026-11-23",end:"2027-01-08",ids:["rd39","rd40","rd41","rd42","rd43","rd44","rd45"]},
       {label:"IT integration (background)",start:"2026-11-17",end:"2027-01-15",ids:["rd12"]}],
     lines:[{date:"2026-11-26",label:"THANKSGIVING",color:"#8a96a6"},{date:GO_LIVE,label:"GO-LIVE"}],
     progress:AREAS.map(a=>({label:a,match:i=>i.area===a})).filter(g=>it.some(g.match)),
@@ -301,6 +320,7 @@ async function reconcileBlocks(){
 }
 
 document.addEventListener("click",e=>{
+  if(e.target.closest("[data-o45]")){Object.assign(F,{q:"",area:"All areas",site:"ONT45",status:"All statuses",owner:"All owners",layout:"area"});rdFilter="all";setTab("checklist");return}
   const tb=e.target.closest("[data-tab]");if(tb){setTab(tb.dataset.tab);return}
   if(e.target.closest("[data-close]")||e.target.matches("[data-close-scrim]")){closeDrawer();return}
   if(e.target.closest("select.inline-sel"))return;

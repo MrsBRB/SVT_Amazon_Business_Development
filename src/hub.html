@@ -267,7 +267,7 @@ section[data-view]>.head p{font-size:15px}
   <div class="sectionhead"><h2>Vehicles in pilot scope</h2><small id="veh-src"></small></div>
   <div class="ov-cards" id="ov-fleet"></div>
   <details class="panel compact" id="veh-box"><summary>Vehicle details<span id="veh-count"></span></summary>
-    <div class="toolbar" style="margin-top:12px"><input type="search" id="veh-q" aria-label="Search vehicles" placeholder="Search equipment ID, VIN or model…"><select id="veh-site" aria-label="Filter site"><option>All sites</option><option>ONT42</option><option>ONT43</option></select><select id="veh-make" aria-label="Filter make"></select><select id="veh-fuel" aria-label="Filter fuel"></select><select id="veh-state" aria-label="Filter availability"><option>All availability</option><option>Active</option><option>Unavailable</option></select></div>
+    <div class="toolbar" style="margin-top:12px"><input type="search" id="veh-q" aria-label="Search vehicles" placeholder="Search equipment ID, VIN or model…"><select id="veh-site" aria-label="Filter site"><option>All sites</option><option>ONT42</option><option>ONT43</option><option>ONT45</option></select><select id="veh-make" aria-label="Filter make"></select><select id="veh-fuel" aria-label="Filter fuel"></select><select id="veh-state" aria-label="Filter availability"><option>All availability</option><option>Active</option><option>Unavailable</option></select></div>
     <div class="tablewrap" style="max-height:420px"><table><thead><tr><th>Equipment ID</th><th>Site</th><th>Make / model</th><th>Year</th><th>Fuel</th><th>Availability</th><th>VIN</th><th>RO history</th></tr></thead><tbody id="veh-rows"></tbody></table></div>
     <p class="sourceNote" id="veh-more"></p></details>
   <div class="sectionhead"><h2>Assigned technicians</h2><div class="tools"><button class="btn primary" data-add="techs">Add technician</button></div></div>
@@ -437,11 +437,11 @@ const SCHEMA = {
     ["next","Next step","text"],["due","Next step due","date"],["launch","Launch date (target)","date"],["launchNote","Launch note","text"],["lastTouch","Last touch","date"],["notes","Notes","textarea"],["source","Source link","url"]]},
   techs:{label:"Technician",fields:[
     ["name","Name","text",true],["role","Role","select",false,["Technician","Lead technician","Dispatcher","Service manager"]],["status","Assignment","select",false,["Proposed","Confirmed","Backup","Released"]],
-    ["site","Site","select",false,["ONT42","ONT43","Both sites"]],["shop","Home shop","text"],["skills","Skills (CNG, Volvo, Freightliner, electrical…)","text"],
+    ["site","Site","select",false,["ONT42","ONT43","ONT45","Both sites"]],["shop","Home shop","text"],["skills","Skills (CNG, Volvo, Freightliner, electrical…)","text"],
     ["unit","Mobile service unit","text"],["shift","Shift / availability","text"],["reach","Reach user","select",false,["Not set up","Invited","Active"]],
     ["trained","Reach training","select",false,["Not yet","Web portal","Mobile app","Both"]],["start","Start date","date"],["notes","Notes","textarea"]]},
   ros:{label:"Repair order",fields:[
-    ["ro","RO number","text",true],["reach","Reach event ID","text"],["wo","Relay Garage work order","text"],["site","Site","select",false,["ONT42","ONT43"]],
+    ["ro","RO number","text",true],["reach","Reach event ID","text"],["wo","Relay Garage work order","text"],["site","Site","select",false,["ONT42","ONT43","ONT45"]],
     ["eq","Equipment ID","text"],["concern","Concern / work type","select",false,["Transmission","Engine","Electrical","Brakes","HVAC","Fuel","Exhaust","Accessories","Check Engine Light","Body","Chassis","Suspension","Steering","Doors","APU","Other"]],
     ["detail","Description","textarea"],["status","Status","select",false,["Open","Dispatched","In progress","Waiting on parts","Waiting on approval","Complete","Invoiced","Cancelled"]],
     ["tech","Technician","text"],["opened","Opened","date"],["closed","Completed","date"],["location","Repair location","select",false,["On site","Off site nearby","ONT43 lot","SVT shop"]],
@@ -453,9 +453,9 @@ const SCHEMA = {
     ["title","Title","text",true],["url","Link","url"],["obj","Initiative","select",false,Object.keys(OBJS)],
     ["role","Role","select",false,["Core","Supporting","Retire"]],["kind","Kind","select",false,["Artifact","Meeting","Doc"]],["updated","Last updated","date"],["what","What it gives you","textarea"]]},
   readiness:{label:"Readiness item",fields:[
-    ["item","Item","text",true],["area","Area","select",false,["Contract & terms","Reach & Relay Garage","Site access & safety","People, parts & equipment","Billing","Scope & success measures","Communication","ONT43 site"]],
+    ["item","Item","text",true],["area","Area","select",false,["Contract & terms","Reach & Relay Garage","Site access & safety","People, parts & equipment","Billing","Scope & success measures","Communication","ONT43 site","ONT45 site"]],
     ["status","Status","select",false,["Not started","In progress","Waiting","Blocked","Ready"]],["gate","Blocks go-live?","select",false,["Gate","Nice to have"]],
-    ["site","Site","select",false,["ONT42 + ONT43","ONT42","ONT43"]],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands","textarea"],["ref","Pilot dashboard id","text"],["order","Order","number"]]},
+    ["site","Site","select",false,["ONT42 + ONT43","ONT42","ONT43","ONT45"]],["owner","Owner","text"],["due","Due","date"],["evidence","Evidence / where it stands","textarea"],["ref","Pilot dashboard id","text"],["order","Order","number"]]},
   docs:{label:"Document",fields:[
     ["name","File name","text",true],["obj","Initiative","select",false,Object.keys(OBJS)],["category","Category","select",false,DOC_CATS],
     ["docDate","Document date","date"],["note","What it is / why it matters","textarea"]]},
@@ -737,7 +737,7 @@ function renderMethod(){
   $("#phases").innerHTML = ph.map(([k,v])=>`<div><b>${k}</b><small>${v}</small><small class="num" style="color:var(--ink)">${c(k)} open action${c(k)===1?"":"s"}</small></div>`).join("");
 }
 const INV=/*@INVENTORY*/null;
-const VEH=(INV&&INV.rows||[]).map(r=>({eq:r[0],vin:r[1],site:r[2],make:r[3],model:r[4],year:r[5],fuel:r[6],state:r[7],reason:r[8]}));
+const VEH=(INV&&INV.rows||[]).map(r=>({eq:r[0],vin:r[1],site:r[2],make:r[3],model:r[4],year:r[5],fuel:r[6],state:r[7],reason:r[8],own:r[9]||""}));
 const VF={q:"",site:"All sites",make:"All makes",fuel:"All fuels",state:"All availability",n:60};
 const RO_OPEN=r=>!["Complete","Invoiced","Cancelled"].includes(r.status);
 const titleCase=t=>{const u=String(t||"");if(/^(CNG|EV|LNG)$/.test(u))return u;return u.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())};
@@ -755,10 +755,10 @@ function renderOverview(){
   // fleet cards
   $("#veh-src").textContent=INV?`Source: ${INV.source}`:"";
   const cnt=(l,k)=>{const m={};l.forEach(v=>m[v[k]]=(m[v[k]]||0)+1);return Object.entries(m).sort((a,b)=>b[1]-a[1])};
-  $("#ov-fleet").innerHTML=["ONT42","ONT43"].map(site=>{const l=VEH.filter(v=>v.site===site);if(!l.length)return"";const act=l.filter(v=>v.state==="Active").length;const fuel=cnt(l,"fuel"),make=cnt(l,"make"),yr=cnt(l,"year").sort((a,b)=>b[0]-a[0]);
+  $("#ov-fleet").innerHTML=["ONT42","ONT43","ONT45"].map(site=>{const l=VEH.filter(v=>v.site===site);if(!l.length)return"";const act=l.filter(v=>v.state==="Active").length;const fuel=cnt(l,"fuel"),make=cnt(l,"make"),yr=cnt(l,"year").sort((a,b)=>b[0]-a[0]);
     const wr=(typeof DEMAND_SITES!=="undefined"&&DEMAND_SITES[site])||null;
-    return `<article class="panel"><div class="track-h"><h3 style="margin:0">${site} · ${site==="ONT42"?"Primary":"Add-on"}</h3><span class="status">${l.length} tractors</span></div>
-      <div class="ov-mini"><div><b>${act}</b><span>active</span></div><div><b>${l.length-act}</b><span>unavailable</span></div>${fuel.map(([f,n])=>`<div><b>${n}</b><span>${esc(titleCase(f))}</span></div>`).join("")}</div>
+    return `<article class="panel"><div class="track-h"><h3 style="margin:0">${site} · ${site==="ONT42"?"Primary":site==="ONT43"?"Add-on":"Planning"}</h3><span class="status">${l.length} tractors</span></div>
+      <div class="ov-mini"><div><b>${l.filter(v=>v.own==="AZNG").length}</b><span>Amazon-owned</span></div><div><b>${act}</b><span>active</span></div><div><b>${l.length-act}</b><span>unavailable</span></div>${fuel.map(([f,n])=>`<div><b>${n}</b><span>${esc(titleCase(f))}</span></div>`).join("")}</div>
       <div class="ov-bars">${make.map(([m,n])=>`<div><span>${esc(titleCase(m))}</span><i><b style="width:${(n/l.length*100).toFixed(1)}%"></b></i><em>${n}</em></div>`).join("")}</div>
       <p class="sourceNote">Model years: ${yr.map(([y,n])=>`${y} (${n})`).join(" · ")}</p></article>`}).join("");
   // vehicle table
