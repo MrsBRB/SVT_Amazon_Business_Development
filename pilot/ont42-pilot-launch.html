@@ -182,7 +182,7 @@ nav .navsep{border-top:1px solid #5b6b7f;margin:14px 10px}
 .sh-card{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:8px;padding:24px;display:flex;flex-direction:column}
 .sh-card.sel{border-color:var(--navy);border-top-color:var(--red);box-shadow:0 0 0 1px var(--navy)}
 .sh-av{width:56px;height:56px;border-radius:6px;background:var(--gray);display:grid;place-items:center;font-family:var(--f-head);font-weight:700;font-size:22px;color:var(--ink);flex:none}
-.sh-card .eyebrow{margin-top:24px}.sh-card h3{font-size:24px;margin:10px 0 4px}.sh-title{color:var(--muted);margin:0 0 18px;font-size:15px}
+.sh-card .eyebrow{margin-top:24px}.sh-card h3{font-size:24px;margin:10px 0 4px}.sh-title{color:var(--muted);margin:0;font-size:15px}.sh-role{margin:14px 0 0;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--ink);line-height:1.55}
 .sh-foot{margin-top:auto;border-top:1px solid var(--line);padding-top:14px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
 .sh-link{background:none;border:0;padding:0;color:var(--ink);font-size:13px}.sh-link:hover{text-decoration:underline}
 .sh-profile{margin-top:24px}.sh-ph{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line)}.sh-ph h2{font-size:28px}
@@ -512,41 +512,28 @@ function vUpdates(){
 }
 
 const PEOPLE=[
- {id:"mike",name:"Mike Thompson",title:"President",org:"SVT Fleet Solutions",grp:"internal",match:["Mike"]},
- {id:"lon",name:"Lon Samford",title:"Director, Operations",org:"SVT Fleet Solutions",grp:"internal",match:["Lon"]},
- {id:"mark",name:"Mark Gallison",title:"Director, Business Development",org:"SVT Fleet Solutions",grp:"internal",match:["Mark"]},
- {id:"brooke",name:"Brooke Benkert",title:"Consulting Director, Business Development",org:"SVT Fleet Solutions",grp:"internal",match:["Brooke"]},
- {id:"richard",name:"Richard Barron",title:"VP Global IT",org:"VVG",grp:"partner",match:["Richard"]},
- {id:"shane",name:"Shane Matthews",title:"IT, future Reach integration",org:"VVG",grp:"partner",match:["Shane"]},
- {id:"evan",name:"Evan Christodoulides",title:"Pilot owner, Middle Mile",org:"Amazon",grp:"partner",match:["Evan"]},
- {id:"steven",name:"Steven Olivo",title:"SoCal AFP Fleet Asset Specialist",org:"Amazon",grp:"partner",match:["Steven"]},
- {id:"aaliyah",name:"Aaliyah Rosas",title:"FAS, ONT42 APP yard",org:"Amazon",grp:"partner",match:["Aaliyah"]},
- {id:"scotty",name:"Scotty Gathright",title:"ONT42 uptime",org:"Amazon",grp:"partner",match:["Scotty"]},
- {id:"david",name:"David Galanti",title:"West Region FAS",org:"Amazon",grp:"partner",match:["David"]},
- {id:"edmund",name:"Edmund Park",title:"Relay Garage connection",org:"Amazon",grp:"partner",match:["Edmund"]},
- {id:"sidhant",name:"Sidhant Mishra",title:"Onboarding",org:"Reach",grp:"partner",match:["Sidhant","Sid"]},
- {id:"kuldeep",name:"Kuldeep Rana",title:"Agreement and account setup",org:"Reach",grp:"partner",match:["Kuldeep"]}];
-let profile="mike";
+ {name:"Mike Thompson",title:"President",org:"SVT Fleet Solutions",grp:"internal",role:"Pilot sponsor. Approves commercial terms and agreements and is the escalation point with Amazon."},
+ {name:"Lon Samford",title:"Director, Operations",org:"SVT Fleet Solutions",grp:"internal",role:"Operational readiness: technicians, shop hours, service levels, mobile units and parts."},
+ {name:"Mark Gallison",title:"Director, Business Development",org:"SVT Fleet Solutions",grp:"internal",role:"Southern California business development. Supports site visits and the ONT42 / ONT43 relationship."},
+ {name:"Brooke Benkert",title:"Consulting Director, Business Development",org:"SVT Fleet Solutions",grp:"internal",role:"Launch readiness. Coordinates the pilot, Reach onboarding and the Amazon relationship."},
+ {name:"Richard Barron",title:"VP Global IT",org:"VVG",grp:"partner",role:"IT review of the Reach agreement and future system integration."},
+ {name:"Shane Matthews",title:"IT",org:"VVG",grp:"partner",role:"Future Reach integration with SVT's repair-order system. Not needed for launch."},
+ {name:"Evan Christodoulides",title:"Pilot owner, Middle Mile",org:"Amazon",grp:"partner",role:"Owns the ONT42 / ONT43 pilot for Amazon and confirms scope, dates and success measures."},
+ {name:"Steven Olivo",title:"SoCal AFP Fleet Asset Specialist",org:"Amazon",grp:"partner",role:"Site contact for ONT42 and ONT43 access and visits."},
+ {name:"Aaliyah Rosas",title:"Fleet Asset Specialist",org:"Amazon",grp:"partner",role:"ONT42 APP yard contact."},
+ {name:"Scotty Gathright",title:"ONT42 uptime",org:"Amazon",grp:"partner",role:"Tracks ONT42 tractor uptime and repair needs."},
+ {name:"David Galanti",title:"West Region FAS",org:"Amazon",grp:"partner",role:"West Region fleet asset coverage."},
+ {name:"Edmund Park",title:"Relay Garage",org:"Amazon",grp:"partner",role:"Connects Reach to Amazon's Relay Garage once location setup is shared."},
+ {name:"Sidhant Mishra",title:"Onboarding",org:"Reach",grp:"partner",role:"Reach onboarding, location setup and training."},
+ {name:"Kuldeep Rana",title:"Account setup",org:"Reach",grp:"partner",role:"Reach service agreement and SVT's service-provider account."}];
 const initials=n=>n.split(/\s+/).map(w=>w[0]).slice(0,2).join("").toUpperCase();
-const assigned=p=>items().filter(r=>p.match.some(m=>new RegExp("\\b"+m+"\\b").test(r.owner||"")));
-function personCard(p){const open=assigned(p).filter(r=>r.status!=="Ready").length;
-  return `<article class="sh-card${profile===p.id?" sel":""}"><div class="sh-av">${initials(p.name)}</div><div class="eyebrow">${esc(p.org)}</div><h3>${esc(p.name)}</h3><p class="sh-title">${esc(p.title)}</p>
-  <div class="sh-foot"><span>${open} open task${open===1?"":"s"}</span><button class="sh-link" data-profile="${p.id}">View profile <span aria-hidden="true">↗</span></button></div></article>`}
+function personCard(p){return `<article class="sh-card"><div class="sh-av">${initials(p.name)}</div><div class="eyebrow">${esc(p.org)}</div><h3>${esc(p.name)}</h3><p class="sh-title">${esc(p.title)}</p><p class="sh-role">${esc(p.role)}</p></article>`}
 function vTeam(){
-  const p=PEOPLE.find(x=>x.id===profile)||PEOPLE[0], mine=assigned(p), notes=S.notes.filter(n=>n.person===p.id).sort((a,b)=>String(b.at).localeCompare(String(a.at)));
   const grid=g=>`<div class="sh-grid">${PEOPLE.filter(x=>x.grp===g).map(personCard).join("")}</div>`;
   return `<div class="sectionhead" style="margin-top:0"><div><h2 style="margin:0">Internal project stakeholders</h2><p style="margin:6px 0 10px">Leadership, project ownership, and the people moving the Amazon opportunity forward.</p><span class="status">Names and titles provided by Brooke</span></div></div>
   ${grid("internal")}
   <div class="sectionhead"><div><h2 style="margin:0">Partner contacts</h2><p style="margin:6px 0 0">VVG, Amazon and Reach contacts on the pilot.</p></div></div>
-  ${grid("partner")}
-  <article class="panel sh-profile" id="sh-profile"><div class="sh-ph"><div class="sh-av">${initials(p.name)}</div><div><h2 style="margin:0">${esc(p.name)}</h2><p class="sh-title" style="margin:4px 0 0">${esc(p.title)}</p></div><span class="status">${p.grp==="internal"?"Internal stakeholder":esc(p.org)+" contact"}</span></div>
-   <div class="sh-sec"><div class="between"><h3>Project assignments</h3><span class="status">${mine.length} linked task${mine.length===1?"":"s"}</span></div>
-    <p class="sourceNote">Checklist items whose owner names ${esc(p.name.split(" ")[0])}, including shared ones.</p>
-    ${mine.length?`<div class="checklist">${mine.map(r=>`<button data-open="${esc(r.id)}"><span>${r.status==="Ready"?"☑":"□"} ${esc(r.item)}${r.due?` <small>· due ${esc(fmtD(r.due))}</small>`:""}</span><span class="status ${stCls(r.status)}">${esc(r.status)}</span></button>`).join("")}</div>`:`<p>No named assignments yet. Add a checklist item with ${esc(p.name)} as the owner to link it here.</p>`}</div>
-   <div class="sh-sec"><h3>Stakeholder notes</h3><p class="sourceNote">Meeting context, questions and follow-ups for ${esc(p.name.split(" ")[0])}. Visible to everyone on this page.</p>
-    ${notes.map(n=>`<div class="comment"><b>${esc(n.title||"Note")}</b>${n.text?"<br>"+esc(n.text):""}<small>${esc(n.byName||"Team member")} · ${esc(fmtAt(n.at))}</small></div>`).join("")}
-    ${canWrite&&db?`<form class="sh-form" id="sh-form" data-person="${p.id}"><label>Note title<input name="title" placeholder="Meeting context or follow-up" required></label><label>Details<textarea name="text" placeholder="Add a note for ${esc(p.name.split(" ")[0])}…"></textarea></label><button class="primary" type="submit">Save stakeholder note</button></form>`:""}</div>
-  </article>`;
+  ${grid("partner")}`;
 }
 
 const ST={"Ready":"done","In progress":"prog","Waiting":"wait","Blocked":"blocked","Not started":"todo"};
@@ -581,10 +568,8 @@ function render(){
   $("#add").hidden=!(db&&canWrite)||!["overview","checklist","board"].includes(tab);
   const focusQ=document.activeElement&&document.activeElement.id==="q",pos=focusQ?document.activeElement.selectionStart:0;
   const draft=$("#up-text")?$("#up-text").value:"";
-  const shf=$("#sh-form"),shd=shf?{p:shf.dataset.person,t:shf.title.value,x:shf.text.value}:null;
   $("#view").innerHTML={overview:vOverview,checklist:vChecklist,board:vBoard,sites:vSites,standup:vStandup,updates:vUpdates,team:vTeam,report:vReport}[tab]();
   if(draft&&$("#up-text"))$("#up-text").value=draft;
-  if(shd){const f2=$("#sh-form");if(f2&&f2.dataset.person===shd.p){f2.title.value=shd.t;f2.text.value=shd.x}}
   if(focusQ){const q=$("#q");if(q){q.focus();q.setSelectionRange(pos,pos)}}
   if(tab==="report")SVTReport.render($("#rp-stage"),reportCfg());
 }
@@ -647,7 +632,6 @@ async function reconcileBlocks(){
 
 document.addEventListener("click",e=>{
   const tb=e.target.closest("[data-tab]");if(tb){setTab(tb.dataset.tab);return}
-  const pf=e.target.closest("[data-profile]");if(pf){profile=pf.dataset.profile;render();const el=document.getElementById("sh-profile");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});return}
   if(e.target.closest("[data-close]")||e.target.matches("[data-close-scrim]")){closeDrawer();return}
   if(e.target.closest("select.inline-sel"))return;
   const o=e.target.closest("[data-open]");if(o){openDrawer(o.dataset.open);return}
@@ -665,8 +649,6 @@ document.addEventListener("change",async e=>{
   if(i&&i.value==="Blocked"){const r=S.readiness.find(x=>x.id===i.dataset.inline);i.value=r?r.status:"Not started";openDrawer(i.dataset.inline,{status:"Blocked"});return}
   if(i&&db){try{await SVTLive.saving(db.doc("readiness/"+i.dataset.inline).update({status:i.value,blockedBy:"",resumeStatus:"",updatedAt:new Date().toISOString(),updatedBy:viewerName||""}));toast("Updated")}catch(x){toast(x&&x.code==="invalid_argument"?"You can view this page but not change it":"Couldn't save. Try again.")}}
 });
-document.addEventListener("submit",async e=>{if(e.target.id!=="sh-form")return;e.preventDefault();const f=e.target,t=f.title.value.trim(),x=f.text.value.trim();if(!t||!db)return;f.title.value="";f.text.value="";
-  try{const now=new Date().toISOString();await SVTLive.saving(db.collection("notes").doc().set({person:f.dataset.person,title:t,text:x,at:now,byName:viewerName||""}));toast("Note saved")}catch(err){const g=$("#sh-form");if(g){g.title.value=t;g.text.value=x}toast(err&&err.code==="invalid_argument"?"You can view this page but not change it":"Couldn't save. Try again.")}});
 document.addEventListener("submit",async e=>{if(e.target.id!=="up-form")return;e.preventDefault();const t=$("#up-text").value.trim();if(!t||!db)return;
   try{const uid=user?await user.id():null,now=new Date().toISOString();await db.collection("updates").doc().set({text:t,at:now,date:now.slice(0,10),by:uid||"",byName:viewerName||""});$("#up-text").value="";toast("Posted")}catch(x){toast("Couldn't post. Try again.")}});
 
