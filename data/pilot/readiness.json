@@ -3,8 +3,8 @@
     "amazon": "Show",
     "amazonText": "Reach service agreement signed",
     "area": "Contract & terms",
-    "due": "2026-11-20",
-    "evidence": "Sent to Mike and Richard Nov 17, 11:55 AM CT. Richard Barron (Nov 17, 5:49 PM ET): innovation can't sign contracts, so Mike should send it to Matt Flannery for review. Mike (Nov 17, 9:50 PM ET): he will get it to Matt Flannery to start the SaaS review process. Nov 18, 9:54 AM CT: Brooke asked Mike whether to reassign the DocHub signature to him, aiming to finish before Thanksgiving. Nov 18, 10:26 AM ET: Reach (Kuldeep Rana) sent a DocHub reminder to review and sign. Nov 19, 10:32 AM: Brooke asked Mike for an update (Sid at Reach asked if SVT has questions or concerns). Mike, Nov 19, 2:05 PM: forwarded and spelled out the opportunity to In House Counsel and Global IT, copied Scott Z, asked for a quick turnaround; expects a quick review because VTC likely has a similar agreement for Velocity. SVT still needs its own agreement. Mike, Nov 19, 7:46 PM ET, on reassigning the DocHub signature to him: \"Yes Please. I am walking it thru the process now.\" Next: Brooke reassigns the DocHub signature to Mike. Not signed yet. Nov 20 (Amazon Pilot Review call): agreement still unsigned and it is holding up technician training and the Relay Garage connection. Mike to call Matt Flannery today and check ContractSafe for an existing Velocity signature first.",
+    "due": "2026-11-23",
+    "evidence": "Sent to Mike and Richard Nov 17, 11:55 AM CT. Richard Barron (Nov 17, 5:49 PM ET): innovation can't sign contracts, so Mike should send it to Matt Flannery for review. Mike (Nov 17, 9:50 PM ET): he will get it to Matt Flannery to start the SaaS review process. Nov 18, 9:54 AM CT: Brooke asked Mike whether to reassign the DocHub signature to him, aiming to finish before Thanksgiving. Nov 18, 10:26 AM ET: Reach (Kuldeep Rana) sent a DocHub reminder to review and sign. Nov 19, 10:32 AM: Brooke asked Mike for an update (Sid at Reach asked if SVT has questions or concerns). Mike, Nov 19, 2:05 PM: forwarded and spelled out the opportunity to In House Counsel and Global IT, copied Scott Z, asked for a quick turnaround; expects a quick review because VTC likely has a similar agreement for Velocity. SVT still needs its own agreement. Mike, Nov 19, 7:46 PM ET, on reassigning the DocHub signature to him: \"Yes Please. I am walking it thru the process now.\" Next: Brooke reassigns the DocHub signature to Mike. Not signed yet. Nov 20 (Amazon Pilot Review call): agreement still unsigned and it is holding up technician training and the Relay Garage connection. Mike to call Matt Flannery today and check ContractSafe for an existing Velocity signature first. Nov 23, 7:56 AM ET: Kuldeep (Reach) circled back for an update on the agreement. Mike replied 8:58 AM ET (Evan, Edmund Park and Mack Al Karam copied): it is with Global IT and in house counsel and he is following up to get approval or feedback and complete it today. Still not signed.",
     "gate": "Gate",
     "id": "rd01",
     "item": "Reach agreement (Vantage License and Services Agreement) approved and signed",
@@ -14,7 +14,7 @@
     "ref": "p1-ti-09",
     "site": "ONT42 + ONT43",
     "status": "In progress",
-    "updatedAt": "2026-11-20T22:23:39Z",
+    "updatedAt": "2026-11-23T15:05:00Z",
     "updatedBy": "Automatic close-out"
   },
   {
