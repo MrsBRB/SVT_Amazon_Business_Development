@@ -383,7 +383,7 @@
     "amazonText": "Operating model chosen (on site, off site nearby, or ONT43)",
     "area": "Scope & success measures",
     "due": "2026-11-24",
-    "evidence": "ONT42 Repair Area Plan, Rev D (Nov 20), priority item 1: Rev D recommends Option A (on-site container shop at the west end) with B (mobile + off-site) as the fallback; bring both to Evan. Evan asked for an option A and B after the visit. Option C if ONT43 is added: ONT42 shop serves ONT43. Nov 20, Evan (email to Mike): \"ONT45 can't take work, ONT43 is a dirt lot, and ONT42 has tight space. That leads me to think the most practical approach is to have SVT ferry units to the Fontana B&M location, where the work can be completed.\" Evan wants to test this on a call early next week and asked for SVT's best fit of capability and capacity against Inland Empire demand ahead of it. Mike placed a hold for Tue Nov 24 (Evan not yet confirmed) and plans to propose SVT as primary provider at ONT42, ONT43 and ONT45.",
+    "evidence": "ONT42 Repair Area Plan, Rev D (Nov 20), priority item 1: Rev D recommends Option A (on-site container shop at the west end) with B (mobile + off-site) as the fallback; bring both to Evan. Evan asked for an option A and B after the visit. Option C if ONT43 is added: ONT42 shop serves ONT43. Nov 20, Evan (email to Mike): \"ONT45 can't take work, ONT43 is a dirt lot, and ONT42 has tight space. That leads me to think the most practical approach is to have SVT ferry units to the Fontana B&M location, where the work can be completed.\" Mike placed a hold for Tue Nov 24 (Evan not yet confirmed) and plans to propose SVT as primary provider at ONT42, ONT43 and ONT45. Nov 23, Evan (email to Mike and Steven Olivo, 10:05 AM CT): \"We'd like SVT to take this work at Velocity Truck Center in Fontana, since our yards at ONT42, ONT43, and ONT45 don't have the space for major repairs. Our site teams would open the work request in Relay Garage and assign it to SVT. SVT would collect the unit, provide the estimate offline for now since we're not integrated yet, complete the repair, return the unit, and pick up the next one on the same trip where possible.\" Amazon's preferred model is now in writing. SVT has not yet confirmed it.",
     "gate": "Gate",
     "id": "rd24",
     "item": "Operating model decided: off site nearby, ferry units to ONT43, or mobile on site plus off site",
@@ -393,7 +393,7 @@
     "ref": "p1-st-01",
     "site": "ONT42 + ONT43",
     "status": "In progress",
-    "updatedAt": "2026-11-20T22:23:39Z",
+    "updatedAt": "2026-11-23T22:22:15Z",
     "updatedBy": "Automatic close-out"
   },
   {
@@ -401,7 +401,7 @@
     "amazonText": "Start date agreed and ONT42 work requests routed to SVT",
     "area": "Scope & success measures",
     "due": "",
-    "evidence": "Nov 19: Brooke moved the proposed go-live to Mon Dec 7 (after Thanksgiving) to allow prep time; still to confirm with Evan. Reach setup details must reach Amazon by Wed Dec 2. Earlier: Reach targeted about Nov 25; Mike's Nov 13 debrief mentioned Jan 1. Nov 20: next-steps call with Evan held for Tue Nov 24 (placeholder from Mike, Evan has not confirmed). Use it to confirm the Dec 7 date.",
+    "evidence": "Nov 19: Brooke moved the proposed go-live to Mon Dec 7 (after Thanksgiving) to allow prep time; still to confirm with Evan. Reach setup details must reach Amazon by Wed Dec 2. Earlier: Reach targeted about Nov 25; Mike's Nov 13 debrief mentioned Jan 1. Nov 20: next-steps call with Evan held for Tue Nov 24 (placeholder from Mike, Evan has not confirmed). Nov 23, Evan (email to Mike): \"Our goal is to get the first units into your queue by end of day Monday.\" He asked when VTC Fontana could start accepting units and said: \"I'm happy to hold a call early next week, but I don't want it to hold up the first units.\" Amazon wants transmission and engine work to start at VTC Fontana before Reach is live, with estimates offline. Start date still not agreed.",
     "gate": "Gate",
     "id": "rd25",
     "item": "Target start date agreed and FAS confirms ONT42 work requests route to SVT",
@@ -411,7 +411,7 @@
     "ref": "p1-st-03",
     "site": "ONT42 + ONT43",
     "status": "Waiting",
-    "updatedAt": "2026-11-20T22:23:39Z",
+    "updatedAt": "2026-11-23T22:22:15Z",
     "updatedBy": "Automatic close-out"
   },
   {
@@ -752,7 +752,7 @@
     "amazon": "Hide",
     "area": "Scope & success measures",
     "due": "2026-11-23",
-    "evidence": "Evan, Nov 20: \"If you can share your proposed best fit of capability and capacity against our demand in the Inland Empire market, I'd like to review it ahead of the meeting so we can move forward quickly.\" Mike (Nov 20): working on a brief plan to share with him.",
+    "evidence": "Evan, Nov 20: \"If you can share your proposed best fit of capability and capacity against our demand in the Inland Empire market, I'd like to review it ahead of the meeting so we can move forward quickly.\" Mike (Nov 20): working on a brief plan to share with him. Nov 23, Evan narrowed it to: when VTC Fontana could start accepting units and how many per week, who at VTC Fontana coordinates scheduling day to day, expected turnaround on transmission repairs, pickup and delivery capacity, and coverage over the holiday week. Demand he gave: ONT43 has at least 7 transmissions out of service, and he expects transmission and engine work out of ONT42 at roughly 4 to 5 units a week. Not answered in any source seen today.",
     "gate": "Gate",
     "id": "rd46",
     "item": "SVT capability and capacity plan for the Inland Empire sent to Evan before the next-steps call",
@@ -761,7 +761,24 @@
     "ref": "",
     "site": "ONT42 + ONT43",
     "status": "Not started",
-    "updatedAt": "2026-11-20T22:23:39Z",
+    "updatedAt": "2026-11-23T22:22:15Z",
+    "updatedBy": "Automatic close-out"
+  },
+  {
+    "amazon": "Hide",
+    "area": "People, parts & equipment",
+    "due": "2026-11-24",
+    "evidence": "Named by Evan, Nov 23 (email to Mike): SVT to take the work at Velocity Truck Center in Fontana. He asked who at VTC Fontana should coordinate scheduling day to day, the expected transmission turnaround, pickup and delivery capacity, and coverage over the holiday week. Estimates go offline until Reach and Relay Garage are integrated. Evan added Daniel Padilla and Leonardo Ruiz (ONT43) to coordinate the first units.",
+    "gate": "Gate",
+    "id": "rd47",
+    "item": "VTC Fontana ready to take Amazon units: day-to-day scheduling contact named, weekly capacity, transmission turnaround, pickup and delivery, holiday-week coverage, offline estimate process",
+    "order": 47,
+    "owner": "Mike",
+    "party": "SVT + Amazon",
+    "ref": "",
+    "site": "ONT42 + ONT43",
+    "status": "Not started",
+    "updatedAt": "2026-11-23T22:22:15Z",
     "updatedBy": "Automatic close-out"
   }
 ]
