@@ -1,9 +1,9 @@
 # ONT Pilot · Amazon View
 
-_Snapshot 2026-11-25. Live version: https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668. Edit the live page, not this file._
+_Snapshot 2026-11-26. Live version: https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668. Edit the live page, not this file._
 
 **Go-live target:** 2026-12-07 (unconfirmed)  
-**Last synced:** 2026-11-25T22:24:00Z
+**Last synced:** 2026-11-26T16:05:42Z
 
 **Launch gates complete:** 5 of 25
 
