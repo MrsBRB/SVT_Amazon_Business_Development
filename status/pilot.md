@@ -1,6 +1,6 @@
 # ONT42 / ONT43 Pilot Launch (internal)
 
-_Snapshot 2026-11-26. Live version: https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H. Edit the live page, not this file._
+_Snapshot 2026-11-27. Live version: https://claude.ai/artifact/57pZLpxJVW2gb8xTgxj77H. Edit the live page, not this file._
 
 **Gates ready:** 5 of 31
 
