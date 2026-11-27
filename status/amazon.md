@@ -3,7 +3,7 @@
 _Snapshot 2026-11-27. Live version: https://claude.ai/artifact/FVQgNvfAAnkuC6uZiwc668. Edit the live page, not this file._
 
 **Go-live target:** 2026-12-07 (unconfirmed)  
-**Last synced:** 2026-11-27T16:05:33Z
+**Last synced:** 2026-11-27T22:25:00Z
 
 **Launch gates complete:** 5 of 25
 
